@@ -1,0 +1,154 @@
+.tnotebook
+{
+    margin-bottom: 5px;
+}
+
+.tnotebook > div.frame
+{
+    border-left    : 1px solid #a1a1a1;
+    border-right   : 1px solid #a1a1a1;
+    border-bottom  : 1px solid #a1a1a1;
+    border-top  : 1px solid #a1a1a1;
+    background-color : #FAFAFA;
+    -moz-box-shadow: 3px 3px 3px #BABABA;
+    -webkit-box-shadow: 3px 3px 3px #BABABA;
+    box-shadow: 3px 3px 3px #BABABA;
+    border-spacing: 0px;
+}
+
+.tnotebook > .spacer
+{
+    height: 7px;
+    background: #eaeaea;
+    border: 1px solid #a1a1a1;
+    border-bottom: 0;
+}
+
+.tnotebook > ul
+{
+    padding: 0;
+    margin: 0;
+    margin-bottom: -1px;
+}
+
+.tnotebook > ul > li
+{
+    height: 23px;
+    display: inline-block;
+    padding-left   : 3px;
+    padding-right  : 3px;
+    border-right   : 1px solid #BFBFBF;
+    border-left    : 1px solid #BFBFBF;
+    border-top     : 1px solid #BFBFBF;
+    border-bottom  : 1px solid #BFBFBF;
+    white-space    : nowrap;
+    -moz-user-select : none;
+    -webkit-user-select : none;
+    user-select    : none;
+    background     : #eaeaea;
+    -webkit-border-top-left-radius: 2px;
+    -webkit-border-top-right-radius: 2px;
+    -moz-border-radius-topleft: 2px;
+    -moz-border-radius-topright: 2px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+}
+
+
+.tnotebook > ul > li > a
+{
+    text-decoration: none;
+    display: block;
+    margin: 5px;
+    font-weight     : bold;
+    color           : #ABABAB;
+    font-family    : sans-serif,arial,verdana;
+    font-size      : 9pt;
+}
+
+.tnotebook > ul > li.active
+{
+    padding-left   : 3px;
+    padding-right  : 3px;
+    border-top     : 1px solid #a1a1a1;
+    border-right   : 1px solid #a1a1a1;
+    border-bottom  : 0px solid #eaeaea;
+    border-left    : 1px solid #a1a1a1;
+    white-space    : nowrap;
+    -moz-user-select : none;
+    -webkit-user-select : none;
+    background: #FAFAFA;
+    user-select    : none;
+    cursor         : default;
+    -webkit-border-top-left-radius: 2px;
+    -webkit-border-top-right-radius: 2px;
+    -moz-border-radius-topleft: 2px;
+    -moz-border-radius-topright: 2px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0.2, #FAFAFA),
+        color-stop(1, #EAEAEA)
+    );
+    background-image: -o-linear-gradient(bottom, #FAFAFA 20%, #EAEAEA 100%);
+    background-image: -moz-linear-gradient(bottom, #FAFAFA 20%, #EAEAEA 100%);
+    background-image: -webkit-linear-gradient(bottom, #FAFAFA 20%, #EAEAEA 100%);
+    background-image: -ms-linear-gradient(bottom, #FAFAFA 20%, #EAEAEA 100%);
+    background-image: linear-gradient(to bottom, #FAFAFA 20%, #EAEAEA 100%);
+}
+
+.tnotebook > ul > li.active > a
+{
+    font-weight    : bold;
+    color          : black;
+    font-family    : sans-serif,arial,verdana;
+    font-size      : 9pt;
+    text-shadow    : 0 1px 0 #FFF;
+}
+
+
+.tnotebook > ul > li.not(.active):hover
+{
+    padding-left   : 3px;
+    padding-right  : 3px;
+    border-top     : 1px solid #a1a1a1;
+    border-right   : 1px solid #a1a1a1;
+    border-left    : 1px solid #a1a1a1;
+    border-bottom  : 1px solid #a1a1a1;
+    white-space    : nowrap;
+    -moz-user-select : none;
+    -webkit-user-select : none;
+    white-space    : nowrap;
+    background     : #eaeaea;
+    cursor         : pointer;
+    -webkit-border-top-left-radius: 2px;
+    -webkit-border-top-right-radius: 2px;
+    -moz-border-radius-topleft: 2px;
+    -moz-border-radius-topright: 2px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+}
+
+.tnotebook > ul > li.not(.active):hover > a
+{
+    color          : #757575;
+}
+
+.tnotebook > div.frame > div
+{
+    position       : relative;
+    visibility     : hidden;
+    z-index        : 1;
+}
+
+.tnotebook > div.frame > div.active
+{
+    position       : relative;
+    padding-top    : 2px;
+    padding-left   : 3px;
+    visibility     : visible;
+}

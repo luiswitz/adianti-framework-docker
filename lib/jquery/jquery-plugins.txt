@@ -1,0 +1,12 @@
+lib/jquery/jquery.scrollto.min.js
+lib/jquery/jquery.blockUI.min.js
+lib/jquery/jquery.editinplace.min.js
+lib/jquery/jquery.autocomplete.min.js
+lib/jquery/jquery.imask.min.js
+lib/jquery/jquery.treeview.min.js
+lib/jquery/jquery.dataTables.min.js
+lib/jquery/dataTables.responsive.min.js
+lib/jquery/select2.min.js
+lib/jquery/moment.min.js
+lib/jquery/fullcalendar.min.js
+lib/jquery/fullcalendar-pt.js

@@ -1,0 +1,255 @@
+body
+{
+    color: #333333;
+    background: #8C8C8C;
+    font-family: sans-serif,arial,verdana;
+    font-size: 10pt;
+    line-height: 1;
+}
+
+img
+{
+    border: 0;
+}
+
+
+#menuDiv
+{
+    width: 100%;
+}
+
+.tbreadcrumb li span
+{
+    font-family: 'Open Sans';
+    font-size: 10pt;
+}
+
+.adianti_container
+{
+    margin: auto;
+    margin-top: 10px;
+    width: 90%;
+    min-height: 570px;
+    display: block;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    background: #FFFFFF;
+    height: auto;
+    float: center;
+    align: center;
+    text-align: left;
+}
+
+.adianti_container .thin_bar
+{
+    width: 100%;
+    background-color: #fccb04;
+    height: 5px;
+}
+
+.adianti_container .header_content
+{
+    float: left;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 3px;
+}
+
+.adianti_container .header_content .logo1 a
+{
+    text-decoration: none;
+}
+
+.adianti_container .header_content .logo1
+{
+    margin-top:12px;
+    margin-bottom:12px;
+    padding-left: 2%;
+    float: left;
+    text-align: left;
+    font-size:17pt;
+}
+
+.adianti_container .header_content .logo2
+{
+    padding-right: 2%;
+    float: right;
+    text-align: right;
+}
+
+.adianti_container .header .header_bottom
+{
+    height: 5px;
+    margin-top: 50px;
+    background-color: #CACFD5;
+}
+
+.body .content
+{
+    padding: 20px;
+}
+
+.adianti_container .header
+{
+    background: #FFFFFF;
+    border-bottom: 2px solid #555555;
+}
+
+.adianti_container .body
+{
+}
+
+input, textarea
+{
+    border-radius: 3px 3px 3px 3px;
+}
+
+.clear
+{
+    clear: both;
+}
+
+.title
+{
+    font-family: sans-serif,arial,verdana;
+    color: #FFFFFF;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 19pt;
+    color: #FFF;
+    display: block;
+    background: #CFCFCF;
+    text-shadow: 1px 2px 2px #4C4C4C;
+    border-radius: 5px 5px 5px 5px;
+    text-align: center;
+}
+
+.welcome
+{
+    float: right;
+    text-align: right;
+}
+
+.welcome span
+{
+    color: #B89713;
+    font-weight: bold;
+}
+
+.tutor-navbar
+{
+    *position: relative;
+    *z-index: 2;
+    overflow: visible;
+    color: #777777;
+    margin-bottom: 0px;
+    font-family: 'Open Sans';
+}
+
+.tutor-navbar-inner
+{
+    min-height: 40px;
+    padding-right: 20px;
+    padding-left: 20px;
+    background: whitesmoke;
+    background-repeat: repeat-x;
+    border: 1px solid #d4d4d4;
+    filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ffffffff', endColorstr='#fff2f2f2', GradientType=0);
+    *zoom: 1;
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+}
+
+.tutor-navbar-inner a
+{
+    color: #333;
+    font-size: 14px;
+}
+
+.tutor-navbar .btn,
+.tutor-navbar .btn-group
+{
+    margin-top: 3px;
+}
+
+@media only screen and (max-width: 768px) {
+    .tutor-navbar > .tutor-navbar-inner > .navbar> .navbar-nav > li.active.open > .dropdown-toggle {
+        background: rgb(93, 122, 237);
+        color: white;
+    }
+}
+
+.navbar-collapse
+{
+    padding-left: 0px;
+}
+
+a
+{
+    text-decoration: none;
+}
+
+.popover-table
+{
+    border: 1px solid #e0e0e0;
+    border-collapse: collapse;
+}
+
+.popover-table td
+{
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+}
+
+.navbar-nav > li.active.open > .dropdown-toggle
+{
+    border-left: 1px solid rgba(0,0,0,0.15);
+    border-right: 1px solid rgba(0,0,0,0.15);
+    border-top: 1px solid rgba(0,0,0,0.15);
+    border-bottom: 1px solid white;
+    background: white;
+    z-index: 2000;
+    display: block;
+    margin-bottom: -1px;
+    margin-top: -1px;
+}
+.navbar-nav > li.active.open
+{
+    box-shadow: 0 0 12px 0 rgba(0,0,0,0.175);
+}
+
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus
+{
+    background: #eeeeee;
+}
+
+.dropdown-submenu>a:after
+{
+    border-left-color: gray;
+}
+.dropdown-menu {
+    font-size: 14px;
+}
+
+.select2-container .select2-choice {
+    background-image: none !important;
+}
+
+.select2-dropdown-open .select2-choice {
+    background-color: white;
+}
+
+.tsourcecode code
+{
+    font-family: Monospace;
+    line-height: normal;
+}
+
+/* para screenshots
+input, select, textarea, .panel-heading, .panel, .panel-footer {
+    border-width: 1.5px !important;
+    border-color: gray !important;
+}
+*/

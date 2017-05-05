@@ -1,0 +1,50 @@
+div.color-div span.tcolor
+{
+    border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+    border: 1px solid #cccccc;
+    border-radius: 0 4px 4px 0;
+    height: 24px;
+    padding: 0px;
+    margin: 0px;
+    width: 24px;
+    padding: 3px;
+    margin: 0px;
+    margin-left: -2px;
+    margin-bottom: 0px;
+    vertical-align:top;
+    box-sizing: border-box;
+    border-left: 1px solid #ccc;
+    
+    background-color: #f5f5f5;
+    background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+    background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+    background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+    background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
+    background-repeat: repeat-x;
+    border-bottom-color: #b3b3b3;
+    vertical-align:top;
+}
+
+div.color-div
+{
+    display: table;
+}
+
+div.color-div .tfield
+{
+    display: table-cell;
+    border-right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+.tcolor
+{
+    display: table-cell;
+}
+
+.tcolor i.tcolor-icon
+{
+    width: 12px;
+    height: 12px;
+}

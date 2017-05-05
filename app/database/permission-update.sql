@@ -1,0 +1,92 @@
+
+
+--- new programs of 3.0.0
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System PHP Info','SystemPHPInfoView');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System ChangeLog View','SystemChangeLogView');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'Welcome View','WelcomeView');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Sql Log','SystemSqlLogList');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Profile View','SystemProfileView');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Profile Form','SystemProfileForm');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System SQL Panel','SystemSQLPanel');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Access Log','SystemAccessLogList');
+
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 1,
+                                        (select id from system_program where controller='SystemPHPInfoView'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 1,
+                                        (select id from system_program where controller='SystemChangeLogView'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 1,
+                                        (select id from system_program where controller='SystemSqlLogList'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 1,
+                                        (select id from system_program where controller='SystemSQLPanel'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 1,
+                                        (select id from system_program where controller='SystemAccessLogList'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 2,
+                                        (select id from system_program where controller='WelcomeView'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 2,
+                                        (select id from system_program where controller='SystemProfileView'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 2,
+                                        (select id from system_program where controller='SystemProfileForm'));
+UPDATE system_user set frontpage_id = (select id from system_program b where controller='WelcomeView') where id=1;
+
+
+--- new programs of 4.0
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Message Form','SystemMessageForm');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Message List','SystemMessageList');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Message Form View','SystemMessageFormView');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Notification List','SystemNotificationList');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Notification Form View','SystemNotificationFormView');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Document Category List','SystemDocumentCategoryFormList');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Document Form','SystemDocumentForm');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Document Upload Form','SystemDocumentUploadForm');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Document List','SystemDocumentList');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Shared Document List','SystemSharedDocumentList');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Unit Form','SystemUnitForm');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Unit List','SystemUnitList');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Access stats','SystemAccessLogStats');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Preference form','SystemPreferenceForm');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Support form','SystemSupportForm');
+
+
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 2,
+                                        (select id from system_program where controller='SystemMessageForm'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 2,
+                                        (select id from system_program where controller='SystemMessageList'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 2,
+                                        (select id from system_program where controller='SystemMessageFormView'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 2,
+                                        (select id from system_program where controller='SystemNotificationList'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 2,
+                                        (select id from system_program where controller='SystemNotificationFormView'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 1,
+                                        (select id from system_program where controller='SystemDocumentCategoryFormList'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 2,
+                                        (select id from system_program where controller='SystemDocumentForm'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 2,
+                                        (select id from system_program where controller='SystemDocumentUploadForm'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 2,
+                                        (select id from system_program where controller='SystemDocumentList'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 2,
+                                        (select id from system_program where controller='SystemSharedDocumentList'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 1,
+                                        (select id from system_program where controller='SystemUnitForm'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 1,
+                                        (select id from system_program where controller='SystemUnitList'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 1,
+                                        (select id from system_program where controller='SystemAccessLogStats'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 1,
+                                        (select id from system_program where controller='SystemPreferenceForm'));
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 2,
+                                        (select id from system_program where controller='SystemSupportForm'));
+
+CREATE TABLE system_unit (
+    id INTEGER PRIMARY KEY NOT NULL,
+    name varchar(100));
+    
+ALTER TABLE system_user add column system_unit_id int references system_unit(id);
+ALTER TABLE system_user add column active char(1);
+UPDATE system_user set active='Y';
+
+CREATE TABLE system_preference (
+    id text,
+    value text
+);

@@ -1,0 +1,351 @@
+html, body
+{
+    height: 95.5%;
+    margin: 0px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+}
+
+.content-wrapper
+{
+    background-color: white !important;
+}
+
+hr
+{
+    margin: 20px 0;
+    border: 0;
+    border-top: 1px solid silver;
+    border-bottom: 1px solid whitesmoke;
+}
+
+a
+{
+    text-decoration: none;
+}
+
+.popover-table
+{
+    border: 1px solid #e0e0e0;
+    border-collapse: collapse;
+}
+
+.popover-table td
+{
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+}
+
+.tframe
+{
+    margin: 10px;
+    padding-top: 5px !important;
+    padding-bottom: 8px !important;
+    padding-left: 15px !important;
+    padding-right: 5px !important;
+    border-radius: 4px !important;
+}
+
+.tframe legend
+{
+    background: white;
+    color: #fff;
+    border-radius: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    box-shadow: 0 0 0 1px #8A8A8A;
+    margin-left: 3px;
+    padding-right: 5px;
+    margin-right: 5px;
+    height: 28px;
+}
+
+.tframe legend label
+{
+    padding-left: 5px;
+    font-weight: bold;
+}
+
+textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus
+{
+    border-color: rgba(82, 168, 236, 0.8);
+    outline: 0;
+    outline: thin dotted 9;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input
+{
+    display: inline-block;
+    height: 28px;
+    padding: 4px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #555555;
+    vertical-align: middle;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    border: 1px solid #ccc;
+}
+
+.tformtitle + tr > td
+{
+    padding-top: 15px !important;
+}
+
+.ui-datepicker-trigger
+{
+    height: 28px !important;
+}
+
+.tseekbutton
+{
+    height: 28px !important;
+}
+
+span.tdate-group-addon, span.input-group-addon.tcolor {
+  height: 28px !important;
+  border-radius:0 !important;
+}
+
+select.tcombo
+{
+    height: 28px;
+    border: 1px solid #ccc !important;
+    border-radius: 0;
+}
+
+.tfield:focus
+{
+    border-color: #3c8dbc !important;
+    box-shadow: none !important;
+    border-radius         : 0;
+    -webkit-border-radius : none !important;
+    -moz-border-radius    : none !important;
+    -webkit-box-shadow : none !important;
+       -moz-box-shadow : none !important;
+            box-shadow : none !important;
+}
+
+textarea, .select2-choices, .select2-container-multi .select2-choices
+{
+    border: 1px solid #ccc !important;
+    border-radius: 0 !important;
+    background: white;
+    background-image: white;
+}
+
+label
+{
+    margin-bottom: 5px;
+}
+
+label, input, button, select, textarea
+{
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 20px;
+}
+
+textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus
+{
+    border-color: rgba(82, 168, 236, 0.8);
+    outline: 0;
+    outline: thin dotted 9;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button
+{
+    font-size: 12px;
+    margin: 0px;
+}
+
+.tformtitle + tr > td
+{
+    padding-top: 15px !important;
+}
+
+.tformtitle > td
+{
+    background-color: #3c8dbc !important;
+    padding: 8px 0px 8px 5px !important;
+}
+
+.tformtitle > td > label
+{
+    color: white !important;
+}
+
+.tformaction > td
+{
+    padding: 12px !important;
+}
+
+.tform > table
+{
+    background: #fff;
+    border: 1px solid #C6C6C6 !important;
+    padding: 0px !important;
+}
+
+.tform
+{
+    background: white !important;
+    border: none !important;
+    border-radius: none !important;
+    padding: 0px !important;
+    margin-bottom: 20px !important;
+}
+
+.tdatagrid_head tr td
+{
+    height: 34px;
+}
+
+.tdatagrid_body tr td
+{
+    height: 30px;
+}
+
+.tdatagrid_body tr td input
+{
+    height: 24px;
+    margin: 0;
+    padding: 0px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+
+.navbar-default .navbar-brand
+{
+    font-family: 'Open Sans';
+}
+
+.sidebar
+{
+    font-family: 'Open Sans';
+}
+
+.tbreadcrumb li span
+{
+    font-family: 'Open Sans';
+    font-size: 10pt;
+}
+
+.navbar-right {
+    margin-right: 0 !important;
+}
+
+.badge-notify{
+   background: #E16D6D;
+   position:relative;
+   top: -12px;
+   left: -12px;
+}
+
+ul.navbar-top-links > li.dropdown >a {
+    background: inherit;
+}
+
+ul.navbar-top-links > li.dropdown > a:hover {
+    background: #4A9FE0;
+}
+
+ul.navbar-top-links .open>a, ul.navbar-top-links .open>a:hover, ul.navbar-top-links .open>a:focus {
+    background: #4A9FE0;
+}
+
+@media only screen and (min-width: 501px) {
+    #search-box {
+        display:inline !important;
+        float:left;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    #search-box {
+        display:none !important;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    .pagination>li>a, .pagination>li>span {
+        padding: 6px;
+    }
+}
+
+
+.navbar-custom-menu > .navbar-nav {
+    float: right;
+}
+
+.sidebar-menu .treeview li, .sidebar-menu .treeview ul
+{
+    background: none;
+    overflow: hidden;
+}
+
+.select2-container {
+    background: white;
+    border-radius: 5px;
+}
+
+.select2-container .select2-choice {
+    background-image: none !important;
+}
+
+.select2-dropdown-open .select2-choice {
+    background-color: white;
+}
+
+.tform
+{
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.tform .tformtitle > td:first-child
+{
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.tform .tformtitle > td:last-child
+{
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+table.tdatagrid_table
+{
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+}
+
+#form_login table > tbody > tr.tformtitle > td
+{
+    text-align: center;
+}
+
+#form_login table > tbody > tr.tformtitle > td > label
+{
+    padding: 0;
+    padding: 8px;
+    font-size: 17pt;
+}

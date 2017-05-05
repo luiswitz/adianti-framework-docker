@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Adianti ERP Template</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    {LIBRARIES}
+    {HEAD}
+    
+    <script type="text/javascript">
+    $(function() {
+        $.get('engine.php?class=SearchBox', function(data)
+        {
+          $('.header_content').append(data).show();
+          search_box=$('.logo1').nextAll('div');
+          search_box.css('padding-top', '5px');
+          search_box.css('margin-right', '10px');
+          search_box.css('float', 'right');
+          search_box.attr('id', 'search-box');
+        });
+    });
+    </script>
+</head>
+<body>
+    <div class="adianti_container">
+        <div class="header">
+            <div class="thin_bar">
+                &nbsp;
+            </div>
+            <div class="header_content">
+                <div class="logo1">
+                    <a target="newwindow" href="http://www.adianti.com.br/framework">
+                        Adianti Framework ERP Template I
+                    </a>
+                </div>
+            </div>
+            <div class="header_bottom" style="clear:both"></div>
+        </div>
+        
+        <div class="body">
+            <div id="menuDiv">
+                <div class="tutor-navbar">
+                  <div class="tutor-navbar-inner">
+                    {MENU}
+                   <!-- <a generator="adianti" href="index.php?class=LoginForm&method=onLogout">Logout</a> -->
+                  </div>
+                </div>
+            </div>
+            <div id="adianti_div_content" class="content"></div>
+            <div id="adianti_online_content"></div>
+            <div id="adianti_online_content2"></div>
+            <div id="pageboth"><br></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</body>
+</html>

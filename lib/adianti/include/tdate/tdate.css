@@ -1,0 +1,62 @@
+.tdate-group
+{
+    display:table;
+    border-spacing: 0;
+    float:inherit;
+}
+
+.tdate-group .tfield
+{
+    display:table-cell;
+    border-right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+span.tdate-group-addon
+{
+    border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+    border: 1px solid #cccccc;
+    border-radius: 0 4px 4px 0;
+    height: 24px;
+    width: 24px;
+    padding: 0px;
+    margin: 0px;
+    margin-left: -2px;
+    margin-bottom: 0px;
+    background-color: #f5f5f5;
+    background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+    background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+    background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+    background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
+    background-repeat: repeat-x;
+    border-bottom-color: #b3b3b3;
+    vertical-align:top;
+    display:table-cell;
+}
+
+span.tdate-group-addon i
+{
+    display: inline-block;
+    margin-top: 1px;
+    vertical-align: text-top;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.datepicker-days .prev, .datepicker-days .next, .datepicker-days .cw, .datepicker-days  .datepicker-switch
+{
+    background: whiteSmoke;
+}
+
+.datepicker-days .day
+{
+    border: 1px solid #e0e0e0;
+    border-spacing: 0;
+    padding: 2px;
+}
+
+.datepicker.dropdown-menu td
+{
+    padding: 1px;
+}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+    
+        <title>Adianti Framework ERP Template II</title>
+    
+        {LIBRARIES}
+        {HEAD}
+        
+        <link href="app/templates/{template}/metisMenu/metisMenu.css" rel="stylesheet">
+        <link href="app/templates/{template}/sb-admin-2.css" rel="stylesheet">
+        <script src="app/templates/{template}/metisMenu/metisMenu.js"></script>
+        <script src="app/templates/{template}/sb-admin-2.js"></script>
+        
+        <script type="text/javascript">
+        $(function() {
+            $('ul.level-2').addClass('in');
+            $(window).load(function() {
+                if ($('#side-menu').is(":visible") == false) {
+                    $('#side-menu a[generator="adianti"]').click(function() {
+                        $('.navbar-toggle').click();
+                        $('body').scrollTop(0);
+                    });
+                }
+            });
+        });
+        
+        function update_messages_menu() {
+            $.get('engine.php?class=MessageList&theme=theme2', function(data) {
+                $('#envelope_messages').html(data);
+            });
+        }
+        
+        function update_notifications_menu() {
+            $.get('engine.php?class=NotificationList&theme=theme2', function(data) {
+                $('#envelope_notifications').html(data);
+            });
+        }
+        
+        $(function() {
+            $.get('engine.php?class=SearchBox', function(data)
+            {
+              $('.navbar-nav').after(data).show();
+              var search_box = $('.navbar-nav').nextAll('div');
+              search_box.css('padding-top', '10px');
+              search_box.css('padding-left', '25px');
+              search_box.css('display', 'table');
+              search_box.attr('id', 'search-box');
+            });
+            
+            update_messages_menu();
+            update_notifications_menu();
+            
+            // setInterval( update_messages_menu, 5000);
+            // setInterval( update_notifications_menu, 5000);
+        });
+        </script>
+    </head>
+    <body>
+        <div id="wrapper">
+            <!-- Navigation -->
+            <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="http://www.adianti.com.br/framework">Adianti Framework ERP Template II</a>
+                    <div class="navbar-nav"></div>
+                </div>
+                
+                <!-- /.navbar-header -->
+    
+                <ul class="nav navbar-top-links navbar-right">
+                    <li class="dropdown" id="envelope_messages">
+                        <!-- /.dropdown-messages -->
+                    </li>
+                    
+                    <li class="dropdown" id="envelope_notifications">
+                        <!-- /.dropdown-messages -->
+                    </li>
+                  
+                    <li class="dropdown notifications-menu" id="support">
+                      <a generator="adianti" href="index.php?class=SystemSupportForm">
+                          <i class="fa fa-life-ring fa-fw"></i>
+                      </a>
+                    </li>
+                  
+                    <!-- /.dropdown -->
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+        				        <li role="presentation" class="dropdown-header">{username}</li>
+                            <li><a href="index.php?class=SystemProfileView"><i class="fa fa-user fa-fw"></i> Perfil </a></li>
+                            <li><a href="index.php?class=LoginForm&method=reloadPermissions&static=1"><i class="fa fa-refresh fa-fw"></i> Recarregar </a></li>
+                            <li class="divider"></li>
+                            <li><a generator="adianti" href="index.php?class=LoginForm&method=onLogout&static=1"><i class="fa fa-sign-out fa-fw"></i> Sair </a>
+                            </li>
+                        </ul>
+                        <!-- /.dropdown-user -->
+                    </li>
+                    <!-- /.dropdown -->
+                </ul>
+                <!-- /.navbar-top-links -->
+    
+                <div class="navbar-default sidebar" role="navigation">
+                    <div class="sidebar-nav navbar-collapse">
+                    
+                    {MENU}
+                    
+                    </div>
+                    <!-- /.sidebar-collapse -->
+                </div>
+                <!-- /.navbar-static-side -->
+            </nav>
+    
+            <div id="page-wrapper" style="padding-top: 20px">
+                <div id="adianti_div_content"></div>
+            </div>
+            <!-- /#page-wrapper -->
+            <div id="adianti_online_content"></div>
+            <div id="adianti_online_content2"></div>
+            
+        </div>
+        <!-- /#wrapper -->
+    </body>
+</html>

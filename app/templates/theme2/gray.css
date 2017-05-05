@@ -1,0 +1,17 @@
+.navbar
+{
+    background: #616161;
+}
+
+.tformtitle > td
+{
+    background-color: #8E8E8E !important;
+}
+
+ul.navbar-top-links > li.dropdown > a:hover {
+    background: #9A9898;
+}
+
+ul.navbar-top-links .open>a, ul.navbar-top-links .open>a:hover, ul.navbar-top-links .open>a:focus {
+    background: #9A9898;
+}

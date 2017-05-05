@@ -1,0 +1,14 @@
+.tpagenavigation
+{
+    padding-top: 17px;
+}
+
+.tpagenavigation > ul.pagination
+{
+    margin: 0;
+}
+
+.tpagenavigation li.off a
+{
+    color: #c0c0c0;
+}

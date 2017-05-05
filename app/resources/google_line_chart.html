@@ -1,0 +1,31 @@
+<!--[main]-->
+<div id="chart_div" style="width: {$width}; height: {$height};"></div>
+<script>
+$(function() {
+    var render_chart = function() {
+        google.charts.load('current', {'packages':['line']});
+        google.charts.setOnLoadCallback(drawVisualization);
+        
+        function drawVisualization() {
+            var data = google.visualization.arrayToDataTable( {$data} );
+            var options = {
+              title : '{$title}',
+              vAxis: {title: '{$ytitle}'},
+              hAxis: {title: '{$xtitle}'},
+              seriesType: 'bars'
+            };
+            
+            var chart = new google.charts.Line(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    };
+  
+    if (typeof google == 'undefined') {
+        $.getScript("https://www.gstatic.com/charts/loader.js", render_chart);
+    }
+    else {
+        render_chart();
+    }
+});
+</script>
+<!--[/main]-->

@@ -1,0 +1,30 @@
+.tframe
+{
+  -webkit-box-sizing: content-box !important;
+  -moz-box-sizing: content-box !important;
+  box-sizing: content-box !important;
+}
+
+.tframe
+{
+    border          : solid;
+    border-color    : #a0a0a0;
+    border-width    : 1px;
+    padding-left    : 3px;
+    padding-right   : 3px;
+    padding-top     : 3px;
+    padding-bottom  : 3px;
+    border-radius   : 3px;
+    margin: 2px;
+}
+
+.tframe legend
+{
+    width: auto;
+    margin: 0;
+    border:0;
+    font-size: inherit;
+    height: 15px;
+    padding-left: 5px;
+    padding-right: 5px;
+}

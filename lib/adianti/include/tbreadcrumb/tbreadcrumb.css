@@ -1,0 +1,141 @@
+#div_breadcrumbs
+{
+    border: 1px solid #DDDDDD;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    height: 36px;
+    min-width: 80%;
+}
+
+.tbreadcrumb
+{
+    float: left;
+    line-height: 28px;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 5px;
+}
+
+.tbreadcrumb li
+{
+    float: left;
+    padding: 0 2px 0 10px;
+}
+
+.tbreadcrumb li:first-child
+{
+    background-position: -56px -54px;
+    padding-left: 5px;
+    padding-right: 12px;
+}
+
+.tbreadcrumb li:first-child + li
+{
+    background-position: -9999px -9999px;
+    padding-left: 0;
+}
+
+.tbreadcrumb li span, .store-header .tbreadcrumb li a
+{
+    color: #666666;
+    display: block;
+    padding: 0 6px;
+}
+
+.tbreadcrumb li a.home
+{
+    height: 0;
+    overflow: hidden;
+    padding: 28px 0 0;
+    width: 34px;
+}
+
+.tbreadcrumb li a:hover, .store-header .tbreadcrumb li a:hover span
+{
+    color: #0085CC;
+}
+
+.tbreadcrumb li.title
+{
+    color: #8F8F8F;
+    font-size: 13px;
+    font-weight: bold;
+    padding-left: 10px;
+    padding-top: 0;
+}
+
+ol.tbreadcrumb li
+{
+    background: none repeat scroll 0 center rgba(0, 0, 0, 0);
+    color: #666666;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 3em;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0 0 0 0.8em;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+
+ol.tbreadcrumb li a
+{
+    background-image: url("../../include/tbreadcrumb/images/footer-arrow.png");
+    background-position: 100% -28px;
+    background-repeat: no-repeat;
+    background-size: 30px 187px;
+    color: #666666;
+    display: inline-block;
+    padding: 0 1.75em 0 0;
+    text-decoration: none;
+}
+
+ol.tbreadcrumb li a:hover, ol.tbreadcrumb li a:focus
+{
+    color: #333333;
+    text-decoration: none;
+}
+
+ol.tbreadcrumb li span.selected
+{
+    color: blue;
+}
+
+ol.tbreadcrumb li a.bread
+{
+    padding-left: 0.8em;
+}
+
+.tbreadcrumb li a.bread span
+{
+    background-image: url("../../include/tbreadcrumb/home.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    display: block;
+    text-indent: -999px;
+    width: 15px;
+}
+
+.tbreadcrumb li span
+{
+    font-weight: bold;
+}
+
+ol.tbreadcrumb li a
+{
+    background-image: url("../../include/tbreadcrumb/footer-arrow.png");
+    background-position: 100% -28px;
+    background-repeat: no-repeat;
+    background-size: 30px 187px;
+    color: #666666;
+    display: inline-block;
+    padding: 0 1.75em 0 0;
+    text-decoration: none;
+}
+
+ol.tbreadcrumb li a:hover, ol.tbreadcrumb li a:focus
+{
+    color: #333333;
+    text-decoration: none;
+}
