@@ -10,7 +10,7 @@ You can access the following applications after the setup:
 
 
 ```
-git clone  https://github.com/luiswitz/adianti-framework-docker.git > my_new_project
+git clone  https://github.com/luiswitz/adianti-framework-docker.git my_new_project
 cd my_new_project
 ```
 Setup your database credentials in `docker-compose.yml` and `phinx.yml` and run the containers
@@ -18,12 +18,19 @@ Setup your database credentials in `docker-compose.yml` and `phinx.yml` and run 
 docker-compose up
 ```
 
+Install dependencies with composer
+```
+docker-compose exec php composer install
+```
+
+Acces PHP MyAdmin http://localhost:8183 and create your database
+
 Setup database with migrations
 ```
 docker-compose exec php php vendor/robmorgan/phinx/bin/phinx migrate -e development
 ```
 
-php vendor/robmorgan/phinx/bin/phinx create CreateSystemGroupTable
+Access the application: http://localhost
 
 ## Creating Migrations
 
