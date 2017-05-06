@@ -18,5 +18,7 @@ class CreateSystemUserGroupTable extends AbstractMigration
         ['id' => 2, 'system_user_id' => 2, 'system_group_id' => 2],
         ['id' => 3, 'system_user_id' => 1, 'system_group_id' => 2]
       ];
+
+      $this->insert('system_user_group', $data);
     }
 }
