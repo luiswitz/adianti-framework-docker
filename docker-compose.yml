@@ -1,29 +1,33 @@
-db:
-  image: mysql:5.7
-  ports:
-    - "3306:3306"
-  volumes:
-    - /var/lib/mysql
-  environment:
-    - MYSQL_ROOT_PASSWORD=root
+version: '2'
+services:
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-datavolume:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
 
-php:
-  build: .
-  ports:
-    - "80:80"
-    - "443:443"
-  volumes:
-    - ./:/var/www/html
-  links:
-    - db
+  php:
+    build: .
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/html
+    links:
+      - db
 
-phpmyadmin:
-  image: phpmyadmin/phpmyadmin
-  restart: always
-  links:
-    - db
-  ports:
-    - 8183:80
-  environment:
-    - MYSQL_USER=root
-    - MYSQL_ROOT_PASSWORD=root
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    links:
+      - db
+    ports:
+      - 8183:80
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=root
+volumes:
+  mysql-datavolume:
