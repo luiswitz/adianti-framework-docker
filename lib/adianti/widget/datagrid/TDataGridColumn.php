@@ -6,7 +6,7 @@ use Adianti\Control\TAction;
 /**
  * Representes a DataGrid column
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage datagrid
  * @author     Pablo Dall'Oglio

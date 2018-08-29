@@ -12,7 +12,7 @@ use Exception;
 /**
  * ComboBox Widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -27,6 +27,8 @@ class TCombo extends TField implements AdiantiWidgetInterface
     private   $searchable;
     private   $changeAction;
     private   $defaultOption;
+    protected $changeFunction;
+    protected $is_boolean;
 
     /**
      * Class Constructor
@@ -42,8 +44,50 @@ class TCombo extends TField implements AdiantiWidgetInterface
 
         // creates a <select> tag
         $this->tag = new TElement('select');
-        $this->tag->{'class'} = 'tcombo'; // CSS
+        $this->tag->{'class'}  = 'tcombo'; // CSS
         $this->tag->{'widget'} = 'tcombo';
+        $this->is_boolean = FALSE;
+    }
+    
+    /**
+     * Enable/disable boolean mode
+     */
+    public function setBooleanMode()
+    {
+        $this->is_boolean = true;
+        $this->addItems( [ '1' => AdiantiCoreTranslator::translate('Yes'),
+                           '2' => AdiantiCoreTranslator::translate('No') ] );
+    }
+    
+    /**
+     * Define the field's value
+     * @param $value A string containing the field's value
+     */
+    public function setValue($value)
+    {
+        if ($this->is_boolean)
+        {
+            $this->value = $value ? '1' : '2';
+        }
+        else
+        {
+            parent::setValue($value);
+        }
+    }
+    
+    /**
+     * Returns the field's value
+     */
+    public function getValue()
+    {
+        if ($this->is_boolean)
+        {
+            return $this->value == '1' ? true : false;
+        }
+        else
+        {
+            return parent::getValue();
+        }
     }
     
     /**
@@ -107,7 +151,14 @@ class TCombo extends TField implements AdiantiWidgetInterface
                 }
                 else
                 {
-                    return $val;
+                    if ($this->is_boolean)
+                    {
+                        return $val == '1' ? true : false;
+                    }
+                    else
+                    {
+                        return $val;
+                    }
                 }
             }
         }
@@ -135,6 +186,14 @@ class TCombo extends TField implements AdiantiWidgetInterface
     }
     
     /**
+     * Set change function
+     */
+    public function setChangeFunction($function)
+    {
+        $this->changeFunction = $function;
+    }
+    
+    /**
      * Reload combobox items after it is already shown
      * @param $formname form name (used in gtk version)
      * @param $name field name
@@ -153,8 +212,16 @@ class TCombo extends TField implements AdiantiWidgetInterface
         {
             foreach ($items as $key => $value)
             {
-                $value = addslashes($value);
-                $code .= "tcombo_add_option('{$formname}', '{$name}', '{$key}', '{$value}'); ";
+                if (substr($key, 0, 3) == '>>>')
+                {
+                    $code .= "tcombo_create_opt_group('{$formname}', '{$name}', '{$value}'); ";
+                }
+                else
+                {
+                    // se exitsir optgroup add nele
+                    $value = addslashes($value);
+                    $code .= "tcombo_add_option('{$formname}', '{$name}', '{$key}', '{$value}'); ";
+                }
             }
         }
         TScript::create($code);
@@ -198,36 +265,19 @@ class TCombo extends TField implements AdiantiWidgetInterface
     {
         $this->defaultOption = $option;
     }
-
+    
     /**
-     * Shows the widget
+     * Render items
      */
-    public function show()
+    public function renderItems()
     {
-        // define the tag properties
-        $this->tag-> name  = $this->name;    // tag name
-        
-        if ($this->id)
-        {
-            $this->tag-> id    = $this->id;
-        }
-        
-        if (strstr($this->size, '%') !== FALSE)
-        {
-            $this->setProperty('style', "width:{$this->size};", false); //aggregate style info
-        }
-        else
-        {
-            $this->setProperty('style', "width:{$this->size}px;", false); //aggregate style info
-        }
-                
         if ($this->defaultOption !== FALSE)
         {
             // creates an empty <option> tag
             $option = new TElement('option');
             
             $option->add( $this->defaultOption );
-            $option-> value = '';   // tag value
+            $option->{'value'} = '';   // tag value
 
             // add the option tag to the combo
             $this->tag->add($option);
@@ -241,7 +291,8 @@ class TCombo extends TField implements AdiantiWidgetInterface
                 if (substr($chave, 0, 3) == '>>>')
                 {
                     $optgroup = new TElement('optgroup');
-                    $optgroup-> label = $item;
+                    $optgroup->{'label'} = $item;
+                    
                     // add the option to the combo
                     $this->tag->add($optgroup);
                 }
@@ -249,7 +300,7 @@ class TCombo extends TField implements AdiantiWidgetInterface
                 {
                     // creates an <option> tag
                     $option = new TElement('option');
-                    $option-> value = $chave;  // define the index
+                    $option->{'value'} = $chave;  // define the index
                     $option->add($item);      // add the item label
                     
                     if (substr($chave, 0, 3) == '###')
@@ -261,7 +312,7 @@ class TCombo extends TField implements AdiantiWidgetInterface
                     if (($chave == $this->value) AND ($this->value !== NULL))
                     {
                         // mark as selected
-                        $option-> selected = 1;
+                        $option->{'selected'} = 1;
                     }
                     
                     if (isset($optgroup))
@@ -274,6 +325,29 @@ class TCombo extends TField implements AdiantiWidgetInterface
                     }                    
                 }
             }
+        }
+    }
+    
+    /**
+     * Shows the widget
+     */
+    public function show()
+    {
+        // define the tag properties
+        $this->tag->{'name'}  = $this->name;    // tag name
+        
+        if ($this->id and empty($this->tag->{'id'}))
+        {
+            $this->tag->{'id'} = $this->id;
+        }
+        
+        if (strstr($this->size, '%') !== FALSE)
+        {
+            $this->setProperty('style', "width:{$this->size};", false); //aggregate style info
+        }
+        else
+        {
+            $this->setProperty('style', "width:{$this->size}px;", false); //aggregate style info
         }
         
         if (isset($this->changeAction))
@@ -288,6 +362,12 @@ class TCombo extends TField implements AdiantiWidgetInterface
             $this->setProperty('onChange', $this->getProperty('changeaction'));
         }
         
+        if (isset($this->changeFunction))
+        {
+            $this->setProperty('changeaction', $this->changeFunction, FALSE);
+            $this->setProperty('onChange', $this->changeFunction, FALSE);
+        }
+        
         // verify whether the widget is editable
         if (!parent::getEditable())
         {
@@ -296,13 +376,25 @@ class TCombo extends TField implements AdiantiWidgetInterface
             $this->tag->{'style'}  .= ';pointer-events:none';
             $this->tag->{'class'}   = 'tcombo_disabled'; // CSS
         }
+        
+        if ($this->searchable)
+        {
+            $this->tag->{'role'} = 'tcombosearch';
+        }
+        
         // shows the combobox
+        $this->renderItems();
         $this->tag->show();
         
         if ($this->searchable)
         {
             $select = AdiantiCoreTranslator::translate('Select');
-            TScript::create("$('#{$this->id}').select2({allowClear: true, placeholder: '{$select}'})");
+            TScript::create("tcombo_enable_search('#{$this->id}', '{$select}')");
+            
+            if (!parent::getEditable())
+            {
+                TScript::create(" tmultisearch_disable_field( '{$this->formName}', '{$this->name}'); ");
+            }
         }
     }
 }

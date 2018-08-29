@@ -95,3 +95,14 @@
     -moz-box-shadow: inset 0 1px 0 #ffffff;
     box-shadow: inset 0 1px 0 white;
 }
+
+.tseparator
+{
+    margin-bottom: 5px;
+}
+
+hr.tseparator-divisor
+{
+    margin-bottom: 15px;
+    margin-top: 10px;
+}

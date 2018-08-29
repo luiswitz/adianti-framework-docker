@@ -5,7 +5,7 @@
     float:inherit;
 }
 
-.tdate-group .tfield
+.tdate-group .tfield, .tdate-group .tfield_disabled
 {
     display:table-cell;
     border-right: 0;
@@ -59,4 +59,34 @@ span.tdate-group-addon i
 .datepicker.dropdown-menu td
 {
     padding: 1px;
+}
+
+.datepicker.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    float: left;
+    display: none;
+    min-width: 160px;
+    list-style: none;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    background-clip: padding-box;
+    *border-right-width: 2px;
+    *border-bottom-width: 2px;
+    color: #333333;
+    font-size: 13px;
+    line-height: 20px;
+}
+.datepicker.dropdown-menu th,
+.datepicker.datepicker-inline th,
+.datepicker.dropdown-menu td,
+.datepicker.datepicker-inline td {
+    padding: 2px 3px;
 }

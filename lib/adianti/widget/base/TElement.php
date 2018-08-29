@@ -4,7 +4,7 @@ namespace Adianti\Widget\Base;
 /**
  * Base class for all HTML Elements
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage base
  * @author     Pablo Dall'Oglio
@@ -159,7 +159,14 @@ class TElement
             // iterate all child elements
             foreach ($this->children as $key => $child)
             {
-                $this->children[$key] = clone $child;
+                if (is_object($child))
+                {
+                    $this->children[$key] = clone $child;
+                }
+                else
+                {
+                    $this->children[$key] = $child;
+                }
             }
         }
     }

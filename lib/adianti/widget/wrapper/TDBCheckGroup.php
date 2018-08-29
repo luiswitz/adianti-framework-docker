@@ -12,7 +12,7 @@ use Exception;
 /**
  * Database CheckBox Widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -37,6 +37,9 @@ class TDBCheckGroup extends TCheckGroup
     {
         // executes the parent class constructor
         parent::__construct($name);
+        
+        $key   = trim($key);
+        $value = trim($value);
         
         if (empty($database))
         {
@@ -83,31 +86,16 @@ class TDBCheckGroup extends TCheckGroup
                 }
                 else
                 {
-                    $items[$object->$key] = $this->replace($value, $object);
+                    $items[$object->$key] = $object->render($value);
                 }
+            }
+            
+            if (strpos($value, '{') !== FALSE AND is_null($ordercolumn))
+            {
+                asort($items);
             }
             parent::addItems($items);
         }
         TTransaction::close();
-    }
-    
-    /**
-     * Replace a string with object properties within {pattern}
-     * @param $content String with pattern
-     * @param $object  Any object
-     */
-    private function replace($content, $object)
-    {
-        if (preg_match_all('/\{(.*?)\}/', $content, $matches) )
-        {
-            foreach ($matches[0] as $match)
-            {
-                $property = substr($match, 1, -1);
-                $value    = $object->$property;
-                $content  = str_replace($match, $value, $content);
-            }
-        }
-        
-        return $content;
     }
 }

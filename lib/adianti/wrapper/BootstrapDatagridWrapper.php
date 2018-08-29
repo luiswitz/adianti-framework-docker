@@ -5,7 +5,7 @@ use Adianti\Widget\Datagrid\TDataGrid;
 /**
  * Bootstrap datagrid decorator for Adianti Framework
  *
- * @version    4.0
+ * @version    5.0
  * @package    wrapper
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -24,6 +24,7 @@ class BootstrapDatagridWrapper
     {
         $this->decorated = $datagrid;
         $this->decorated->{'class'} = 'table table-striped table-hover';
+        $this->decorated->{'type'}  = 'bootstrap';
     }
     
     /**
@@ -76,14 +77,6 @@ class BootstrapDatagridWrapper
                         else
                         {
                             unset($row->{'class'});
-                        }
-                        $cells = $row->getChildren();
-                        if ($cells)
-                        {
-                            foreach ($cells as $cell)
-                            {
-                                unset($cell->{'class'});
-                            }
                         }
                     }
                 }

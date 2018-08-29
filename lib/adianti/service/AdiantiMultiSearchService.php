@@ -14,7 +14,7 @@ use Exception;
 /**
  * MultiSearch backend
  *
- * @version    4.0
+ * @version    5.0
  * @package    service
  * @author     Pablo Dall'Oglio
  * @author     Matheus Agnes Dias
@@ -40,6 +40,7 @@ class AdiantiMultiSearchService
             try
             {
                 TTransaction::open($param['database']);
+
                 $repository = new TRepository($param['model']);
                 $criteria = new TCriteria;
                 if ($param['criteria'])
@@ -47,22 +48,36 @@ class AdiantiMultiSearchService
                     $criteria = unserialize( base64_decode(str_replace(array('-', '_'), array('+', '/'), $param['criteria'])) );
                 }
     
-                $column = $param['column'];
-                if (stristr(strtolower($operator),'like') !== FALSE)
+                $columns = explode(',', $param['column']);
+                
+                if ($columns)
                 {
-                    $filter = new TFilter($column, $operator, "NOESC:'%{$param['value']}%'");
-                }
-                else
-                {
-                    $filter = new TFilter($column, $operator, "NOESC:'{$param['value']}'");
+                    $dynamic_criteria = new TCriteria;
+                    foreach ($columns as $column)
+                    {
+                        if (stristr(strtolower($operator),'like') !== FALSE)
+                        {
+                            $filter = new TFilter($column, $operator, "NOESC:'%{$param['value']}%'");
+                        }
+                        else
+                        {
+                            $filter = new TFilter($column, $operator, "NOESC:'{$param['value']}'");
+                        }
+    
+                        $dynamic_criteria->add($filter, TExpression::OR_OPERATOR);
+                    }
+                    
+                    if ($param['idsearch'] == '1')
+                    {
+                        $id = (int) $param['value'];
+                        $dynamic_criteria->add( new TFilter($key, '=', "NOESC:'{$id}'" ), TExpression::OR_OPERATOR);
+                    }
                 }
                 
-                $id = (int) $param['value'];
-                $filter2 = new TFilter($key, '=', "NOESC:'{$id}'");
-                $criteria->add($filter);
-                $criteria->add($filter2, TExpression::OR_OPERATOR);
+                $criteria->add($dynamic_criteria, TExpression::AND_OPERATOR);
                 $criteria->setProperty('order', $param['orderColumn']);
                 $criteria->setProperty('limit', 1000);
+                
                 $collection = $repository->load($criteria, FALSE);
                 $items = array();
                 
@@ -74,7 +89,7 @@ class AdiantiMultiSearchService
                         $array_object = $object->toArray();
                         $maskvalues = $mask;
                         
-                        $maskvalues = self::replace($maskvalues, $object);
+                        $maskvalues = $object->render($maskvalues);
                         
                         // replace methods
                         $methods = get_class_methods($object);
@@ -90,8 +105,8 @@ class AdiantiMultiSearchService
                         }
                         
                         $c = $maskvalues;
-                    	if($k != null && $c != null )
-                    	{
+                        if ( $k != null && $c != null )
+                        {
                             if (utf8_encode(utf8_decode($c)) !== $c ) // SE NÃO UTF8
                             {
                                 $c = utf8_encode($c);
@@ -111,31 +126,11 @@ class AdiantiMultiSearchService
             }
             catch (Exception $e)
             {
-        		$ret = array();
-            	$ret['result'] = array("1::".$e->getMessage());
-            	
+                $ret = array();
+                $ret['result'] = array("1::".$e->getMessage());
+                
                 echo json_encode($ret);
             }
         }
 	}
-	
-    /**
-     * Replace a string with object properties within {pattern}
-     * @param $content String with pattern
-     * @param $object  Any object
-     */
-    private static function replace($content, $object)
-    {
-        if (preg_match_all('/\{(.*?)\}/', $content, $matches) )
-        {
-            foreach ($matches[0] as $match)
-            {
-                $property = substr($match, 1, -1);
-                $value    = $object->$property;
-                $content  = str_replace($match, $value, $content);
-            }
-        }
-        
-        return $content;
-    }
 }

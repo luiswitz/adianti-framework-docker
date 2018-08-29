@@ -13,7 +13,7 @@ use Exception;
 /**
  * Abstract Record Lookup Widget: Creates a lookup field used to search values from associated entities
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -33,7 +33,7 @@ class TDBSeekButton extends TSeekButton
      * @param  $receive_display_field name of the form field to receive the "display field"
      
      */
-    public function __construct($name, $database, $form, $model, $display_field, $receive_key, $receive_display_field, TCriteria $criteria = NULL)
+    public function __construct($name, $database, $form, $model, $display_field, $receive_key, $receive_display_field, TCriteria $criteria = NULL, $operator = 'like')
     {
         parent::__construct($name);
         
@@ -66,6 +66,7 @@ class TDBSeekButton extends TSeekButton
         $action->setParameter('receive_key',   $receive_key);
         $action->setParameter('receive_field', $receive_display_field);
         $action->setParameter('criteria',      base64_encode(serialize($criteria)));
+        $action->setParameter('operator',      ($operator == 'ilike') ? 'ilike' : 'like');
         parent::setAction($action);
     }
 }

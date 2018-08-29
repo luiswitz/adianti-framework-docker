@@ -11,7 +11,7 @@ use Exception;
 /**
  * Page Navigation provides navigation for a datagrid
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage datagrid
  * @author     Pablo Dall'Oglio
@@ -28,6 +28,20 @@ class TPageNavigation
     private $action;
     private $width;
     private $direction;
+    private $hidden;
+    
+    public function __construct()
+    {
+        $this->hidden = false;
+    }
+    
+    /**
+     * Hide
+     */
+    public function hide()
+    {
+        $this->hidden = true;
+    }
     
     /**
      * Set the Amount of displayed records
@@ -36,6 +50,14 @@ class TPageNavigation
     public function setLimit($limit)
     {
         $this->limit  = (int) $limit;
+    }
+    
+    /**
+     * Returns the limit of records
+     */
+    public function getLimit()
+    {
+        return $this->limit;
     }
     
     /**
@@ -57,12 +79,28 @@ class TPageNavigation
     }
     
     /**
+     * Return the total count of records
+     */
+    public function getCount()
+    {
+        return $this->count;
+    }
+    
+    /**
      * Define the current page
      * @param $page An integer (the current page)
      */
     public function setPage($page)
     {
         $this->page = (int) $page;
+    }
+    
+    /**
+     * Returns the current page
+     */
+    public function getPage()
+    {
+        return $this->page;
     }
     
     /**
@@ -123,6 +161,11 @@ class TPageNavigation
      */
     public function show()
     {
+        if ($this->hidden)
+        {
+            return;
+        }
+        
         if (!$this->action instanceof TAction)
         {
             throw new Exception(AdiantiCoreTranslator::translate('You must call ^1 before add this component', __CLASS__ . '::' . 'setAction()'));

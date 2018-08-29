@@ -7,7 +7,7 @@ use Adianti\Widget\Base\TScript;
 /**
  * JQuery dialog container
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio

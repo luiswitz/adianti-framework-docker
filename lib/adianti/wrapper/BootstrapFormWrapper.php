@@ -2,6 +2,7 @@
 namespace Adianti\Wrapper;
 
 use Adianti\Widget\Wrapper\TQuickForm;
+use Adianti\Widget\Wrapper\AdiantiFormBuilder;
 use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Form\TButton;
 use Adianti\Widget\Form\TLabel;
@@ -12,7 +13,7 @@ use Adianti\Widget\Form\AdiantiWidgetInterface;
 /**
  * Bootstrap form decorator for Adianti Framework
  *
- * @version    4.0
+ * @version    5.0
  * @package    wrapper
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -34,6 +35,7 @@ class BootstrapFormWrapper implements AdiantiFormInterface
         
         $this->element   = new TElement('form');
         $this->element->{'class'}   = $class;
+        $this->element->{'type'}    = 'bootstrap';
         $this->element->{'enctype'} = "multipart/form-data";
         $this->element->{'method'}  = 'post';
         $this->element->{'name'}    = $this->decorated->getName();
@@ -231,7 +233,7 @@ class BootstrapFormWrapper implements AdiantiFormInterface
                     $col = new TElement('div');
                     if ($this->element->{'class'} == 'form-horizontal')
                     {
-                        $col->{'class'} = 'col-sm-'.$fieldClass;
+                        $col->{'class'} = 'col-sm-'.$fieldClass . ' fb-field-container';
                     }
                     
                     $group->add($col);
@@ -239,34 +241,14 @@ class BootstrapFormWrapper implements AdiantiFormInterface
                 
                 foreach ($fields as $field)
                 {
-                    if (!$field instanceof TButton)
+                    if ($this->element->{'class'} == 'form-inline')
                     {
-                        if ($this->element->{'class'} == 'form-inline')
-                        {
-                            $group->add($field);
-                        }
-                        else
-                        {
-                            $col->add($field);
-                        }
-                        
-                        if ($this->element->{'class'} !== 'form-inline')
-                        {
-                            $input_class = ($field instanceof TLabel) ? '' : 'form-control';
-                            
-                            if ($this->element->{'class'} == 'form-horizontal')
-                            {
-                                $field->{'class'} = $input_class . ' input-sm ' . $field->{'class'};
-                                $field->{'style'} = $field->style . ';float:left';
-                            }
-                            else
-                            {
-                                $field->{'class'} = $input_class . ' ' . $field->{'class'};
-                                $field->{'style'} = $field->style . ';display:inline-block';
-                            }
-                        }
-                        
-    
+                        $label->{'style'} .= ';float:left';
+                        $group->add(BootstrapFormBuilder::wrapField($field, 'inline-block'));
+                    }
+                    else
+                    {
+                        $col->add(BootstrapFormBuilder::wrapField($field, 'inline-block'));
                     }
                 }
                 $fieldCount ++;

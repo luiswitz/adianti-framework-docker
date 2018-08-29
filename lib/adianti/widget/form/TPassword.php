@@ -12,7 +12,7 @@ use Exception;
 /**
  * Password Widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -22,6 +22,7 @@ use Exception;
 class TPassword extends TField implements AdiantiWidgetInterface
 {
     private $exitAction;
+    private $exitFunction;
     protected $formName;
     
     /**
@@ -39,6 +40,15 @@ class TPassword extends TField implements AdiantiWidgetInterface
             $string_action = $action->toString();
             throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
         }
+    }
+    
+    /**
+     * Define the javascript function to be executed when the user leaves the form field
+     * @param $function Javascript function
+     */
+    public function setExitFunction($function)
+    {
+        $this->exitFunction = $function;
     }
     
     /**
@@ -71,6 +81,11 @@ class TPassword extends TField implements AdiantiWidgetInterface
                 
                 $string_action = $this->exitAction->serialize(FALSE);
                 $this->setProperty('onBlur', "__adianti_post_lookup('{$this->formName}', '{$string_action}', this, 'callback')");
+            }
+            
+            if (isset($this->exitFunction))
+            {
+                $this->setProperty('onBlur', $this->exitFunction, FALSE );
             }
         }
         else

@@ -8,7 +8,7 @@ use SimpleXMLIterator;
 /**
  * FPDF Adapter that parses XML files from Adianti Framework
  *
- * @version    4.0
+ * @version    5.0
  * @package    wrapper
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -32,17 +32,15 @@ class AdiantiPDFDesigner extends FPDF
      * @param  $format Page format
      * @author Pablo Dall'Oglio
      */
-    public function __construct($orientation = 'P', $format = 'a4')
+    public function __construct($orientation = 'P', $format = 'a4', $unit = 'pt')
     {
-        parent::__construct($orientation, 'pt', $format);
+        parent::__construct($orientation, $unit, $format);
         
         $this->setLocale();
         
         parent::SetAutoPageBreak(true);
         parent::SetMargins(0, 0, 0);
         parent::SetCreator('Adianti Studio PDF Designer');
-        // parent::SetTitle('Letter');
-        // parent::SetKeywords('www.xyz.com.br');
         parent::SetFillColor(255, 255, 255);
         parent::Open();
         parent::AliasNbPages();
@@ -279,17 +277,6 @@ class AdiantiPDFDesigner extends FPDF
                 }
             }
         }
-    }
-    
-    /**
-     * Saves the PDF
-     * @param $output Output path
-     * @author Pablo Dall'Oglio
-     */
-    public function save($output)
-    {
-        parent::Output($output);
-        $this->unsetLocale();
     }
     
     /**
@@ -585,5 +572,16 @@ class AdiantiPDFDesigner extends FPDF
         {
             $value = utf8_decode($value);
         }
+    }
+    
+    /**
+     * Saves the PDF
+     * @param $output Output path
+     * @author Pablo Dall'Oglio
+     */
+    public function save($output)
+    {
+        parent::Output($output);
+        $this->unsetLocale();
     }
 }

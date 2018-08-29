@@ -5,11 +5,12 @@ use Adianti\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Base\TScript;
 use Adianti\Widget\Form\TEntry;
+use Adianti\Control\TAction;
 
 /**
  * Color Widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -20,6 +21,8 @@ class TIcon extends TEntry implements AdiantiWidgetInterface
 {
     protected $id;
     protected $changeFunction;
+    protected $formName;
+    protected $name;
     
     /**
      * Class Constructor
@@ -68,6 +71,11 @@ class TIcon extends TEntry implements AdiantiWidgetInterface
         $wrapper->{'class'} = 'input-group';
         $span = new TElement('span');
         $span->{'class'} = 'input-group-addon';
+        
+        if (!empty($this->exitAction))
+        {
+            $this->setChangeFunction( $this->changeFunction . "; tform_fire_field_actions('{$this->formName}', '{$this->name}'); " );
+        }
         
         $i = new TElement('i');
         $span->add($i);

@@ -8,7 +8,7 @@ use Exception;
 /**
  * Required field validation
  *
- * @version    4.0
+ * @version    5.0
  * @package    validator
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -24,7 +24,7 @@ class TRequiredValidator extends TFieldValidator
      */
     public function validate($label, $value, $parameters = NULL)
     {
-        if ( (is_null($value)) OR (is_scalar($value) AND trim($value)=='') OR (is_array($value) AND count($value)==1 AND isset($value[0]) AND empty($value[0])) OR (is_array($value) AND empty($value)) )
+        if ( (is_null($value)) OR (is_scalar($value) AND !is_bool($value) AND trim($value)=='') OR (is_array($value) AND count($value)==1 AND isset($value[0]) AND empty($value[0])) OR (is_array($value) AND empty($value)) )
         {
             throw new Exception(AdiantiCoreTranslator::translate('The field ^1 is required', $label));
         }

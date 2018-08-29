@@ -45,6 +45,9 @@ div.color-div .tfield
 
 .tcolor i.tcolor-icon
 {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
 }
+
+.colorpicker-alpha {display:none !important;}
+.colorpicker{ min-width:128px !important;}

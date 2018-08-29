@@ -6,7 +6,7 @@ use Adianti\Widget\Base\TElement;
 /**
  * Image Widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -26,7 +26,7 @@ class TImage extends TElement
         if (substr($source,0,3) == 'bs:')
         {
             parent::__construct('i');
-            $this-> class = 'glyphicon glyphicon-'.substr($source,3);
+            $this->{'class'} = 'glyphicon glyphicon-'.substr($source,3);
             parent::add('');
         }
         else if (substr($source,0,3) == 'fa:')
@@ -52,22 +52,22 @@ class TImage extends TElement
         {
             parent::__construct('img');
             // assign the image path
-            $this-> src = $source;
-            $this-> border = 0;
+            $this->{'src'} = $source;
+            $this->{'border'} = 0;
         }
-        else if (file_exists("app/images/$source"))
+        else if (file_exists("app/images/{$source}"))
         {
             parent::__construct('img');
             // assign the image path
-            $this-> src = "app/images/$source";
-            $this-> border = 0;
+            $this->{'src'} = "app/images/{$source}";
+            $this->{'border'} = 0;
         }
-        else if (file_exists("lib/adianti/images/$source"))
+        else if (file_exists("lib/adianti/images/{$source}"))
         {
             parent::__construct('img');
             // assign the image path
-            $this-> src = "lib/adianti/images/$source";
-            $this-> border = 0;
+            $this->{'src'} = "lib/adianti/images/{$source}";
+            $this->{'border'} = 0;
         }
         else
         {

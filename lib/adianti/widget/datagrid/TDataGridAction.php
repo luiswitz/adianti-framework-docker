@@ -6,7 +6,7 @@ use Adianti\Control\TAction;
 /**
  * Represents an action inside a datagrid
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage datagrid
  * @author     Pablo Dall'Oglio
@@ -18,6 +18,7 @@ class TDataGridAction extends TAction
     private $image;
     private $label;
     private $field;
+    private $fields;
     private $displayCondition;
     private $buttonClass;
     private $useButton;
@@ -67,12 +68,31 @@ class TDataGridAction extends TAction
     }
     
     /**
+     * Define wich Active Record's properties
+     * will be passed along with the action
+     * @param $field Active Record's property
+     */
+    public function setFields($fields)
+    {
+        $this->fields = $fields;
+    }
+    
+    /**
      * Returns the Active Record's property that 
      * will be passed along with the action
      */
     public function getField()
     {
         return $this->field;
+    }
+    
+    /**
+     * Returns the Active Record's properties that 
+     * will be passed along with the action
+     */
+    public function getFields()
+    {
+        return $this->fields;
     }
     
     /**

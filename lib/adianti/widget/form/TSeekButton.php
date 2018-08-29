@@ -17,7 +17,7 @@ use ReflectionClass;
 /**
  * Record Lookup Widget: Creates a lookup field used to search values from associated entities
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -52,7 +52,7 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
      */
     public static function createButton($name, $icon)
     {
-        $image = new TImage( $icon ? $icon : 'lib/adianti/images/ico_find.png');
+        $image = new TImage( $icon ? $icon : 'fa:search');
         $button = new TElement('span');
         $button->{'class'} = 'btn btn-default tseekbutton';
         $button->{'type'} = 'button';
@@ -102,9 +102,12 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
      * Define an auxiliar field
      * @param $object any TField object
      */
-    public function setAuxiliar(TElement $object)
+    public function setAuxiliar($object)
     {
-        $this->auxiliar = $object;
+        if (method_exists($object, 'show'))
+        {
+            $this->auxiliar = $object;
+        }
     }
     
     /**
@@ -168,6 +171,7 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
                         $ajaxAction->setParameter('receive_key',   $this->action->getParameter('receive_key'));
                         $ajaxAction->setParameter('receive_field', $this->action->getParameter('receive_field'));
                         $ajaxAction->setParameter('criteria',      $this->action->getParameter('criteria'));
+                        $ajaxAction->setParameter('operator',      $this->action->getParameter('operator') ? $this->action->getParameter('operator') : 'like');
                     }
                     else
                     {

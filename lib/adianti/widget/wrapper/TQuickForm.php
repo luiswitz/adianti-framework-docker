@@ -9,6 +9,8 @@ use Adianti\Widget\Form\TForm;
 use Adianti\Widget\Form\TLabel;
 use Adianti\Widget\Form\THidden;
 use Adianti\Widget\Form\TButton;
+use Adianti\Widget\Form\TCheckGroup;
+use Adianti\Widget\Form\TRadioGroup;
 use Adianti\Widget\Container\TTable;
 use Adianti\Widget\Container\THBox;
 use Adianti\Validator\TFieldValidator;
@@ -19,7 +21,7 @@ use Exception;
 /**
  * Create quick forms for input data with a standard container for elements
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -57,6 +59,14 @@ class TQuickForm extends TForm
         
         // add the table to the form
         parent::add($this->table);
+    }
+    
+    /**
+     * Returns the actions container
+     */
+    public function getActionsContainer()
+    {
+        return $this->actionsContainer;
     }
     
     /**
@@ -156,9 +166,9 @@ class TQuickForm extends TForm
      */
     public function addQuickField($label, AdiantiWidgetInterface $object, $size = 200, TFieldValidator $validator = NULL, $label_size = NULL)
     {
-        if ($size)
+        if ($size && !$object instanceof TRadioGroup && !$object instanceof TCheckGroup)
         {
-            $object->setSize($size, $size);
+            $object->setSize($size);
         }
         parent::addField($object);
         
@@ -252,7 +262,11 @@ class TQuickForm extends TForm
         foreach ($objects as $object)
         {
             parent::addField($object);
-            $object->setLabel($label_value);
+            
+            if (!$object instanceof TButton)
+            {
+                $object->setLabel($label_value);
+            }
             $hbox->add($object);
         }
         $row->addCell( $hbox );
@@ -271,15 +285,8 @@ class TQuickForm extends TForm
      */
     public function addQuickAction($label, TAction $action, $icon = 'ico_save.png')
     {
-        $name   = strtolower(str_replace(' ', '_', $label));
+        $name   = 'btn_'.strtolower(str_replace(' ', '_', $label));
         $button = new TButton($name);
-        
-        if (strstr($icon, '#') !== FALSE)
-        {
-            $pieces = explode('#', $icon);
-            $color = $pieces[1];
-            $button->{'style'} = "color: #{$color}";
-        }
         parent::addField($button);
         
         // define the button action

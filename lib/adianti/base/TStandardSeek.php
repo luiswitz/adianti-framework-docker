@@ -23,13 +23,14 @@ use Adianti\Database\TFilter;
 use Adianti\Database\TCriteria;
 use Adianti\Registry\TSession;
 use Adianti\Widget\Container\TPanelGroup;
+use Adianti\Wrapper\BootstrapDatagridWrapper;
 use Exception;
 use StdClass;
 
 /**
  * Standard Page controller for Seek buttons
  *
- * @version    4.0
+ * @version    5.0
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -51,7 +52,7 @@ class TStandardSeek extends TWindow
     {
         parent::__construct();
         parent::setTitle( AdiantiCoreTranslator::translate('Search record') );
-        parent::setSize(0.7, 640);
+        parent::setSize(0.7, 750);
         
         // creates a new form
         $this->form = new TForm('form_standard_seek');
@@ -81,12 +82,12 @@ class TStandardSeek extends TWindow
         $this->form->setFields(array($display_field, $find_button));
         
         // creates a new datagrid
-        $this->datagrid = new TDataGrid;
+        $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
         $this->datagrid->{'style'} = 'width: 100%';
         
         // create two datagrid columns
-        $id      = new TDataGridColumn('id',            'ID',    'right', '16%');
-        $display = new TDataGridColumn('display_field', AdiantiCoreTranslator::translate('Field'), 'left');
+        $id      = new TDataGridColumn('id',            'ID',    'center', '50');
+        $display = new TDataGridColumn('display_field', AdiantiCoreTranslator::translate('Description'), 'left');
         
         // add the columns to the datagrid
         $this->datagrid->addColumn($id);
@@ -94,8 +95,8 @@ class TStandardSeek extends TWindow
         
         // create a datagrid action
         $action1 = new TDataGridAction(array($this, 'onSelect'));
-        $action1->setLabel(AdiantiCoreTranslator::translate('Select'));
-        $action1->setImage('fa:check-circle-o green');
+        $action1->setLabel('Ok');
+        $action1->setImage('fa:hand-pointer-o green');
         $action1->setUseButton(TRUE);
         $action1->setField('id');
         
@@ -110,18 +111,13 @@ class TStandardSeek extends TWindow
         $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
-        $panel = new TPanelGroup();
-        $panel->add($this->form);
-        
-        // creates the container
-        $vbox = new TVBox;
-        $vbox->add($panel);
-        $vbox->add($this->datagrid);
-        $vbox->add($this->pageNavigation);
-        $vbox->{'style'} = 'width: 100%';
+        $panel = new TPanelGroup($this->form);
+        $panel->{'style'} = 'width: 100%';
+        $panel->add($this->datagrid);
+        $panel->addFooter($this->pageNavigation);
         
         // add the container to the page
-        parent::add($vbox);
+        parent::add($panel);
     }
     
     /**
@@ -135,9 +131,11 @@ class TStandardSeek extends TWindow
         // check if the user has filled the form
         if (isset($data-> display_field) AND ($data-> display_field))
         {
+            $operator = TSession::getValue('standard_seek_operator');
+            
             // creates a filter using the form content
             $display_field = TSession::getValue('standard_seek_display_field');
-            $filter = new TFilter($display_field, 'like', "%{$data-> display_field}%");
+            $filter = new TFilter($display_field, $operator, "%{$data-> display_field}%");
             
             // store the filter in section
             TSession::setValue('tstandardseek_filter',        $filter);
@@ -214,8 +212,9 @@ class TStandardSeek extends TWindow
                 {
                     
                     $item = $object;
-                    $item-> id = $object->$pk;
-                    $item-> display_field = $object->$display_field;
+                    $item->{'id'} = $object->$pk;
+                    $item->{'display_field'} = $object->$display_field;
+                    
                     // add the object into the datagrid
                     $this->datagrid->addItem($item);
                 }
@@ -261,8 +260,7 @@ class TStandardSeek extends TWindow
             TSession::setValue('standard_seek_model',         $param['model']);
             TSession::setValue('standard_seek_database',      $param['database']);
             TSession::setValue('standard_seek_parent',        $param['parent']);
-            
-    
+            TSession::setValue('standard_seek_operator',      $param['operator']);
             
             if (isset($param['criteria']) AND $param['criteria'])
             {

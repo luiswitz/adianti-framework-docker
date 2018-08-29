@@ -6,7 +6,7 @@ use Adianti\Widget\Base\TElement;
 /**
  * Text Display
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -25,6 +25,8 @@ class TTextDisplay extends TElement
     public function __construct($value, $color = null, $size = null, $decoration = null)
     {
         parent::__construct('span');
+        $this->{'class'} = 'ttd';
+        
         $style = array();
         
         if (!empty($color))
@@ -34,7 +36,7 @@ class TTextDisplay extends TElement
         
         if (!empty($size))
         {
-            $style['font-size'] = $size . 'pt';
+            $style['font-size'] = (strpos($size, 'px') or strpos($size, 'pt')) ? $size : $size.'pt';
         }
         
         if (!empty($decoration))

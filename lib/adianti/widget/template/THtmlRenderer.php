@@ -8,7 +8,7 @@ use ApplicationTranslator;
 /**
  * Html Renderer
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage template
  * @author     Pablo Dall'Oglio
@@ -180,9 +180,13 @@ class THtmlRenderer
                     $opened_sections[$sectionName] = TRUE;
                     $delimiter  = TRUE;
                     
+                    $found = self::recursiveKeyArraySearch($previousSection, $this->replacements);
+                    
                     // turns section repeatable if it occurs inside parent section
                     if (isset($this->replacements[$previousSection][$sectionName]) OR
-                        isset($this->replacements[$previousSection][0][$sectionName]))
+                        isset($this->replacements[$previousSection][0][$sectionName]) OR
+                        isset($found[$sectionName]) OR
+                        isset($found[0][$sectionName]) )
                     {
                         $this->repeatSection[$sectionName] = TRUE;
                     }
@@ -274,6 +278,25 @@ class THtmlRenderer
                 }
             }
         }
+    }
+    
+    /**
+     * Static search in memory structure
+     */
+    public static function recursiveKeyArraySearch($needle,$haystack)
+    {
+        foreach($haystack as $key=>$value)
+        {
+            if($needle === $key)
+            {
+                return $value;
+            }
+            else if (is_array($value) && self::recursiveKeyArraySearch($needle,$value) !== false)
+            {
+                return self::recursiveKeyArraySearch($needle,$value);
+            }
+        }
+        return false;
     }
     
     /**

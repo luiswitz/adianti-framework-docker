@@ -6,7 +6,7 @@ use Adianti\Widget\Container\TJQueryDialog;
 /**
  * Window Container (JQueryDialog wrapper)
  *
- * @version    4.0
+ * @version    5.0
  * @package    control
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -31,9 +31,9 @@ class TWindow extends TPage
     /**
      * Create a window
      */
-    public static function create($title, $width, $height)
+    public static function create($title, $width, $height, $params = null)
     {
-        $inst = new self;
+        $inst = new static($params);
         $inst->setIsWrapped(TRUE);
         $inst->setTitle($title);
         $inst->setSize($width, $height);
@@ -86,6 +86,16 @@ class TWindow extends TPage
     public function setPosition($x, $y)
     {
         $this->wrapper->setPosition($x, $y);
+    }
+    
+    /**
+     * Define the Property value
+     * @param $property Property name
+     * @param $value Property value
+     */
+    public function setProperty($property, $value)
+    {
+        $this->wrapper->$property = $value;
     }
     
     /**

@@ -1,0 +1,14 @@
+.select2-dropdown
+{
+    z-index: 4051;
+}
+
+.select2-dropdown .select2-search__field:focus, .select2-search--inline .select2-search__field:focus
+{
+    border:none !important;
+}
+
+.select2-selection__choice
+{
+    white-space: normal !important;
+}

@@ -16,7 +16,7 @@ use Exception;
 /**
  * A group of CheckButton's
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -32,9 +32,12 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
     private $buttons;
     private $labels;
     private $allItemsChecked;
+    protected $separator;
+    protected $changeFunction;
     protected $formName;
     protected $labelClass;
     protected $useButton;
+    protected $value;
     
     /**
      * Class Constructor
@@ -46,6 +49,31 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
         parent::setSize(NULL);
         $this->labelClass = 'tcheckgroup_label ';
         $this->useButton  = FALSE;
+    }
+    
+    /**
+     * Clone object
+     */
+    public function __clone()
+    {
+        if (is_array($this->items))
+        {
+            $oldbuttons = $this->buttons;
+            $this->buttons = array();
+            $this->labels  = array();
+
+            foreach ($this->items as $key => $value)
+            {
+                $button = new TCheckButton("{$this->name}[]");
+                $button->setProperty('checkgroup', $this->name);
+                $button->setIndexValue($key);
+                $button->setProperty('onchange', $oldbuttons[$key]->getProperty('onchange'));
+                
+                $obj = new TLabel($value);
+                $this->buttons[$key] = $button;
+                $this->labels[$key] = $obj;
+            }
+        }
     }
     
     /**
@@ -116,6 +144,14 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
     }
     
     /**
+     * Return the items
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+    
+    /**
      * Return the option buttons
      */
     public function getButtons()
@@ -132,13 +168,48 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
     }
     
     /**
+     * Define the field's separator
+     * @param $sep A string containing the field's separator
+     */
+    public function setValueSeparator($sep)
+    {
+        $this->separator = $sep;
+    }
+    
+    /**
+     * Define the field's value
+     * @param $value A string containing the field's value
+     */
+    public function setValue($value)
+    {
+        if (empty($this->separator))
+        {
+            $this->value = $value;
+        }
+        else
+        {
+            if ($value)
+            {
+                $this->value = explode($this->separator, $value);
+            }
+        }
+    }
+    
+    /**
      * Return the post data
      */
     public function getPostData()
     {
         if (isset($_POST[$this->name]))
         {
-            return $_POST[$this->name];
+            if (empty($this->separator))
+            {
+                return $_POST[$this->name];
+            }
+            else
+            {
+                return implode($this->separator, $_POST[$this->name]);
+            }
         }
         else
         {
@@ -161,6 +232,14 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
             $string_action = $action->toString();
             throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
         }
+    }
+    
+    /**
+     * Set change function
+     */
+    public function setChangeFunction($function)
+    {
+        $this->changeFunction = $function;
     }
     
     /**
@@ -226,7 +305,7 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
                 $obj->{'class'} = $this->labelClass . ($active?'active':'');
                 $obj->setTip($this->tag->title);
                 
-                if ($this->getSize() AND isset($this->breakItems) AND !$obj->getSize())
+                if ($this->getSize() AND !$obj->getSize())
                 {
                     $obj->setSize($this->getSize());
                 }
@@ -244,6 +323,12 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
                         
                         $button->setProperty('changeaction', "__adianti_post_lookup('{$this->formName}', '{$string_action}', this, 'callback')");
                         $button->setProperty('onChange', $button->getProperty('changeaction'), FALSE);
+                    }
+                    
+                    if (isset($this->changeFunction))
+                    {
+                        $button->setProperty('changeaction', $this->changeFunction, FALSE);
+                        $button->setProperty('onChange', $this->changeFunction, FALSE);
                     }
                 }
                 else

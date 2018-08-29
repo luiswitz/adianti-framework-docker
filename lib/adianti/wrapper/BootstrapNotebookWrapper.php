@@ -6,7 +6,7 @@ use Adianti\Widget\Base\TElement;
 /**
  * Bootstrap datagrid decorator for Adianti Framework
  *
- * @version    4.0
+ * @version    5.0
  * @package    wrapper
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -71,6 +71,7 @@ class BootstrapNotebookWrapper
         $rendered = $this->decorated->render();
         $rendered->{'role'} = 'tabpanel';
         unset($rendered->{'class'});
+        $rendered->{'class'} = 'tabwrapper';
         
         foreach ($this->properties as $property => $value)
         {
@@ -103,8 +104,8 @@ class BootstrapNotebookWrapper
         if ($this->direction == 'tabs-left')
         {
             $rendered->clearChildren();
-            $left_pack = TElement::tag('div', '', array('class'=> 'col-xs-'.$this->divisions[0], 'style' => 'padding:0'));
-            $right_pack = TElement::tag('div', '', array('class'=> 'col-xs-'.$this->divisions[1], 'style' => 'padding-right:0; margin-right:0'));
+            $left_pack = TElement::tag('div', '', array('class'=> 'left-pack col-xs-'.$this->divisions[0], 'style' => 'padding:0'));
+            $right_pack = TElement::tag('div', '', array('class'=> 'right-pack col-xs-'.$this->divisions[1], 'style' => 'padding-right:0; margin-right:0'));
             $rendered->add($left_pack);
             $rendered->add($right_pack);
             $left_pack->add($tabs);
@@ -113,8 +114,8 @@ class BootstrapNotebookWrapper
         else if ($this->direction == 'tabs-right')
         {
             $rendered->clearChildren();
-            $left_pack = TElement::tag('div', '', array('class'=> 'col-xs-'.$this->divisions[1]));
-            $right_pack = TElement::tag('div', '', array('class'=> 'col-xs-'.$this->divisions[0]));
+            $left_pack = TElement::tag('div', '', array('class'=> 'left-pack col-xs-'.$this->divisions[1]));
+            $right_pack = TElement::tag('div', '', array('class'=> 'right-pack col-xs-'.$this->divisions[0]));
             $rendered->add($left_pack);
             $rendered->add($right_pack);
             $left_pack->add($panel);

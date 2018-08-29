@@ -9,7 +9,7 @@ use ReflectionMethod;
 /**
  * Structure to encapsulate an action
  *
- * @version    4.0
+ * @version    5.0
  * @package    control
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -37,10 +37,7 @@ class TAction
         
         if (!empty($parameters))
         {
-            foreach ($parameters as $param => $value)
-            {
-                $this->setParameter($param, $value);
-            }
+            $this->setParameters($parameters);
         }
     }
     

@@ -2,6 +2,7 @@
 namespace Adianti\Base;
 
 use Adianti\Core\AdiantiCoreTranslator;
+use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Dialog\TMessage;
 use Adianti\Widget\Dialog\TQuestion;
 use Adianti\Control\TAction;
@@ -13,6 +14,15 @@ use Adianti\Database\TCriteria;
 use Adianti\Registry\TSession;
 use Exception;
 
+/**
+ * Standard List Trait
+ *
+ * @version    5.0
+ * @package    base
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
+ */
 trait AdiantiStandardListTrait
 {
     use AdiantiStandardControlTrait;
@@ -24,6 +34,14 @@ trait AdiantiStandardListTrait
     public function setLimit($limit)
     {
         $this->limit = $limit;
+    }
+    
+    /**
+     * Enable total row
+     */
+    public function enableTotalRow()
+    {
+        $this->totalRow = true;
     }
     
     /**
@@ -189,6 +207,7 @@ trait AdiantiStandardListTrait
         }
         
         TSession::setValue($this->activeRecord.'_filter_data', $data);
+        TSession::setValue(get_class($this).'_filter_data', $data);
         
         // fill the form with data again
         $this->form->setData($data);
@@ -273,6 +292,23 @@ trait AdiantiStandardListTrait
                 $this->pageNavigation->setCount($count); // count of records
                 $this->pageNavigation->setProperties($param); // order, page
                 $this->pageNavigation->setLimit($limit); // limit
+            }
+            
+            if ($this->totalRow)
+            {
+                $tfoot = new TElement('tfoot');
+                $tfoot->{'class'} = 'tdatagrid_footer';
+                $row = new TElement('tr');
+                $tfoot->add($row);
+                $this->datagrid->add($tfoot);
+                
+                $row->{'style'} = 'height: 30px';
+                $cell = new TElement('td');
+                $cell->add( $count . ' ' . AdiantiCoreTranslator::translate('Records'));
+                $cell->{'colspan'} = $this->datagrid->getTotalColumns();
+                $cell->{'style'} = 'text-align:center';
+                
+                $row->add($cell);
             }
             
             // close the transaction

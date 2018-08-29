@@ -13,7 +13,7 @@ use ReflectionClass;
 /**
  * Base class to construct all the widgets
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -49,7 +49,6 @@ abstract class TField
         // define some default properties
         self::setEditable(TRUE);
         self::setName(trim($name));
-        self::setSize(200);
         
         // initialize validations array
         $this->validations = array();
@@ -171,13 +170,21 @@ abstract class TField
     }
     
     /**
-     * Define the name of the form to wich the button is attached
+     * Define the name of the form to wich the field is attached
      * @param $name    A string containing the name of the form
      * @ignore-autocomplete on
      */
     public function setFormName($name)
     {
         $this->formName = $name;
+    }
+    
+    /**
+     * Return the name of the form to wich the field is attached
+     */
+    public function getFormName()
+    {
+        return $this->formName;
     }
     
     /**
