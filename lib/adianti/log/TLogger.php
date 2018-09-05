@@ -4,7 +4,7 @@ namespace Adianti\Log;
 /**
  * Provides an abstract interface to register LOG files
  *
- * @version    4.0
+ * @version    5.0
  * @package    log
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)

@@ -6,7 +6,7 @@ use Adianti\Control\TPage;
 /**
  * Standard page controller for listings
  *
- * @version    4.0
+ * @version    5.0
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -27,6 +27,7 @@ class TStandardList extends TPage
     protected $direction;
     protected $criteria;
     protected $transformCallback;
+    protected $totalRow;
     
     use AdiantiStandardListTrait;
 }

@@ -2,19 +2,19 @@
 namespace Adianti\Widget\Form;
 
 use Adianti\Widget\Form\AdiantiWidgetInterface;
+use Adianti\Core\AdiantiCoreTranslator;
 use Adianti\Control\TAction;
 use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Base\TScript;
 use Adianti\Widget\Form\TForm;
 use Adianti\Widget\Form\TField;
 
-use Adianti\Core\AdiantiCoreTranslator;
 use Exception;
 
 /**
  * Select Widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -27,8 +27,11 @@ class TSelect extends TField implements AdiantiWidgetInterface
     protected $height;
     protected $items; // array containing the combobox options
     protected $formName;
-    private   $changeAction;
-    private   $defaultOption;
+    protected $changeFunction;
+    protected $changeAction;
+    protected $defaultOption;
+    protected $separator;
+    protected $value;
     
     /**
      * Class Constructor
@@ -76,6 +79,14 @@ class TSelect extends TField implements AdiantiWidgetInterface
     }
     
     /**
+     * Return the items
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+    
+    /**
      * Define the Field's width
      * @param $width Field's width in pixels
      * @param $height Field's height in pixels
@@ -87,6 +98,34 @@ class TSelect extends TField implements AdiantiWidgetInterface
     }
     
     /**
+     * Define the field's separator
+     * @param $sep A string containing the field's separator
+     */
+    public function setValueSeparator($sep)
+    {
+        $this->separator = $sep;
+    }
+    
+    /**
+     * Define the field's value
+     * @param $value A string containing the field's value
+     */
+    public function setValue($value)
+    {
+        if (empty($this->separator))
+        {
+            $this->value = $value;
+        }
+        else
+        {
+            if ($value)
+            {
+                $this->value = explode($this->separator, $value);
+            }
+        }
+    }
+    
+    /**
      * Return the post data
      */
     public function getPostData()
@@ -95,7 +134,14 @@ class TSelect extends TField implements AdiantiWidgetInterface
         {
             if ($this->tag->{'multiple'})
             {
-                return $_POST[$this->name];
+                if (empty($this->separator))
+                {
+                    return $_POST[$this->name];
+                }
+                else
+                {
+                    return implode($this->separator, $_POST[$this->name]);
+                }
             }
             else
             {
@@ -123,6 +169,14 @@ class TSelect extends TField implements AdiantiWidgetInterface
             $string_action = $action->toString();
             throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
         }
+    }
+    
+    /**
+     * Set change function
+     */
+    public function setChangeFunction($function)
+    {
+        $this->changeFunction = $function;
     }
     
     /**
@@ -181,30 +235,17 @@ class TSelect extends TField implements AdiantiWidgetInterface
     }
     
     /**
-     * Shows the widget
+     * Render items
      */
-    public function show()
+    protected function renderItems( $with_titles = true )
     {
-        // define the tag properties
-        $this->tag-> name  = $this->name.'[]';    // tag name
-        $this->tag-> id    = $this->id;
-        
-        if (strstr($this->size, '%') !== FALSE)
-        {
-            $this->setProperty('style', "width:{$this->size};height:{$this->height}", false); //aggregate style info
-        }
-        else
-        {
-            $this->setProperty('style', "width:{$this->size}px;height:{$this->height}px", false); //aggregate style info
-        }
-        
         if ($this->defaultOption !== FALSE)
         {
             // creates an empty <option> tag
             $option = new TElement('option');
             
             $option->add( $this->defaultOption );
-            $option-> value = '';   // tag value
+            $option->{'value'} = '';   // tag value
 
             // add the option tag to the combo
             $this->tag->add($option);
@@ -218,7 +259,7 @@ class TSelect extends TField implements AdiantiWidgetInterface
                 if (substr($chave, 0, 3) == '>>>')
                 {
                     $optgroup = new TElement('optgroup');
-                    $optgroup-> label = $item;
+                    $optgroup->{'label'} = $item;
                     // add the option to the combo
                     $this->tag->add($optgroup);
                 }
@@ -226,14 +267,19 @@ class TSelect extends TField implements AdiantiWidgetInterface
                 {
                     // creates an <option> tag
                     $option = new TElement('option');
-                    $option-> value = $chave;  // define the index
-                    $option->add($item);      // add the item label
+                    $option->{'value'} = $chave;  // define the index
+                    if ($with_titles)
+                    {
+                        $option->{'title'} = $item;  // define the title
+                    }
+                    $option->{'titside'} = 'right';  // define the title side
+                    $option->add(htmlspecialchars($item));      // add the item label
                     
                     // verify if this option is selected
                     if (@in_array($chave, (array) $this->value))
                     {
                         // mark as selected
-                        $option-> selected = 1;
+                        $option->{'selected'} = 1;
                     }
                     
                     if (isset($optgroup))
@@ -246,6 +292,25 @@ class TSelect extends TField implements AdiantiWidgetInterface
                     }                    
                 }
             }
+        }
+    }
+    
+    /**
+     * Shows the widget
+     */
+    public function show()
+    {
+        // define the tag properties
+        $this->tag->{'name'}  = $this->name.'[]';    // tag name
+        $this->tag->{'id'}    = $this->id;
+        
+        if (strstr($this->size, '%') !== FALSE)
+        {
+            $this->setProperty('style', "width:{$this->size};height:{$this->height}", false); //aggregate style info
+        }
+        else
+        {
+            $this->setProperty('style', "width:{$this->size}px;height:{$this->height}px", false); //aggregate style info
         }
         
         // verify whether the widget is editable
@@ -262,16 +327,23 @@ class TSelect extends TField implements AdiantiWidgetInterface
                 $this->setProperty('changeaction', "__adianti_post_lookup('{$this->formName}', '{$string_action}', this, 'callback')");
                 $this->setProperty('onChange', $this->getProperty('changeaction'));
             }
+            
+            if (isset($this->changeFunction))
+            {
+                $this->setProperty('changeaction', $this->changeFunction, FALSE);
+                $this->setProperty('onChange', $this->changeFunction, FALSE);
+            }
         }
         else
         {
             // make the widget read-only
-            //$this->tag-> disabled   = "1"; // the value don't post
             $this->tag->{'onclick'} = "return false;";
             $this->tag->{'style'}  .= ';pointer-events:none';
             $this->tag->{'class'}   = 'tfield_disabled'; // CSS
         }
-        // shows the combobox
+        
+        // shows the widget
+        $this->renderItems();
         $this->tag->show();
     }
 }

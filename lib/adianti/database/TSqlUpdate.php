@@ -7,7 +7,7 @@ use Adianti\Database\TTransaction;
 /**
  * Provides an Interface to create UPDATE statements
  *
- * @version    4.0
+ * @version    5.0
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)

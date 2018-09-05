@@ -6,9 +6,9 @@ use Adianti\Widget\Container\TNotebook;
 use Adianti\Widget\Form\TLabel;
 
 /**
- * Frame Widget: creates a kind of bordered area with a title located at its top-left corner
+ * Frame Widget: creates a bordered area with a title located at its top-left corner
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -31,17 +31,17 @@ class TFrame extends TElement
         $this->{'id'}    = 'tfieldset_' . mt_rand(1000000000, 1999999999);
         $this->{'class'} = 'tframe';
         
-        $this->width = $width;
+        $this->width  = $width;
         $this->height = $height;
         
         if ($width)
         {
-            $this->{'style'} .= ";width:{$width}px";
+            $this->{'style'} .= (strstr($width, '%') !== FALSE) ? ";width:{$width}" : ";width:{$width}px";
         }
         
         if ($height)
         {
-            $this->{'style'} .= ";height:{$height}px";
+            $this->{'style'} .= (strstr($height, '%') !== FALSE) ? ";height:{$height}" : ";height:{$height}px";
         }
     }
     

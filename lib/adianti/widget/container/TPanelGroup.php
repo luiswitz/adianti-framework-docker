@@ -7,7 +7,7 @@ use Adianti\Widget\Base\TElement;
 /**
  * Bootstrap native panel for Adianti Framework
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -25,10 +25,15 @@ class TPanelGroup extends TElement
      * @param $title Panel title
      * @param $element Panel content
      */
-    public static function pack($title, $element)
+    public static function pack($title, $element, $footer = null)
     {
         $panel = new self($title);
         $panel->add($element);
+        
+        if ($footer)
+        {
+            $panel->addFooter($footer);
+        }
         
         return $panel;
     }
@@ -38,7 +43,7 @@ class TPanelGroup extends TElement
      * @param $title  Panel Title
      * @param $footer Panel Footer
      */
-    public function __construct($title = NULL)
+    public function __construct($title = NULL, $background = NULL)
     {
         parent::__construct('div');
         $this->{'class'} = 'panel panel-default';
@@ -51,6 +56,11 @@ class TPanelGroup extends TElement
             $panel_title = new TElement('div');
             $panel_title->{'class'} = 'panel-title';
             $panel_title->add( $title );
+            
+            if (!empty($background))
+            {
+                $this->head->{'style'} = 'background:'.$background;
+            }
             $this->head->add($panel_title);
             parent::add($this->head);
         }
@@ -82,6 +92,30 @@ class TPanelGroup extends TElement
                 parent::add($this->footer);
             }
         }
+    }
+    
+    /**
+     * Return panel header
+     */
+    public function getHeader()
+    {
+        return $this->head;
+    }
+    
+    /**
+     * Return panel body
+     */
+    public function getBody()
+    {
+        return $this->body;
+    }
+    
+    /**
+     * Return panel footer
+     */
+    public function getFooter()
+    {
+        return $this->footer;
     }
     
     /**

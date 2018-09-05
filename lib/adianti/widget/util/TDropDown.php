@@ -9,7 +9,7 @@ use Adianti\Widget\Util\TImage;
 /**
  * TDropDown Widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -26,7 +26,7 @@ class TDropDown extends TElement
      * @param $title Dropdown title
      * @param $icon  Dropdown icon
      */
-    public function __construct($label, $icon = NULL, $use_caret = TRUE, $title = '')
+    public function __construct($label, $icon = NULL, $use_caret = TRUE, $title = '', $height = null)
     {
         parent::__construct('div');
         $this->{'class'} = 'btn-group';
@@ -60,6 +60,11 @@ class TDropDown extends TElement
         $this->elements = new TElement('ul');
         $this->elements->{'class'} = 'dropdown-menu pull-left';
         $this->elements->{'aria-labelledby'} = 'drop2';
+        
+        if (!empty($height))
+        {
+            $this->elements->{'style'} = "height:{$height}px;overflow:auto";
+        }
         parent::add($this->elements);
     }
     
@@ -121,8 +126,8 @@ class TDropDown extends TElement
         
         if ($icon)
         {
-            $image = new TImage($icon);
-            $image->{'style'} = 'padding: 4px';
+            $image = is_object($icon) ? clone $icon : new TImage($icon);
+            $image->{'style'} .= ';padding: 4px';
             $link->add($image);
         }
         

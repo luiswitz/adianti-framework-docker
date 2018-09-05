@@ -6,6 +6,7 @@ use Adianti\Core\AdiantiCoreTranslator;
 use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Base\TScript;
 use Adianti\Widget\Form\TMultiSearch;
+use Adianti\Database\TTransaction;
 use Adianti\Database\TCriteria;
 use Adianti\Widget\Form\TForm;
 
@@ -14,7 +15,7 @@ use Exception;
 /**
  * Database Multisearch Widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -42,6 +43,8 @@ class TDBMultiSearch extends TMultiSearch
     protected $service;
     protected $seed;
     protected $editable;
+    protected $changeFunction;
+    protected $idSearch;
     
     /**
      * Class Constructor
@@ -58,6 +61,9 @@ class TDBMultiSearch extends TMultiSearch
         // executes the parent class constructor
         parent::__construct($name);
         $this->id   = 'tdbmultisearch_'.mt_rand(1000000000, 1999999999);
+        
+        $key   = trim($key);
+        $value = trim($value);
         
         if (empty($database))
         {
@@ -92,6 +98,7 @@ class TDBMultiSearch extends TMultiSearch
         $this->service = 'AdiantiMultiSearchService';
         $this->seed = APPLICATION_NAME . ( !empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094' );
         $this->tag->{'widget'} = 'tdbmultisearch';
+        $this->idSearch = true;
     }
     
     /**
@@ -101,6 +108,14 @@ class TDBMultiSearch extends TMultiSearch
     public function setService($service)
     {
         $this->service = $service;
+    }
+    
+    /**
+     * Disable search by id
+     */
+    public function disableIdSearch()
+    {
+        $this->idSearch = false;
     }
     
     /**
@@ -122,13 +137,99 @@ class TDBMultiSearch extends TMultiSearch
     }
     
     /**
+     * Define the field's value
+     * @param $values An array the field's values
+     */
+    public function setValue($values)
+    {
+        $ini = AdiantiApplicationConfig::get();
+        
+        if (isset($ini['general']['compat']) AND $ini['general']['compat'] ==  '4')
+        {
+            if ($values)
+            {
+                parent::setValue( $values );
+                parent::addItems( $values );
+            }
+        }
+        else
+        {
+            $items = [];
+            if ($values)
+            {
+                TTransaction::open($this->database);
+                foreach ($values as $value)
+                {
+                    if ($value)
+                    {
+                        $model = $this->model;
+                        $object = $model::find( $value );
+                        if ($object)
+                        {
+                            $description = $object->render($this->mask);
+                            $items[$value] = $description;
+                        }
+                    }
+                }
+                TTransaction::close();
+                
+                parent::addItems( $items );
+                parent::setValue( $values );
+            }
+        }
+    }
+    
+    /**
+     * Return the post data
+     */
+    public function getPostData()
+    {
+        $ini = AdiantiApplicationConfig::get();
+        
+        if (isset($_POST[$this->name]))
+        {
+            $values = $_POST[$this->name];
+            
+            if (isset($ini['general']['compat']) AND $ini['general']['compat'] ==  '4')
+            {
+                $return = [];
+                if (is_array($values))
+                {
+                    TTransaction::open($this->database);
+                    foreach ($values as $value)
+                    {
+                        if ($value)
+                        {
+                            $model = $this->model;
+                            $object = $model::find( $value );
+                            if ($object)
+                            {
+                                $description = $object->render($this->mask);
+                                $return[$value] = $description;
+                            }
+                        }
+                    }
+                }
+                return $return;
+            }
+            else
+            {
+                return $values;
+            }
+        }
+        else
+        {
+            return '';
+        }
+    }
+    
+    /**
      * Shows the widget
      */
     public function show()
     {
         // define the tag properties
-        $this->tag-> name  = $this->name;    // tag name
-        $this->tag-> id  = $this->id;    // tag name
+        $this->tag->{'id'}  = $this->id;    // tag name
         if (strstr($this->size, '%') !== FALSE)
         {
             $this->setProperty('style', "width:{$this->size};", false); //aggregate style info
@@ -141,27 +242,6 @@ class TDBMultiSearch extends TMultiSearch
         }
         
         $multiple = $this->maxSize == 1 ? 'false' : 'true';
-        
-        $load_items = 'undefined';
-        if ($this->initialItems)
-        {
-            $new_items = array();
-            foreach ($this->initialItems as $key => $item)
-            {
-                $new_item = array('id' => $key, 'text' => $item);
-                $new_items[] = $new_item;
-            }
-            
-            if ($multiple == 'true')
-            {
-                $load_items = json_encode($new_items);
-            }
-            else
-            {
-                $load_items = json_encode($new_item);
-            }
-        }
-        
         $orderColumn = isset($this->orderColumn) ? $this->orderColumn : $this->column;
         $criteria = '';
         if ($this->criteria)
@@ -175,34 +255,37 @@ class TDBMultiSearch extends TMultiSearch
         $class = $this->service;
         $callback = array($class, 'onSearch');
         $method = $callback[1];
-        
+        $id_search_string = $this->idSearch ? '1' : '0';
         $search_word = AdiantiCoreTranslator::translate('Search');
-        $url = "engine.php?class={$class}&method={$method}&static=1&database={$this->database}&key={$this->key}&column={$this->column}&model={$this->model}&orderColumn={$orderColumn}&criteria={$criteria}&operator={$this->operator}&mask={$this->mask}";
+        $url = "engine.php?class={$class}&method={$method}&static=1&database={$this->database}&key={$this->key}&column={$this->column}&model={$this->model}&orderColumn={$orderColumn}&criteria={$criteria}&operator={$this->operator}&mask={$this->mask}&idsearch={$id_search_string}";
         $change_action = 'function() {}';
         
-        if ($this->editable)
+        if (isset($this->changeAction))
         {
-            if (isset($this->changeAction))
+            if (!TForm::getFormByName($this->formName) instanceof TForm)
             {
-                if (!TForm::getFormByName($this->formName) instanceof TForm)
-                {
-                    throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
-                }
-                
-                $string_action = $this->changeAction->serialize(FALSE);
-                $change_action = "function() { serialform=tmultisearch_get_form_data('{$this->formName}', '{$this->name}', '{$this->id}');
-                                             __adianti_ajax_lookup('$string_action&'+serialform, this); }";
+                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
             }
             
-            TScript::create(" tdbmultisearch_start( '{$this->id}', '{$length}', '{$this->maxSize}', '{$search_word}', $multiple, '{$url}', '{$size}', '{$this->height}px', {$load_items}, '{$hash}', {$change_action} ); ");
+            $string_action = $this->changeAction->serialize(FALSE);
+            $change_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback'); }";
+            $this->setProperty('changeaction', "__adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback')");
         }
-        else
+        else if (isset($this->changeFunction))
         {
-            TScript::create(" tdbmultisearch_start( '{$this->id}', '{$length}', '{$this->maxSize}', '{$search_word}', $multiple, '{$url}', '{$size}', '{$this->height}px', {$load_items}, '{$hash}', {$change_action} ); ");
-            TScript::create(" tmultisearch_disable_field( '{$this->formName}', '{$this->name}'); ");
+            $change_action = "function() { $this->changeFunction }";
+            $this->setProperty('changeaction', $this->changeFunction, FALSE);
         }
         
         // shows the component
+        parent::renderItems( false );
         $this->tag->show();
+        
+        TScript::create(" tdbmultisearch_start( '{$this->id}', '{$length}', '{$this->maxSize}', '{$search_word}', $multiple, '{$url}', '{$size}', '{$this->height}px', '{$hash}', {$change_action} ); ");
+        
+        if (!$this->editable)
+        {
+            TScript::create(" tmultisearch_disable_field( '{$this->formName}', '{$this->name}'); ");
+        }
     }
 }

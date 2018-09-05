@@ -13,7 +13,7 @@ use ReflectionClass;
 /**
  * Wrapper class to deal with forms
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -356,7 +356,7 @@ class TForm implements AdiantiFormInterface
     }
     
     /**
-     * Returns the form data as an object
+     * Returns the form POST data as an object
      * @param $class A string containing the class for the returning object
      */
     public function getData($class = 'StdClass')
@@ -379,7 +379,52 @@ class TForm implements AdiantiFormInterface
         
         return $object;
     }
-
+    
+    /**
+     * Returns the form start values as an object
+     * @param $class A string containing the class for the returning object
+     */
+    public function getValues($class = 'StdClass', $withOptions = false)
+    {
+        if (!class_exists($class))
+        {
+            throw new Exception(AdiantiCoreTranslator::translate('Class ^1 not found in ^2', $class, __METHOD__));
+        }
+        
+        $object = new $class;
+        foreach ($this->fields as $key => $field)
+        {
+            $key = str_replace(['[',']'], ['',''], $key);
+            
+            if (!$field instanceof TButton)
+            {
+                if ($withOptions AND method_exists($field, 'getItems'))
+                {
+                    $items = $field->getItems();
+                    
+                    if (is_array($field->getValue()))
+                    {
+                        $value = [];
+                        foreach ($field->getValue() as $field_value)
+                        {
+                            if ($field_value)
+                            {
+                                $value[] = $items[$field_value];
+                            }
+                        }
+                    }
+                    $object->$key = $value;
+                }
+                else
+                {
+                    $object->$key = $field->getValue();
+                }
+            }
+        }
+        
+        return $object;
+    }
+    
     /**
      * Validate form
      */

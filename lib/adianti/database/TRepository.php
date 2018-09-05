@@ -15,7 +15,7 @@ use ReflectionClass;
 /**
  * Implements the Repository Pattern to deal with collections of Active Records
  *
- * @version    4.0
+ * @version    5.0
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -47,7 +47,7 @@ final class TRepository
         }
         else
         {
-            throw new Exception(AdiantiCoreTranslator::translate('The class ^1 was not found. Check the class name or the file name. They must match', $class));
+            throw new Exception(AdiantiCoreTranslator::translate('The class ^1 was not found. Check the class name or the file name. They must match', '"' . $class . '"'));
         }
     }
     
@@ -236,6 +236,37 @@ final class TRepository
     }
     
     /**
+     * Return a indexed array
+     */
+    public function getIndexedArray($indexColumn, $valueColumn, $criteria = NULL)
+    {
+        $criteria = (empty($criteria)) ? $this->criteria : $criteria;
+        $objects = $this->load($criteria, FALSE);
+        
+        $indexedArray = array();
+        if ($objects)
+        {
+            foreach ($objects as $object)
+            {
+                if (isset($object->$valueColumn))
+                {
+                    $indexedArray[ $object->$indexColumn ] = $object->$valueColumn;
+                }
+                else
+                {
+                    $indexedArray[ $object->$indexColumn ] = $object->render($valueColumn);
+                }
+            }
+        }
+        
+        if (empty($criteria) or ( $criteria instanceof TCriteria and empty($criteria->getProperty('order')) ))
+        {
+            asort($indexedArray);
+        }
+        return $indexedArray;
+    }
+    
+    /**
      * Update values in the repository
      */
     public function update($setValues = NULL, TCriteria $criteria = NULL)
@@ -334,7 +365,7 @@ final class TRepository
      * @param $criteria  An TCriteria object, specifiyng the filters
      * @return           The affected rows
      */
-    public function delete(TCriteria $criteria = NULL)
+    public function delete(TCriteria $criteria = NULL, $callObjectLoad = FALSE)
     {
         if (!$criteria)
         {
@@ -349,7 +380,7 @@ final class TRepository
             
             // first, clear cache
             $record = new $class;
-            if ( $cache = $record->getCacheControl() )
+            if ( ($cache = $record->getCacheControl()) OR $callObjectLoad )
             {
                 $pk = $record->getPrimaryKey();
                 
@@ -375,10 +406,20 @@ final class TRepository
                     // iterate the results as objects
                     while ($row = $result-> fetchObject())
                     {
-                        $record_key = $class . '['. $row->$pk . ']';
-                        if ($cache::delValue( $record_key ))
+                        if ($cache)
                         {
-                            TTransaction::log($record_key . ' deleted from cache');
+                            $record_key = $class . '['. $row->$pk . ']';
+                            if ($cache::delValue( $record_key ))
+                            {
+                                TTransaction::log($record_key . ' deleted from cache');
+                            }
+                        }
+                        
+                        if ($callObjectLoad)
+                        {
+                            $object = new $this->class;
+                            $object->fromArray( (array) $row);
+                            $object->delete();
                         }
                     }
                 }

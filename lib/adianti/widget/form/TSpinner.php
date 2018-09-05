@@ -14,7 +14,7 @@ use Exception;
 /**
  * Spinner Widget (also known as spin button)
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -27,8 +27,10 @@ class TSpinner extends TField implements AdiantiWidgetInterface
     private $max;
     private $step;
     private $exitAction;
+    private $exitFunction;
     protected $id;
     protected $formName;
+    protected $value;
     
     /**
      * Class Constructor
@@ -52,7 +54,7 @@ class TSpinner extends TField implements AdiantiWidgetInterface
         $this->max = $max;
         $this->step = $step;
         
-        if ($this->getValue() % $step !== 0)
+        if (is_int($step) AND $this->getValue() % $step !== 0)
         {
             parent::setValue($min);
         }
@@ -96,14 +98,22 @@ class TSpinner extends TField implements AdiantiWidgetInterface
     }
     
     /**
+     * Set exit function
+     */
+    public function setExitFunction($function)
+    {
+        $this->exitFunction = $function;
+    }
+    
+    /**
      * Shows the widget at the screen
      */
     public function show()
     {
         // define the tag properties
-        $this->tag-> name  = $this->name;    // TAG name
-        $this->tag-> value = $this->value;   // TAG value
-        $this->tag-> type  = 'text';         // input type
+        $this->tag->{'name'}  = $this->name;    // TAG name
+        $this->tag->{'value'} = $this->value;   // TAG value
+        $this->tag->{'type'}  = 'text';         // input type
         
         if (strstr($this->size, '%') !== FALSE)
         {
@@ -120,36 +130,32 @@ class TSpinner extends TField implements AdiantiWidgetInterface
             $this->tag->{'id'}  = $this->id;
         }
         
-        // verify if the widget is non-editable
-        if (parent::getEditable())
+        $exit_action = 'function() {}';
+        if (isset($this->exitAction))
         {
-            $exit_action = 'function() {}';
-            if (isset($this->exitAction))
+            if (!TForm::getFormByName($this->formName) instanceof TForm)
             {
-                if (!TForm::getFormByName($this->formName) instanceof TForm)
-                {
-                    throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
-                }            
-                $string_action = $this->exitAction->serialize(FALSE);
-                $exit_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}' ) }";
-            }
-            
-            TScript::create(" tspinner_start( '#{$this->id}', '{$this->value}', '{$this->min}', '{$this->max}', '{$this->step}', $exit_action); ");
-            
-            $mask = str_repeat('9', strlen($this->max));
-            $this->tag->{'onKeyPress'} = "return tentry_mask(this,event,'{$mask}')";
-        }
-        else
-        {
-            $this->tag->{'readonly'} = "1";
-            $this->tag->{'class'} = 'tfield_disabled'; // CSS
-            $this->tag->{'style'} = "width:{$this->size}px;".
-                                    "-moz-user-select:none;";
-            $this->tag->{'onmouseover'} = "style.cursor='default'";
+                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
+            }            
+            $string_action = $this->exitAction->serialize(FALSE);
+            $exit_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}' ) }";
         }
         
-        // shows the tag
+        if (isset($this->exitFunction))
+        {
+            $exit_action = "function() { {$this->exitFunction} }";
+        }
+        
+        $mask = str_repeat('9', strlen($this->max));
+        $this->tag->{'onKeyPress'} = "return tentry_mask(this,event,'{$mask}')";
         $this->tag->show();
+        TScript::create(" tspinner_start( '#{$this->id}', '{$this->value}', '{$this->min}', '{$this->max}', '{$this->step}', $exit_action); ");
+        
+        // verify if the widget is non-editable
+        if (!parent::getEditable())
+        {
+            self::disableField($this->formName, $this->name);
+        }
     }
     
     /**
@@ -157,6 +163,6 @@ class TSpinner extends TField implements AdiantiWidgetInterface
      */
     public function setValue($value)
     {
-        parent::setValue( (int) $value);
+        parent::setValue( (float) $value);
     }
 }

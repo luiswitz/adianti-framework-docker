@@ -1,17 +1,13 @@
-FROM php:7.1-apache
+FROM php:7.2-apache
 RUN apt-get update
-RUN apt-get install -y g++ curl git
+RUN apt-get install -ym wget g++ curl git gnupg2 apt-utils software-properties-common libpng-dev
 
 # mysql
-RUN apt-get update \
-  && echo 'deb http://packages.dotdeb.org jessie all' >> /etc/apt/sources.list \
-  && echo 'deb-src http://packages.dotdeb.org jessie all' >> /etc/apt/sources.list \
-  && apt-get install -y wget \
-  && wget https://www.dotdeb.org/dotdeb.gpg \
-  && apt-key add dotdeb.gpg \
-  && apt-get update \
-  && apt-get install -y php7.0-mysql \
-  && docker-php-ext-install pdo_mysql
+RUN docker-php-source extract \
+    && docker-php-ext-install gd mysqli pdo_mysql \
+    && docker-php-source delete
 
 # composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN alias composer="php -n /usr/local/bin/composer"

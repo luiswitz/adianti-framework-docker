@@ -90,3 +90,31 @@ CREATE TABLE system_preference (
     id text,
     value text
 );
+
+
+--- new programs of 5.0
+CREATE TABLE system_user_unit (
+    id INTEGER PRIMARY KEY NOT NULL,
+    system_user_id int,
+    system_unit_id int,
+    FOREIGN KEY(system_user_id) REFERENCES system_user(id),
+    FOREIGN KEY(system_unit_id) REFERENCES system_unit(id));
+
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System PHP Error','SystemPHPErrorLogView');
+
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 1,
+                                        (select id from system_program where controller='SystemPHPErrorLogView'));
+
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Database Browser','SystemDatabaseExplorer');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Table List','SystemTableList');
+INSERT INTO system_program VALUES((select coalesce(max(id),0)+1 from system_program b),'System Data Browser','SystemDataBrowser');
+
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 1,
+                                        (select id from system_program where controller='SystemDatabaseExplorer'));
+                                        
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 1,
+                                        (select id from system_program where controller='SystemTableList'));
+                                        
+INSERT INTO system_group_program VALUES((select coalesce(max(id),0)+1 from system_group_program b), 1,
+                                        (select id from system_program where controller='SystemDataBrowser'));
+                                        

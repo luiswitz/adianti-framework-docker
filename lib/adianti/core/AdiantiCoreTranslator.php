@@ -4,7 +4,7 @@ namespace Adianti\Core;
 /**
  * Framework translation class for internal messages
  *
- * @version    4.0
+ * @version    5.0
  * @package    core
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -117,6 +117,8 @@ class AdiantiCoreTranslator
         $this->messages['en'][] = '^1 was not defined. You must call ^2 in ^3';
         $this->messages['en'][] = 'Database';
         $this->messages['en'][] = 'Constructor';
+        $this->messages['en'][] = 'Records';
+        $this->messages['en'][] = 'Description';
         
         $this->messages['pt'][] = 'Carregando';
         $this->messages['pt'][] = 'Arquivo não encontrado';
@@ -214,6 +216,8 @@ class AdiantiCoreTranslator
         $this->messages['pt'][] = '^1 não definido. Você deve executar ^2 no ^3';
         $this->messages['pt'][] = 'Database';
         $this->messages['pt'][] = 'Construtor';
+        $this->messages['pt'][] = 'Registros';
+        $this->messages['pt'][] = 'Descrição';
     }
     
     /**

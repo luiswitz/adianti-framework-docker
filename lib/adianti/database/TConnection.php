@@ -8,7 +8,7 @@ use Exception;
 /**
  * Singleton manager for database connections
  *
- * @version    4.0
+ * @version    5.0
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -69,6 +69,10 @@ final class TConnection
             case 'pgsql':
                 $port = $port ? $port : '5432';
                 $conn = new PDO("pgsql:dbname={$name};user={$user}; password={$pass};host=$host;port={$port}");
+                if(!empty($char))
+                {
+                    $conn->exec("SET CLIENT_ENCODING TO '{$char}';");
+                }
                 break;
             case 'mysql':
                 $port = $port ? $port : '3306';
@@ -86,8 +90,10 @@ final class TConnection
                 $conn->query('PRAGMA foreign_keys = ON'); // referential integrity must be enabled
                 break;
             case 'ibase':
-                $name = isset($host) ? "{$host}:{$name}" : $name;
-                $conn = new PDO("firebird:dbname={$name}", $user, $pass);
+            case 'fbird':
+                $db_string = empty($port) ? "{$host}:{$name}" : "{$host}/{$port}:{$name}";
+                $charset = $char ? ";charset={$char}" : '';
+                $conn = new PDO("firebird:dbname={$db_string}{$charset}", $user, $pass);
                 break;
             case 'oracle':
                 $port    = $port ? $port : '1521';
@@ -116,8 +122,14 @@ final class TConnection
                 }
                 else
                 {
-                    $port = $port ? $port : '1433';
-                    $conn = new PDO("dblib:host={$host}:{$port};dbname={$name}", $user, $pass);
+                    if ($port)
+                    {
+                        $conn = new PDO("dblib:host={$host}:{$port};dbname={$name}", $user, $pass);
+                    }
+                    else
+                    {
+                        $conn = new PDO("dblib:host={$host};dbname={$name}", $user, $pass);
+                    }
                 }
                 break;
             case 'dblib':

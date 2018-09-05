@@ -1,7 +1,13 @@
 <?php
 /**
- * SystemDocumentCategory Active Record
- * @author  <your-name-here>
+ * SystemDocumentCategory
+ *
+ * @version    1.0
+ * @package    model
+ * @subpackage communication
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemDocumentCategory extends TRecord
 {
@@ -18,6 +24,4 @@ class SystemDocumentCategory extends TRecord
         parent::__construct($id, $callObjectLoad);
         parent::addAttribute('name');
     }
-
-
 }

@@ -9,7 +9,7 @@ use Adianti\Widget\Datagrid\TDataGridAction;
 /**
  * Create quick datagrids through its simple interface
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -53,9 +53,19 @@ class TQuickGrid extends TDataGrid
         {
             $action->setImage($icon);
         }
-        $action->setField($field);
+        
+        if (is_array($field))
+        {
+            $action->setFields($field);
+        }
+        else
+        {
+            $action->setField($field);
+        }
         
         // add the datagrid action
         parent::addAction($action);
+        
+        return $action;
     }
 }

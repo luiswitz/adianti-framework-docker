@@ -2,6 +2,7 @@
 namespace Adianti\Wrapper;
 
 use Adianti\Base\TStandardSeek;
+use Adianti\Core\AdiantiApplicationConfig;
 use Adianti\Control\TAction;
 use Adianti\Validator\TRequiredValidator;
 
@@ -46,7 +47,7 @@ use SimpleXMLElement;
 /**
  * Interface builder that takes a XML file save by Adianti Studio Designer and renders the form into the interface.
  *
- * @version    4.0
+ * @version    5.0
  * @package    wrapper
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -346,6 +347,14 @@ class AdiantiUIBuilder extends TPanel
                 }
             }
             
+            $database      = (string) $properties->{'database'};
+            $model         = (string) $properties->{'model'};
+            $display_field = (string) $properties->{'display'};
+            
+            $ini  = AdiantiApplicationConfig::get();
+            $seed = APPLICATION_NAME . ( !empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094' );
+            
+            $action->setParameter('hash',          md5("{$seed}{$database}{$model}{$display_field}"));
             $action->setParameter('model',         (string) $properties->{'model'});
             $action->setParameter('display_field', (string) $properties->{'display'});
             $action->setParameter('receive_key',   (string) $properties->{'name'});

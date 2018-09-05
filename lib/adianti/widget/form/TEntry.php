@@ -12,7 +12,7 @@ use Exception;
 /**
  * Entry Widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -23,12 +23,13 @@ class TEntry extends TField implements AdiantiWidgetInterface
 {
     private $mask;
     private $completion;
-    private $exitAction;
     private $numericMask;
     private $decimals;
     private $decimalsSeparator;
     private $thousandSeparator;
     private $replaceOnPost;
+    protected $exitFunction;
+    protected $exitAction;
     protected $id;
     protected $formName;
     protected $name;
@@ -44,7 +45,8 @@ class TEntry extends TField implements AdiantiWidgetInterface
         $this->id   = 'tentry_' . mt_rand(1000000000, 1999999999);
         $this->numericMask = FALSE;
         $this->replaceOnPost = FALSE;
-        $this->tag->{'type'}  = 'text';
+        $this->tag->{'type'}   = 'text';
+        $this->tag->{'widget'} = 'tentry';
     }
     
     /**
@@ -168,6 +170,15 @@ class TEntry extends TField implements AdiantiWidgetInterface
     }
     
     /**
+     * Define the javascript function to be executed when the user leaves the form field
+     * @param $function Javascript function
+     */
+    public function setExitFunction($function)
+    {
+        $this->exitFunction = $function;
+    }
+    
+    /**
      * Force lower case
      */
     public function forceLowerCase()
@@ -199,16 +210,19 @@ class TEntry extends TField implements AdiantiWidgetInterface
         $this->tag->{'name'}  = $this->name;    // TAG name
         $this->tag->{'value'} = $this->value;   // TAG value
         
-        if (strstr($this->size, '%') !== FALSE)
+        if (!empty($this->size))
         {
-            $this->setProperty('style', "width:{$this->size};", false); //aggregate style info
-        }
-        else
-        {
-            $this->setProperty('style', "width:{$this->size}px;", false); //aggregate style info
+            if (strstr($this->size, '%') !== FALSE)
+            {
+                $this->setProperty('style', "width:{$this->size};", false); //aggregate style info
+            }
+            else
+            {
+                $this->setProperty('style', "width:{$this->size}px;", false); //aggregate style info
+            }
         }
         
-        if ($this->id)
+        if ($this->id and empty($this->tag->{'id'}))
         {
             $this->tag->{'id'} = $this->id;
         }
@@ -237,6 +251,18 @@ class TEntry extends TField implements AdiantiWidgetInterface
                 }
             }
             
+            if (isset($this->exitFunction))
+            {
+                if (strstr($this->getProperty('onBlur'), 'return') == FALSE)
+                {
+                    $this->setProperty('onBlur', $this->exitFunction, FALSE);
+                }
+                else
+                {
+                    $this->setProperty('onBlur', $this->exitFunction, TRUE);
+                }
+            }
+            
             if ($this->mask)
             {
                 $this->tag->{'onKeyPress'} = "return tentry_mask(this,event,'{$this->mask}')";
@@ -244,9 +270,9 @@ class TEntry extends TField implements AdiantiWidgetInterface
         }
         else
         {
-            $this->tag-> readonly = "1";
+            $this->tag->{'readonly'} = "1";
             $this->tag->{'class'} = 'tfield_disabled'; // CSS
-            $this->tag-> onmouseover = "style.cursor='default'";
+            $this->tag->{'onmouseover'} = "style.cursor='default'";
         }
         
         // shows the tag

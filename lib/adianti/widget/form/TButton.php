@@ -15,7 +15,7 @@ use Exception;
 /**
  * Button Widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -40,6 +40,14 @@ class TButton extends TField implements AdiantiWidgetInterface
         $button->setAction(new TAction( $callback ), $label);
         $button->setImage( $image );
         return $button;
+    }
+    
+    /**
+     * Add CSS class
+     */
+    public function addStyleClass($class)
+    {
+        $this->{'class'} = 'btn btn-default '. $class;
     }
     
     /**
@@ -109,7 +117,15 @@ class TButton extends TField implements AdiantiWidgetInterface
     {
         $this->properties[$name] = $value;
     }
-
+    
+    /**
+     * Return field property
+     */
+    public function getProperty($name)
+    {
+        return $this->properties[$name];
+    }
+    
     /**
      * Enable the field
      * @param $form_name Form name
@@ -159,7 +175,7 @@ class TButton extends TField implements AdiantiWidgetInterface
             $button = new TElement('button');
             $button->{'id'}      = 'tbutton_'.$this->name;
             $button->{'name'}    = $this->name;
-            $button->{'class'}   = 'btn btn-sm btn-default';
+            $button->{'class'}   = 'btn btn-default btn-sm';
             $button->{'onclick'} = $action;
             $action = '';
         }

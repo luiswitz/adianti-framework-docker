@@ -6,7 +6,7 @@ use Adianti\Widget\Base\TElement;
 /**
  * SourceCode View
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -29,11 +29,24 @@ class TSourceCode
         }
         
         $this->content = file_get_contents($file);
-        if (utf8_encode(utf8_decode($this->content)) !== $this->content ) // SE NÃO UTF8
+        if (utf8_encode(utf8_decode($this->content)) !== $this->content ) // NOT UTF
         {
             $this->content = utf8_encode($this->content);
         }
         return TRUE;
+    }
+    
+    /**
+     * Load from string
+     */
+    public function loadString($content)
+    {
+        $this->content = $content;
+        
+        if (utf8_encode(utf8_decode($content)) !== $content ) // NOT UTF
+        {
+            $this->content = utf8_encode($content);
+        }
     }
     
     /**

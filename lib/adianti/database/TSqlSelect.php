@@ -9,7 +9,7 @@ use PDO;
 /**
  * Provides an Interface to create SELECT statements
  *
- * @version    4.0
+ * @version    5.0
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -45,6 +45,10 @@ final class TSqlSelect extends TSqlStatement
         else if (in_array($driver, array('oci', 'oci8')))
         {
             return $this->getOracleInstruction( $prepared );
+        }
+        else if (in_array($driver, array('firebird')))
+        {
+            return $this->getInterbaseInstruction( $prepared );
         }
         else
         {
@@ -98,6 +102,59 @@ final class TSqlSelect extends TSqlStatement
     }
     
     /**
+     * Returns the SELECT statement as an string for standard open source drivers
+     * @param $prepared Return a prepared Statement
+     */
+    public function getInterbaseInstruction( $prepared )
+    {
+        // creates the SELECT instruction
+        $this->sql  = 'SELECT ';
+        
+        if ($this->criteria)
+        {
+            $limit     = (int) $this->criteria->getProperty('limit');
+            $offset    = (int) $this->criteria->getProperty('offset');
+            
+            if ($limit)
+            {
+                $this->sql .= ' FIRST ' . $limit;
+            }
+            if ($offset)
+            {
+                $this->sql .= ' SKIP ' . $offset;
+            }
+        }
+        
+        // concatenate the column names
+        $this->sql .= implode(',', $this->columns);
+        
+        // concatenate the entity name
+        $this->sql .= ' FROM ' . $this->entity;
+        
+        // concatenate the criteria (WHERE)
+        if ($this->criteria)
+        {
+            $expression = $this->criteria->dump( $prepared );
+            if ($expression)
+            {
+                $this->sql .= ' WHERE ' . $expression;
+            }
+            
+            // get the criteria properties
+            $order     = $this->criteria->getProperty('order');
+            $direction = in_array($this->criteria->getProperty('direction'), array('asc', 'desc')) ? $this->criteria->getProperty('direction') : '';
+            
+            if ($order)
+            {
+                $this->sql .= ' ORDER BY ' . $order . ' ' . $direction;
+            }
+        }
+        
+        // return the SQL statement
+        return $this->sql;
+    }
+    
+    /**
      * Returns the SELECT statement as an string for mssql/dblib drivers
      * @param $prepared Return a prepared Statement
      */
@@ -118,9 +175,9 @@ final class TSqlSelect extends TSqlStatement
         
         if ((isset($limit) OR isset($offset)) AND ($limit>0 OR $offset>0))
         {
-            if (!$order)
+            if (empty($order))
             {
-                $order = 'id';
+                $order = '(SELECT NULL)';
             }
             $this->sql = "SELECT {$columns}
                       FROM
@@ -206,7 +263,7 @@ final class TSqlSelect extends TSqlStatement
         {
             $this->sql = "SELECT {$columns} ";
             $this->sql.= "  FROM (";
-            $this->sql.= "       SELECT rownum rnum, A.{$columns} FROM ({$basicsql}) A";
+            $this->sql.= "       SELECT rownum \"__ROWNUMBER__\", A.{$columns} FROM ({$basicsql}) A";
             
             if ($limit >0 )
             {
@@ -216,7 +273,7 @@ final class TSqlSelect extends TSqlStatement
             $this->sql.= ")";
             if ($offset > 0)
             {
-                $this->sql .= " WHERE rnum > {$offset} ";
+                $this->sql .= " WHERE \"__ROWNUMBER__\" > {$offset} ";
             }
         }
         else

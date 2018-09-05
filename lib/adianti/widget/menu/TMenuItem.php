@@ -8,7 +8,7 @@ use Adianti\Widget\Util\TImage;
 /**
  * MenuItem Widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage menu
  * @author     Pablo Dall'Oglio
@@ -74,7 +74,7 @@ class TMenuItem extends TElement
             //$url['class'] = $this->action;
             //$url_str = http_build_query($url);
             $action = str_replace('#', '&', $this->action);
-            if (substr($action,0,7) == 'http://')
+            if ((substr($action,0,7) == 'http://') or (substr($action,0,8) == 'https://'))
             {
                 $this->link-> href = $action;
                 $this->link-> target = '_blank';

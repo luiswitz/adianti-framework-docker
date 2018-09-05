@@ -13,7 +13,7 @@
 }
 
 .iconpicker-component{
-    padding: 4px;
+    padding: 2px;
     width: 24px !important;
 }
 
@@ -28,4 +28,9 @@
 .iconpicker .iconpicker-item {
     margin: 0 5px 5px 0;
     padding: 5px;
+}
+
+.iconpicker-container
+{
+    border-spacing: 0;
 }

@@ -1,6 +1,7 @@
 <?php
 namespace Adianti\Widget\Form;
 
+use Adianti\Core\AdiantiApplicationConfig;
 use Adianti\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Base\TScript;
@@ -14,7 +15,7 @@ use Exception;
 /**
  * FileChooser widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage form
  * @author     Nataniel Rabaioli
@@ -28,28 +29,112 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
     protected $height;
     protected $completeAction;
     protected $uploaderClass;
+    protected $extensions;
+    protected $seed;
+    protected $fileHandling;
     
+    /**
+     * Constructor method
+     * @param $name input name
+     */
     public function __construct($name)
     {
         parent::__construct($name);
         $this->id = $this->name . '_' . mt_rand(1000000000, 1999999999);
         $this->height = 25;
         $this->uploaderClass = 'AdiantiUploaderService';
+        $this->fileHandling = FALSE;
+        
+        $ini = AdiantiApplicationConfig::get();
+        $this->seed = APPLICATION_NAME . ( !empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094' );
     }
     
+    /**
+     * Define the service class for response
+     */
     public function setService($service)
     {
         $this->uploaderClass = $service;
     }
     
+    /**
+     * Define the allowed extensions
+     */
+    public function setAllowedExtensions($extensions)
+    {
+        $this->extensions = $extensions;
+    }
+    
+    /**
+     * Define to file handling
+     */
+    public function enableFileHandling()
+    {
+        $this->fileHandling = TRUE;
+    }
+    
+    /**
+     * Set field size
+     */
     public function setSize($width, $height = NULL)
     {
         $this->size   = $width;
     }
     
+    /**
+     * Set field height
+     */
     public function setHeight($height)
     {
         $this->height = $height;
+    }
+    
+    /**
+     * Return the post data
+     */
+    public function getPostData()
+    {
+        $name = str_replace(['[',']'], ['',''], $this->name);
+        
+        if (isset($_POST[$name]))
+        {
+            return $_POST[$name];
+        }
+    }
+    
+    /**
+     * Set field value
+     */
+    public function setValue($value)
+    {
+        if ($value)
+        {
+            if ($this->fileHandling)
+            {
+                if (is_array($value))
+                {
+                    $new_value = [];
+                    foreach ($value as $key => $item)
+                    {
+                        if (is_array($item))
+                        {
+                            $new_value[] = urlencode(json_encode($item));
+                        }
+                        else
+                        {
+                            $new_value[] = urlencode(json_encode(['idFile'=>$key,'fileName'=>$item]));
+                        }
+                    }
+                    $value = $new_value;
+                }
+                
+                parent::setValue($value);
+            }
+            else
+            {            
+                parent::setValue($value);
+            }
+        }
     }
     
     /**
@@ -58,12 +143,12 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
     public function show()
     {
         // define the tag properties
-        $this->tag-> id    = $this->id;
-        $this->tag-> name  = 'file_' . $this->name.'[]';  // tag name
-        $this->tag-> receiver  = $this->name;  // tag name
-        $this->tag-> value = $this->value; // tag value
-        $this->tag-> type  = 'file';       // input type
-        $this->tag-> multiple = '1';
+        $this->tag->{'id'}        = $this->id;
+        $this->tag->{'name'}      = 'file_' . $this->name.'[]';  // tag name
+        $this->tag->{'receiver'}  = $this->name;  // tag name
+        $this->tag->{'value'}     = $this->value; // tag value
+        $this->tag->{'type'}      = 'file';       // input type
+        $this->tag->{'multiple'}  = '1';
         
         if (strstr($this->size, '%') !== FALSE)
         {
@@ -87,26 +172,26 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
                 }
                 $string_action = $this->completeAction->serialize(FALSE);
                 
-                $complete_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', this, 'callback'); }";
+                $complete_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->tag-> id}', 'callback'); }";
             }
         }
         else
         {
             // make the field read-only
-            $this->tag-> readonly = "1";
-            $this->tag-> type = 'text';
-            $this->tag->{'class'} = 'tfield_disabled'; // CSS
+            $this->tag->{'readonly'} = "1";
+            $this->tag->{'type'}     = 'text';
+            $this->tag->{'class'}    = 'tfield_disabled'; // CSS
         }
         
         $id_div = mt_rand(1000000000, 1999999999);
         
         $div = new TElement('div');
-        $div-> style="width:{$this->size}px;";
-        $div-> id = 'div_file_'.$id_div;
+        $div->{'style'} = "width:{$this->size}px;";
+        $div->{'id'}    = 'div_file_'.$id_div;
         
         $divParciais = new TElement('div');
-        $divParciais-> style = 'width:100%;';
-        $divParciais-> id = 'div_parciais_'.$id_div;
+        $divParciais->{'style'} = 'width:100%;';
+        $divParciais->{'id'}    = 'div_parciais_'.$id_div;
         
         foreach( (array)$this->value as $val )
         {
@@ -120,9 +205,19 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
         $div->add( $divParciais );
         $div->show();
         
-        $action = "engine.php?class={$this->uploaderClass}";
+        if (empty($this->extensions))
+        {
+            $action = "engine.php?class={$this->uploaderClass}";
+        }
+        else
+        {
+            $hash = md5("{$this->seed}{$this->name}".base64_encode(serialize($this->extensions)));
+            $action = "engine.php?class={$this->uploaderClass}&name={$this->name}&hash={$hash}&extensions=".base64_encode(serialize($this->extensions));
+        }
         
-        TScript::create(" tmultifile_start( '{$this->tag-> id}', '{$action}', '{$divParciais-> id}', {$complete_action});");
+        $fileHandling = $this->fileHandling ? '1' : '0';
+        
+        TScript::create(" tmultifile_start( '{$this->tag-> id}', '{$action}', '{$divParciais-> id}', {$complete_action}, $fileHandling);");
     }
     
     /**

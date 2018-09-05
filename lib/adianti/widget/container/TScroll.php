@@ -8,7 +8,7 @@ use Adianti\Widget\Util\TSourceCode;
 /**
  * Scrolled Window: Allows to add another containers inside, creating scrollbars when its content is bigger than its visual area
  * 
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -40,7 +40,7 @@ class TScroll extends TElement
      */
     public function setSize($width, $height)
     {
-        $this->width = $width;
+        $this->width  = $width;
         $this->height = $height;
     }
     
@@ -75,12 +75,12 @@ class TScroll extends TElement
         
         if ($this->width)
         {
-            $this->{'style'} .= ";width:{$this->width}px";
+            $this->{'style'} .= (strstr($this->width, '%') !== FALSE) ? ";width:{$this->width}" : ";width:{$this->width}px";
         }
         
         if ($this->height)
         {
-            $this->{'style'} .= ";height:{$this->height}px";
+            $this->{'style'} .= (strstr($this->height, '%') !== FALSE) ? ";height:{$this->height}" : ";height:{$this->height}px";
         }
         
         $this->{'class'} .= " tscroll";

@@ -25,7 +25,11 @@ class TApplication extends AdiantiCoreApplication
                                                          'MessageList' => TRUE,
                                                          'SystemDocumentUploaderService' => TRUE,
                                                          'NotificationList' => TRUE,
-                                                         'SearchBox' => TRUE));
+                                                         'SearchBox' => TRUE,
+                                                         'SearchInputBox' => TRUE,
+                                                         'SystemPageService' => TRUE,
+                                                         'SystemPageBatchUpdate' => TRUE,
+                                                         'SystemPageUpdate' => TRUE));
                 
                 if( isset($programs[$class]) OR $public )
                 {

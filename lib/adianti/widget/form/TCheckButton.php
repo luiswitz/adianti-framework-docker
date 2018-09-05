@@ -7,7 +7,7 @@ use Adianti\Widget\Form\TField;
 /**
  * CheckButton widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio

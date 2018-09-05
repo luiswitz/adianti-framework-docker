@@ -12,7 +12,7 @@ use Exception;
 /**
  * Database Entry Widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -42,6 +42,8 @@ class TDBEntry extends TEntry
     {
         // executes the parent class constructor
         parent::__construct($name);
+        
+        $value = trim($value);
         
         if (empty($database))
         {

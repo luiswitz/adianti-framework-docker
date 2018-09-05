@@ -7,7 +7,7 @@ use Adianti\Database\TSqlStatement;
 /**
  * Provides an interface to define filters to be used inside a criteria
  *
- * @version    4.0
+ * @version    5.0
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -98,7 +98,7 @@ class TFilter extends TExpression
             $result = '(' . implode(',', $foo) . ')';
         }
         // if the value is a subselect (must not be escaped as string)
-        else if (substr($value,0,7) == '(SELECT')
+        else if (substr(strtoupper($value),0,7) == '(SELECT')
         {
             $result = "$value";
         }

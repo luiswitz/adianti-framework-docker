@@ -14,7 +14,7 @@ use Exception;
 /**
  * A Sortable list
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -32,6 +32,7 @@ class TSortList extends TField implements AdiantiWidgetInterface
     private $orientation;
     private $limit;
     protected $id;
+    protected $changeFunction;
     
     /**
      * Class Constructor
@@ -181,6 +182,14 @@ class TSortList extends TField implements AdiantiWidgetInterface
     }
     
     /**
+     * Set change function
+     */
+    public function setChangeFunction($function)
+    {
+        $this->changeFunction = $function;
+    }
+    
+    /**
      * Enable the field
      */
     public static function enableField($form_name, $field)
@@ -280,6 +289,11 @@ class TSortList extends TField implements AdiantiWidgetInterface
                 }            
                 $string_action = $this->changeAction->serialize(FALSE);
                 $change_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback'); }";
+            }
+            
+            if (isset($this->changeFunction))
+            {
+                $change_action = "function() { $this->changeFunction }";
             }
             
             $connect = 'false';

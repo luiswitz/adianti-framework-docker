@@ -1,6 +1,7 @@
 <?php
 namespace Adianti\Widget\Form;
 
+use Adianti\Core\AdiantiApplicationConfig;
 use Adianti\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Base\TScript;
@@ -14,7 +15,7 @@ use Exception;
 /**
  * FileChooser widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage form
  * @author     Nataniel Rabaioli
@@ -29,6 +30,10 @@ class TFile extends TField implements AdiantiWidgetInterface
     protected $completeAction;
     protected $uploaderClass;
     protected $placeHolder;
+    protected $extensions;
+    protected $displayMode;
+    protected $seed;
+    protected $fileHandling;
     
     /**
      * Constructor method
@@ -40,6 +45,18 @@ class TFile extends TField implements AdiantiWidgetInterface
         $this->id = $this->name . '_' . mt_rand(1000000000, 1999999999);
         $this->height = 25;
         $this->uploaderClass = 'AdiantiUploaderService';
+        $this->fileHandling = FALSE;
+        
+        $ini = AdiantiApplicationConfig::get();
+        $this->seed = APPLICATION_NAME . ( !empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094' );
+    }
+    
+    /**
+     * Define the display mode {file}
+     */
+    public function setDisplayMode($mode)
+    {
+        $this->displayMode = $mode;
     }
     
     /**
@@ -48,6 +65,22 @@ class TFile extends TField implements AdiantiWidgetInterface
     public function setService($service)
     {
         $this->uploaderClass = $service;
+    }
+    
+    /**
+     * Define the allowed extensions
+     */
+    public function setAllowedExtensions($extensions)
+    {
+        $this->extensions = $extensions;
+    }
+    
+    /**
+     * Define to file handling
+     */
+    public function enableFileHandling()
+    {
+        $this->fileHandling = TRUE;
     }
     
     /**
@@ -75,6 +108,41 @@ class TFile extends TField implements AdiantiWidgetInterface
     }
     
     /**
+     * Return the post data
+     */
+    public function getPostData()
+    {
+        $name = str_replace(['[',']'], ['',''], $this->name);
+        
+        if (isset($_POST[$name]))
+        {
+            return $_POST[$name];
+        }
+    }
+    
+    /**
+     * Set field value
+     */
+    public function setValue($value)
+    {
+        if ($this->fileHandling)
+        {
+            if (strpos($value, '%7B') === false)
+            {
+                $this->value = urlencode(json_encode(['fileName'=>$value]));
+            }
+            else
+            {
+                parent::setValue($value);
+            }
+        }
+        else
+        {
+            parent::setValue($value);
+        }
+    }
+    
+    /**
      * Show the widget at the screen
      */
     public function show()
@@ -85,14 +153,18 @@ class TFile extends TField implements AdiantiWidgetInterface
         $this->tag->{'value'} = $this->value; // tag value
         $this->tag->{'type'}  = 'file';       // input type
         
-        if (strstr($this->size, '%') !== FALSE)
+        if (!empty($this->size))
         {
-            $this->setProperty('style', "width:{$this->size};", false); //aggregate style info
+            if (strstr($this->size, '%') !== FALSE)
+            {
+                $this->setProperty('style', "width:{$this->size};", false); //aggregate style info
+            }
+            else
+            {
+                $this->setProperty('style', "width:{$this->size}px;", false); //aggregate style info
+            }
         }
-        else
-        {
-            $this->setProperty('style', "width:{$this->size}px;", false); //aggregate style info
-        }
+        
         $this->setProperty('style', "height:{$this->height}px;", false); //aggregate style info
         
         $hdFileName = new THidden($this->name);
@@ -109,9 +181,9 @@ class TFile extends TField implements AdiantiWidgetInterface
                 {
                     throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
                 }
-                $string_action = $this->completeAction->serialize(FALSE);
                 
-                $complete_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback'); }";
+                $string_action = $this->completeAction->serialize(FALSE);
+                $complete_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback'); tfile_update_download_link('{$this->name}') }";
             }
         }
         else
@@ -138,10 +210,34 @@ class TFile extends TField implements AdiantiWidgetInterface
             $div->add( $this->tag );
         }
         
+        if ($this->displayMode == 'file' AND file_exists($this->value))
+        {
+            $icon = TElement::tag('i', null, ['class' => 'fa fa-download']);
+            $link = new TElement('a');
+            $link->{'id'}     = 'view_'.$this->name;
+            $link->{'href'}   = 'download.php?file='.$this->value;
+            $link->{'target'} = 'download';
+            $link->{'style'}  = 'padding: 4px; display: block';
+            $link->add($icon);
+            $link->add($this->value);
+            $div->add( $link );
+        }
+        
         $div->show();
         
-        $action = "engine.php?class={$this->uploaderClass}";
-        TScript::create(" tfile_start( '{$this->tag-> id}', '{$action}', '{$div-> id}', {$complete_action});");
+        if (empty($this->extensions))
+        {
+            $action = "engine.php?class={$this->uploaderClass}";
+        }
+        else
+        {
+            $hash = md5("{$this->seed}{$this->name}".base64_encode(serialize($this->extensions)));
+            $action = "engine.php?class={$this->uploaderClass}&name={$this->name}&hash={$hash}&extensions=".base64_encode(serialize($this->extensions));
+        }
+        
+        $fileHandling = $this->fileHandling ? '1' : '0';
+        
+        TScript::create(" tfile_start( '{$this->tag-> id}', '{$action}', '{$div-> id}', {$complete_action}, $fileHandling);");
     }
     
     /**

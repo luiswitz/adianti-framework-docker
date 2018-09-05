@@ -1,0 +1,701 @@
+html, body
+{
+    height: 95.5%;
+    margin: 0px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+}
+
+.content-wrapper
+{
+    background-color: white !important;
+}
+
+hr
+{
+    margin: 20px 0;
+    border: 0;
+    border-top: 1px solid silver;
+    border-bottom: 1px solid whitesmoke;
+}
+
+hr.slim
+{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+a
+{
+    text-decoration: none;
+}
+
+.popover-table
+{
+    border: 1px solid #e0e0e0;
+    border-collapse: collapse;
+}
+
+.popover-table td
+{
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+}
+
+.tframe
+{
+    margin: 10px;
+    padding-top: 5px !important;
+    padding-bottom: 8px !important;
+    padding-left: 15px !important;
+    padding-right: 5px !important;
+    border-radius: 0px !important;
+    border: 1px solid #ddd !important;
+}
+
+.tframe legend
+{
+    background: white;
+    color: #fff;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    box-shadow: 0 0 0 1px #C7C7C7;
+    margin-left: 3px;
+    padding-right: 5px;
+    margin-right: 5px;
+    height: 28px;
+}
+
+.tframe legend label
+{
+    padding-left: 3px;
+    font-weight: bold;
+}
+
+
+form .tfield, form .tfield_disabled
+{
+    height: 28px;
+}
+
+.panel form[type="bootstrap"] select.tcombo, .panel form[type="bootstrap"] textarea.tfield, .panel form[type="bootstrap"] input.tfield, .panel form[type="bootstrap"] input.tfield_disabled
+{
+    display: inline-block;
+    padding: 4px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #555555;
+    vertical-align: middle;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    border: 0;
+}
+
+.tformtitle + tr > td
+{
+    padding-top: 15px !important;
+}
+
+.ui-datepicker-trigger
+{
+    height: 28px !important;
+}
+
+.tseekbutton
+{
+    height: 28px !important;
+}
+
+.panel form[type="bootstrap"] span.tdate-group-addon, .panel form[type="bootstrap"] span.input-group-addon.tcolor {
+  height: 28px !important;
+  border-radius:0 !important;
+  background: none;
+  background-image: none;
+}
+
+.panel form[type="bootstrap"] .tseekbutton, .panel form[type="bootstrap"] .tdate-group-addon
+{
+    box-shadow: initial !important;
+    border-radius:0;
+    border:0;
+}
+
+.panel form[type="bootstrap"] .ttd
+{
+    display: inline-block;
+    margin-top: 8px;
+}
+
+span.tdate-group-addon > i.fa-clock-o, span.tdate-group-addon > i.glyphicon-calendar {
+  width:24px !important;
+  padding-top:4px;
+}
+
+.panel form[type="bootstrap"] div.color-div span.tcolor
+{
+  background: none !important;
+  background-image: none !important;
+  border: 0;
+}
+
+span.tcolor > i.tcolor-icon
+{
+    border: 1px solid #c0c0c0;
+}
+
+.login-avatar
+{
+    height: 28px;
+    padding-left: 4px;
+    padding-top: 8px;
+    color: gray;
+}
+
+.panel form[type="bootstrap"] select.tcombo
+{
+    height: 28px;
+    border: 0;
+    border-radius: 0;
+}
+
+
+label
+{
+    margin-bottom: 5px;
+}
+
+label, input, button, select, textarea
+{
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 20px;
+}
+
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button
+{
+    font-size: 12px;
+    margin: 0px;
+}
+
+.tformtitle + tr > td
+{
+    padding-top: 15px !important;
+}
+
+.tformtitle > td
+{
+    background-color: #3c8dbc !important;
+    padding: 8px 0px 8px 5px !important;
+}
+
+.tformtitle > td > label
+{
+    color: white !important;
+}
+
+.tformaction > td
+{
+    padding: 12px !important;
+}
+
+.tform > table
+{
+    background: #fff;
+    border: 1px solid #C6C6C6 !important;
+    padding: 0px !important;
+}
+
+.tform
+{
+    background: white !important;
+    border: none !important;
+    border-radius: none !important;
+    padding: 0px !important;
+    margin-bottom: 20px !important;
+}
+
+.tdatagrid_head tr td
+{
+    height: 34px;
+}
+
+.tdatagrid_body tr td
+{
+    height: 30px;
+}
+
+.tdatagrid_body tr td input
+{
+    height: 24px;
+    margin: 0;
+    padding: 0px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+
+.navbar-default .navbar-brand
+{
+    font-family: 'Open Sans';
+}
+
+.sidebar
+{
+    font-family: 'Open Sans';
+}
+
+.tbreadcrumb li span
+{
+    font-family: 'Open Sans';
+    font-size: 10pt;
+}
+
+.navbar-right {
+    margin-right: 0 !important;
+}
+
+.badge-notify{
+   background: #E16D6D;
+   position:relative;
+   top: -12px;
+   left: -12px;
+}
+
+ul.navbar-top-links > li.dropdown >a {
+    background: inherit;
+}
+
+ul.navbar-top-links > li.dropdown > a:hover {
+    background: #4A9FE0;
+}
+
+ul.navbar-top-links .open>a, ul.navbar-top-links .open>a:hover, ul.navbar-top-links .open>a:focus {
+    background: #4A9FE0;
+}
+
+@media only screen and (min-width: 501px) {
+    #search-box {
+        display:inline !important;
+        float:left;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    #search-box {
+        display:none !important;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    .pagination>li>a, .pagination>li>span {
+        padding: 6px;
+    }
+}
+
+
+.navbar-custom-menu > .navbar-nav {
+    float: right;
+}
+
+.sidebar-menu .treeview li, .sidebar-menu .treeview ul
+{
+    background: none;
+    overflow: hidden;
+}
+
+.select2-container--default .select2-selection
+{
+    border: 0;
+    padding-left: 4px !important;
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered
+{
+    padding-left: 0;
+}
+
+.select2-dropdown.select2-dropdown--below
+{
+    border-top: 1px solid #aaaaaa;
+}
+
+.tform
+{
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.tform .tformtitle > td:first-child
+{
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.tform .tformtitle > td:last-child
+{
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+table.tdatagrid_table
+{
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+}
+
+#form_login table > tbody > tr.tformtitle > td
+{
+    text-align: center;
+}
+
+#form_login table > tbody > tr.tformtitle > td > label
+{
+    padding: 0;
+    padding: 8px;
+    font-size: 17pt;
+}
+
+.panel
+{
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: initial;
+}
+
+.panel-default>.panel-heading > .panel-title
+{
+    text-transform: uppercase;
+    padding: 10px !important;
+}
+
+.panel-default>.panel-heading
+{
+    background: initial;
+    min-height: 53px !important;
+}
+
+.panel-footer
+{
+    background: initial;
+    border-top: initial;
+    border-top: 1px solid whitesmoke;
+}
+
+.btn:not(.btn-link):not(.btn-circle) i
+{
+    font-size: 12px !important;
+    position: initial !important;
+    top: initial !important;
+}
+
+.form-horizontal .form-group
+{
+    margin-bottom: 7px !important;
+}
+
+label
+{
+    font-family: 'Roboto', Arial, Tahoma, sans-serif;
+    color: #555;
+}
+
+.form-group .control-label label
+{
+    font-weight: bold;
+}
+
+#div_breadcrumbs
+{
+    border: 0;
+    text-transform: uppercase;
+}
+
+section.content
+{
+    margin-top: 84px !important;
+}
+
+.content .nav > li:hover
+{
+    background: whitesmoke;
+}
+
+.content .nav > li.active > a
+{
+    background: whitesmoke;
+}
+.content .nav > li > a
+{
+    color: #428bca !important;
+}
+
+.content .nav > li.active > a
+{
+    color: #428bca !important;
+    font-weight: bold;
+}
+
+.content .nav > li.active > a:hover
+{
+    color: #428bca !important;
+}
+
+input[type="radio"], input[type="checkbox"]
+{
+    position: inherit !important;
+    left: inherit !important;
+    opacity: inherit !important;
+    margin-right: 4px !important;
+}
+
+.tcheckgroup_label, .tcheckgroup_label > input
+{
+    cursor:pointer;
+}
+
+.ui-widget
+{
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.ui-dialog .table tbody tr td, .table tbody tr th
+{
+    padding: 8px !important;
+    border-bottom: 0 !important;
+}
+
+.ui-dialog .panel > .panel-body
+{
+    padding: 4px;
+}
+
+.ui-dialog .panel .panel-heading
+{
+    padding: 8px 15px;
+}
+
+.ui-dialog .panel .panel-footer
+{
+    padding: 8px 15px;
+}
+
+.ui-dialog .panel
+{
+    border:0;
+    box-shadow:none;
+}
+
+.panel > .panel-footer > .tpagenavigation
+{
+    padding-top:0;
+}
+
+.tfield_disabled
+{
+    background: whitesmoke;
+}
+
+.panel form[type="bootstrap"] .select2-choice
+{
+    border:0 !important;
+}
+
+.panel form[type="bootstrap"] .select2-arrow
+{
+    background:none !important;
+    background-image:none !important;
+    border: 0 !important;
+}
+
+.tframe
+{
+    background: white;
+}
+
+.tfullcalendar, .tform
+{
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.tfullcalendar
+{
+    padding: 20px;
+}
+
+[data-toggle="buttons"]>.btn input[type="radio"], [data-toggle="buttons"]>.btn-group>.btn input[type="radio"], [data-toggle="buttons"]>.btn input[type="checkbox"], [data-toggle="buttons"]>.btn-group>.btn input[type="checkbox"]
+{
+    position: absolute !important;
+}
+
+.left-mailbox {
+    float: left; 
+    width: 160px;
+    margin-right: 10px;
+}
+
+.right-mailbox { 
+    overflow: hidden;
+}
+
+@media screen and (max-width: 500px) {
+    .left-mailbox { 
+        float: none;
+        width: auto;
+        margin-right:0;
+    }
+}
+
+/** datetimepicker header **/
+
+.dtp
+{
+    z-index: 2010 !important;
+}
+
+.dtp > .dtp-content > .dtp-date-view > header.dtp-header
+{
+    background: #c73f3f !important;
+}
+
+.dtp div.dtp-date, .dtp div.dtp-time
+{
+    background: #f37070 !important;
+}
+
+
+.dtp .p10 > a
+{
+    color: #d8d8d8 !important;
+}
+
+.dtp table.dtp-picker-days tr > td > a.selected
+{
+    background: #fd8a8a !important;
+}
+
+
+.ui-dialog
+{
+    border-radius: 3px;
+}
+
+.ui-dialog-titlebar
+{
+    background: whitesmoke;
+    font-family: 'Open Sans';
+    padding: .2em .7em;
+    border-bottom: 1px solid whitesmoke;
+    font-weight:normal;
+    margin-bottom:0;
+    height: 48px;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+.ui-dialog .ui-dialog-titlebar-close
+{
+    background: whitesmoke !important;
+    border:0;
+}
+
+.panel button.btn:not(.btn-link):not(.btn-circle){
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.16), 0 2px 10px rgba(0, 0, 0, 0.12);
+    border-radius: 2px;
+    border: none;
+    font-size: 13px;
+    outline: none;
+}
+
+div.tab-pane
+{
+    border: 0 !important;
+}
+
+.ui-dialog .window_modal
+{
+    padding:0.2px;
+}
+
+.ui-dialog .window_modal .panel
+{
+    margin-bottom:0;
+    border-top:0;
+    border-radius:0;
+    overflow:hidden;
+}
+
+span.ui-spinner
+{
+    border: 0 !important;
+}
+
+span.ui-spinner a.ui-spinner-button
+{
+    border:0 !important;
+}
+
+input[widget="tslider"] {
+    margin: auto;
+}
+
+input[widget="tfile"], input[widget="tmultifile"] {
+    padding-top: 0;
+}
+
+.note-editor button.btn:not(.btn-link):not(.btn-circle) {
+    box-shadow: none;
+}
+
+.panel .tfieldlist select.tcombo,
+.panel .tfieldlist textarea.tfield,
+.panel .tfieldlist input.tfield,
+.panel .tfieldlist input.tfield_disabled
+{
+    box-shadow:none !important;
+    border-bottom: solid !important;
+    border-color: #ddd !important;
+    border-width: 1px !important;
+}
+
+.panel .tfieldlist select.tcombo:hover,
+.panel .tfieldlist textarea.tfield:hover,
+.panel .tfieldlist input.tfield:hover,
+.panel .tfieldlist .select2-container--default .select2-selection:hover
+{
+    border-color: #1f91f3 !important;
+    border-width: 2px !important;
+}
+
+.panel .tfieldlist .select2-container--default .select2-selection
+{
+    border-radius:0 !important;
+    border-bottom: 1px solid #ddd !important;
+    padding-left: 4px !important;
+}
+
+.sourcecodewrapper
+{
+    background: #262722;
+    font-weight:bold;
+    border-radius:3px;
+    padding:8px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px;
+}
+
+.tsourcecode code
+{
+    font-family: Andale mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Lucida Console, Monaco, Consolas, Droid Sans monospace, Monospace;
+    line-height: normal;
+    background: #262722;
+}

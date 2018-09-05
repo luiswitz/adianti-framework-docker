@@ -5,6 +5,15 @@ use Adianti\Core\AdiantiCoreTranslator;
 use Exception;
 use ReflectionClass;
 
+/**
+ * Standard Control Trait
+ *
+ * @version    5.0
+ * @package    base
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
+ */
 trait AdiantiStandardControlTrait
 {
     protected $database; // Database name

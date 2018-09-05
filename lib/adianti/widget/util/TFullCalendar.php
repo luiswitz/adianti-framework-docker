@@ -10,7 +10,7 @@ use stdClass;
 /**
  * FullCalendar Widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -28,7 +28,12 @@ class TFullCalendar extends TElement
     private $min_time;
     private $max_time;
     private $events;
-    
+    private $enabled_days;
+    private $popover;
+    private $poptitle;
+    private $popcontent;
+
+
     /**
      * Class Constructor
      * @param $current_date Current date of calendar
@@ -43,6 +48,8 @@ class TFullCalendar extends TElement
         $this->{'id'}    = 'tfullcalendar_' . mt_rand(1000000000, 1999999999);
         $this->min_time  = '00:00:00';
         $this->max_time  = '24:00:00';
+        $this->enabled_days = [0,1,2,3,4,5,6];
+        $this->popover = FALSE;
     }
     
     /**
@@ -52,6 +59,14 @@ class TFullCalendar extends TElement
     {
         $this->min_time = $min_time;
         $this->max_time = $max_time;
+    }
+    
+    /**
+     * Enable these days
+     */
+    public function enableDays($days)
+    {
+        $this->enabled_days = $days;
     }
     
     /**
@@ -109,6 +124,18 @@ class TFullCalendar extends TElement
     }
     
     /**
+     * Enable popover
+     * @param $title Title
+     * @param $content Content
+     */
+    public function enablePopover($title, $content)
+    {
+        $this->popover = TRUE;
+        $this->poptitle = $title;
+        $this->popcontent = $content;
+    }
+    
+    /**
      * Add an event
      * @param $id Event id
      * @param $title Event title
@@ -117,17 +144,52 @@ class TFullCalendar extends TElement
      * @param $url Event url
      * @param $color Event color
      */
-    public function addEvent($id, $title, $start, $end = NULL, $url = NULL, $color = NULL)
+    public function addEvent($id, $title, $start, $end = NULL, $url = NULL, $color = NULL, $object = NULL)
     {
         $event = new stdClass;
         $event->{'id'} = $id;
-        $event->{'title'} = $title;
+        
+        if ($this->popover and !empty($object))
+        {
+            $poptitle   = $this->replace($this->poptitle, $object);
+            $popcontent = $this->replace($this->popcontent, $object);
+            $event->{'title'} = "<div popover='true' poptitle='{$poptitle}' popcontent='{$popcontent}' style='display:inline'> {$title} </div>";
+        }
+        else
+        {
+            $event->{'title'} = $title;
+        }
         $event->{'start'} = $start;
         $event->{'end'} = $end;
         $event->{'url'} = $url;
         $event->{'color'} = $color;
         
         $this->events[] = $event;
+    }
+    
+    /**
+     * Replace a string with object properties within {pattern}
+     * @param $content String with pattern
+     * @param $object  Any object
+     */
+    private function replace($content, $object, $cast = null)
+    {
+        if (preg_match_all('/\{(.*?)\}/', $content, $matches) )
+        {
+            foreach ($matches[0] as $match)
+            {
+                $property = substr($match, 1, -1);
+                $value    = $object->$property;
+                if ($cast)
+                {
+                    settype($value, $cast);
+                }
+                
+                $content  = str_replace($match, $value, $content);
+            }
+        }
+        
+        return $content;
     }
     
     /**
@@ -173,8 +235,9 @@ class TFullCalendar extends TElement
         
         $events = json_encode($this->events);
         $editable = ($this->update_action) ? 'true' : 'false';
+        $hidden_days = json_encode(array_values(array_diff([0,1,2,3,4,5,6], $this->enabled_days)));
         
-        TScript::create("tfullcalendar_start( '{$id}', {$editable}, '{$this->default_view}', '{$this->current_date}', '$language', $events, '{$day_action_string}', '{$event_action_string}', '{$update_action_string}', '{$this->min_time}', '{$this->max_time}' );");
+        TScript::create("tfullcalendar_start( '{$id}', {$editable}, '{$this->default_view}', '{$this->current_date}', '$language', $events, '{$day_action_string}', '{$event_action_string}', '{$update_action_string}', '{$this->min_time}', '{$this->max_time}', $hidden_days );");
         parent::show();
     }
 }

@@ -9,7 +9,7 @@ use Adianti\Widget\Form\TField;
 /**
  * Slider Widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -73,9 +73,9 @@ class TSlider extends TField implements AdiantiWidgetInterface
     public function show()
     {
         // define the tag properties
-        $this->tag-> name  = $this->name;    // TAG name
-        $this->tag-> value = $this->value;   // TAG value
-        $this->tag-> type  = 'text';         // input type
+        $this->tag->{'name'}  = $this->name;    // TAG name
+        $this->tag->{'value'} = $this->value;   // TAG value
+        $this->tag->{'type'}  = 'text';         // input type
         
         if (strstr($this->size, '%') !== FALSE)
         {
@@ -91,32 +91,24 @@ class TSlider extends TField implements AdiantiWidgetInterface
             $this->tag->{'id'} = $this->id;
         }
         
-        // verify if the widget is editable
-        if (parent::getEditable())
+        $this->tag->{'readonly'} = "1";
+        $this->tag->{'style'}    = "width:40px;-moz-user-select:none;border:0;text-align:center";
+        
+        $div = new TElement('div');
+        $div->{'id'} = $this->id.'_div';
+        $div->{'style'} = "width:{$this->size}px";
+        
+        $main_div = new TElement('div');
+        $main_div->{'style'} = "text-align:center;width:{$this->size}px";
+        $main_div->add($this->tag);
+        $main_div->add($div);
+        $main_div->show();
+        
+        TScript::create(" tslider_start( '#{$this->id}', {$this->value}, {$this->min}, {$this->max}, {$this->step}); ");
+        
+        if (!parent::getEditable())
         {
-            $this->tag->{'readonly'} = "1";
-            $this->tag->{'style'}    = "width:40px;-moz-user-select:none;border:0;text-align:center";
-            
-            $div = new TElement('div');
-            $div->{'id'} = $this->id.'_div';
-            $div->{'style'} = "width:{$this->size}px";
-            
-            $main_div = new TElement('div');
-            $main_div->{'style'} = "text-align:center;width:{$this->size}px";
-            
-            TScript::create(" tslider_start( '#{$this->id}', {$this->value}, {$this->min}, {$this->max}, {$this->step}); ");
-            
-            $main_div->add($this->tag);
-            $main_div->add($div);
-            $main_div->show();
-        }
-        else
-        {
-            $this->tag->{'readonly'} = "1";
-            $this->tag->{'class'} = 'tfield_disabled'; // CSS
-            $this->tag->{'style'} = "width:40px;-moz-user-select:none;";
-            $this->tag->{'onmouseover'} = "style.cursor='default'";
-            $this->tag->show();
+            self::disableField($this->formName, $this->name);
         }
     }
     

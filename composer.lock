@@ -1,11 +1,364 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "192394569391ed3a249723c26e6de2d6",
+    "content-hash": "8b3dc0468e926893ed7651c9d87ab000",
     "packages": [
+        {
+            "name": "bacon/bacon-qr-code",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Bacon/BaconQrCode.git",
+                "reference": "5a91b62b9d37cee635bbf8d553f4546057250bee"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Bacon/BaconQrCode/zipball/5a91b62b9d37cee635bbf8d553f4546057250bee",
+                "reference": "5a91b62b9d37cee635bbf8d553f4546057250bee",
+                "shasum": ""
+            },
+            "require": {
+                "ext-iconv": "*",
+                "php": "^5.4|^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8"
+            },
+            "suggest": {
+                "ext-gd": "to generate QR code images"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "BaconQrCode": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ben Scholzen 'DASPRiD'",
+                    "email": "mail@dasprids.de",
+                    "homepage": "http://www.dasprids.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "BaconQrCode is a QR code generator for PHP.",
+            "homepage": "https://github.com/Bacon/BaconQrCode",
+            "time": "2017-10-17T09:59:25+00:00"
+        },
+        {
+            "name": "dompdf/dompdf",
+            "version": "v0.8.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dompdf/dompdf.git",
+                "reference": "5113accd9ae5d466077cce5208dcf3fb871bf8f6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/5113accd9ae5d466077cce5208dcf3fb871bf8f6",
+                "reference": "5113accd9ae5d466077cce5208dcf3fb871bf8f6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-gd": "*",
+                "ext-mbstring": "*",
+                "phenx/php-font-lib": "0.5.*",
+                "phenx/php-svg-lib": "0.3.*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.8.*",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "0.7-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Dompdf\\": "src/"
+                },
+                "classmap": [
+                    "lib/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Ménager",
+                    "email": "fabien.menager@gmail.com"
+                },
+                {
+                    "name": "Brian Sweeney",
+                    "email": "eclecticgeek@gmail.com"
+                },
+                {
+                    "name": "Gabriel Bull",
+                    "email": "me@gabrielbull.com"
+                }
+            ],
+            "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
+            "homepage": "https://github.com/dompdf/dompdf",
+            "time": "2017-11-26T14:49:08+00:00"
+        },
+        {
+            "name": "phenx/php-font-lib",
+            "version": "0.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PhenX/php-font-lib.git",
+                "reference": "760148820110a1ae0936e5cc35851e25a938bc97"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PhenX/php-font-lib/zipball/760148820110a1ae0936e5cc35851e25a938bc97",
+                "reference": "760148820110a1ae0936e5cc35851e25a938bc97",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "FontLib\\": "src/FontLib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Ménager",
+                    "email": "fabien.menager@gmail.com"
+                }
+            ],
+            "description": "A library to read, parse, export and make subsets of different types of font files.",
+            "homepage": "https://github.com/PhenX/php-font-lib",
+            "time": "2017-09-13T16:14:37+00:00"
+        },
+        {
+            "name": "phenx/php-svg-lib",
+            "version": "v0.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PhenX/php-svg-lib.git",
+                "reference": "ccc46ef6340d4b8a4a68047e68d8501ea961442c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PhenX/php-svg-lib/zipball/ccc46ef6340d4b8a4a68047e68d8501ea961442c",
+                "reference": "ccc46ef6340d4b8a4a68047e68d8501ea961442c",
+                "shasum": ""
+            },
+            "require": {
+                "sabberworm/php-css-parser": "8.1.*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Svg\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Ménager",
+                    "email": "fabien.menager@gmail.com"
+                }
+            ],
+            "description": "A library to read, parse and export to PDF SVG files.",
+            "homepage": "https://github.com/PhenX/php-svg-lib",
+            "time": "2018-06-03T10:10:03+00:00"
+        },
+        {
+            "name": "phpmailer/phpmailer",
+            "version": "v6.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPMailer/PHPMailer.git",
+                "reference": "cb3ea134d4d3729e7857737d5f320cce9caf4d32"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/cb3ea134d4d3729e7857737d5f320cce9caf4d32",
+                "reference": "cb3ea134d4d3729e7857737d5f320cce9caf4d32",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "ext-filter": "*",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "doctrine/annotations": "1.2.*",
+                "friendsofphp/php-cs-fixer": "^2.2",
+                "phpdocumentor/phpdocumentor": "2.*",
+                "phpunit/phpunit": "^4.8 || ^5.7",
+                "zendframework/zend-eventmanager": "3.0.*",
+                "zendframework/zend-i18n": "2.7.3",
+                "zendframework/zend-serializer": "2.7.*"
+            },
+            "suggest": {
+                "ext-mbstring": "Needed to send email in multibyte encoding charset",
+                "hayageek/oauth2-yahoo": "Needed for Yahoo XOAUTH2 authentication",
+                "league/oauth2-google": "Needed for Google XOAUTH2 authentication",
+                "psr/log": "For optional PSR-3 debug logging",
+                "stevenmaguire/oauth2-microsoft": "Needed for Microsoft XOAUTH2 authentication",
+                "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PHPMailer\\PHPMailer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Jim Jagielski",
+                    "email": "jimjag@gmail.com"
+                },
+                {
+                    "name": "Marcus Bointon",
+                    "email": "phpmailer@synchromedia.co.uk"
+                },
+                {
+                    "name": "Andy Prevost",
+                    "email": "codeworxtech@users.sourceforge.net"
+                },
+                {
+                    "name": "Brent R. Matzelle"
+                }
+            ],
+            "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
+            "time": "2018-03-27T13:49:45+00:00"
+        },
+        {
+            "name": "phprtflite/phprtflite",
+            "version": "v1.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phprtflite/PHPRtfLite.git",
+                "reference": "eef76d965fc7a0cb4c7342f229f67ad4793c61c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phprtflite/PHPRtfLite/zipball/eef76d965fc7a0cb4c7342f229f67ad4793c61c2",
+                "reference": "eef76d965fc7a0cb4c7342f229f67ad4793c61c2",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPRtfLite": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Steffen Zeidler",
+                    "email": "sigma_z@sigma-scripts.de"
+                }
+            ],
+            "description": "PHPRtfLite is an API enabling developers to create rtf documents with php.",
+            "time": "2014-07-04T19:43:18+00:00"
+        },
+        {
+            "name": "picqer/php-barcode-generator",
+            "version": "v0.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/picqer/php-barcode-generator.git",
+                "reference": "f754cbd592f3131af144dfcc6a3090fd0f6d1793"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/picqer/php-barcode-generator/zipball/f754cbd592f3131af144dfcc6a3090fd0f6d1793",
+                "reference": "f754cbd592f3131af144dfcc6a3090fd0f6d1793",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Picqer\\Barcode\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPLv3"
+            ],
+            "authors": [
+                {
+                    "name": "Nicola Asuni",
+                    "email": "info@tecnick.com",
+                    "homepage": "http://nicolaasuni.tecnick.com"
+                },
+                {
+                    "name": "Casper Bakker",
+                    "email": "info@picqer.com"
+                }
+            ],
+            "description": "An easy to use, non-bloated, barcode generator in PHP. Creates SVG, PNG, JPG and HTML images from the most used 1D barcode standards.",
+            "homepage": "http://github.com/picqer/php-barcode-generator",
+            "keywords": [
+                "CODABAR",
+                "Code11",
+                "Code93",
+                "EAN13",
+                "KIX",
+                "KIXCODE",
+                "MSI",
+                "POSTNET",
+                "Pharma",
+                "Standard 2 of 5",
+                "barcode",
+                "barcode generator",
+                "code128",
+                "code39",
+                "ean",
+                "html",
+                "jpeg",
+                "jpg",
+                "php",
+                "png",
+                "svg",
+                "upc"
+            ],
+            "time": "2017-09-28T19:23:19+00:00"
+        },
         {
             "name": "psr/log",
             "version": "1.0.2",
@@ -55,16 +408,16 @@
         },
         {
             "name": "robmorgan/phinx",
-            "version": "v0.8.0",
+            "version": "v0.8.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/robmorgan/phinx.git",
-                "reference": "15e43d10dd99ac818c8d65735c50191bcbeafdbc"
+                "url": "https://github.com/cakephp/phinx.git",
+                "reference": "7a19de5bebc59321edd9613bc2a667e7f96224ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/robmorgan/phinx/zipball/15e43d10dd99ac818c8d65735c50191bcbeafdbc",
-                "reference": "15e43d10dd99ac818c8d65735c50191bcbeafdbc",
+                "url": "https://api.github.com/repos/cakephp/phinx/zipball/7a19de5bebc59321edd9613bc2a667e7f96224ec",
+                "reference": "7a19de5bebc59321edd9613bc2a667e7f96224ec",
                 "shasum": ""
             },
             "require": {
@@ -117,28 +470,80 @@
                 "migrations",
                 "phinx"
             ],
-            "time": "2017-02-28T18:34:31+00:00"
+            "time": "2017-06-05T13:30:19+00:00"
         },
         {
-            "name": "symfony/config",
-            "version": "v3.2.8",
+            "name": "sabberworm/php-css-parser",
+            "version": "8.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/config.git",
-                "reference": "e5533fcc0b3dd377626153b2852707878f363728"
+                "url": "https://github.com/sabberworm/PHP-CSS-Parser.git",
+                "reference": "850cbbcbe7fbb155387a151ea562897a67e242ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/e5533fcc0b3dd377626153b2852707878f363728",
-                "reference": "e5533fcc0b3dd377626153b2852707878f363728",
+                "url": "https://api.github.com/repos/sabberworm/PHP-CSS-Parser/zipball/850cbbcbe7fbb155387a151ea562897a67e242ef",
+                "reference": "850cbbcbe7fbb155387a151ea562897a67e242ef",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9",
-                "symfony/filesystem": "~2.8|~3.0"
+                "php": ">=5.3.2"
             },
             "require-dev": {
-                "symfony/yaml": "~3.0"
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Sabberworm\\CSS": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Raphael Schweikert"
+                }
+            ],
+            "description": "Parser for CSS Files written in PHP",
+            "homepage": "http://www.sabberworm.com/blog/2010/6/10/php-css-parser",
+            "keywords": [
+                "css",
+                "parser",
+                "stylesheet"
+            ],
+            "time": "2016-07-19T19:14:21+00:00"
+        },
+        {
+            "name": "symfony/config",
+            "version": "v3.4.15",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/config.git",
+                "reference": "7b08223b7f6abd859651c56bcabf900d1627d085"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/config/zipball/7b08223b7f6abd859651c56bcabf900d1627d085",
+                "reference": "7b08223b7f6abd859651c56bcabf900d1627d085",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5.9|>=7.0.8",
+                "symfony/filesystem": "~2.8|~3.0|~4.0",
+                "symfony/polyfill-ctype": "~1.8"
+            },
+            "conflict": {
+                "symfony/dependency-injection": "<3.3",
+                "symfony/finder": "<3.3"
+            },
+            "require-dev": {
+                "symfony/dependency-injection": "~3.3|~4.0",
+                "symfony/event-dispatcher": "~3.3|~4.0",
+                "symfony/finder": "~3.3|~4.0",
+                "symfony/yaml": "~3.0|~4.0"
             },
             "suggest": {
                 "symfony/yaml": "To use the yaml reference dumper"
@@ -146,7 +551,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.4-dev"
                 }
             },
             "autoload": {
@@ -173,43 +578,49 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-12T14:13:17+00:00"
+            "time": "2018-07-26T11:19:56+00:00"
         },
         {
             "name": "symfony/console",
-            "version": "v3.2.8",
+            "version": "v3.4.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "a7a17e0c6c3c4d70a211f80782e4b90ddadeaa38"
+                "reference": "6b217594552b9323bcdcfc14f8a0ce126e84cd73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/a7a17e0c6c3c4d70a211f80782e4b90ddadeaa38",
-                "reference": "a7a17e0c6c3c4d70a211f80782e4b90ddadeaa38",
+                "url": "https://api.github.com/repos/symfony/console/zipball/6b217594552b9323bcdcfc14f8a0ce126e84cd73",
+                "reference": "6b217594552b9323bcdcfc14f8a0ce126e84cd73",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9",
-                "symfony/debug": "~2.8|~3.0",
+                "php": "^5.5.9|>=7.0.8",
+                "symfony/debug": "~2.8|~3.0|~4.0",
                 "symfony/polyfill-mbstring": "~1.0"
+            },
+            "conflict": {
+                "symfony/dependency-injection": "<3.4",
+                "symfony/process": "<3.3"
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/event-dispatcher": "~2.8|~3.0",
-                "symfony/filesystem": "~2.8|~3.0",
-                "symfony/process": "~2.8|~3.0"
+                "symfony/config": "~3.3|~4.0",
+                "symfony/dependency-injection": "~3.4|~4.0",
+                "symfony/event-dispatcher": "~2.8|~3.0|~4.0",
+                "symfony/lock": "~3.4|~4.0",
+                "symfony/process": "~3.3|~4.0"
             },
             "suggest": {
-                "psr/log": "For using the console logger",
+                "psr/log-implementation": "For using the console logger",
                 "symfony/event-dispatcher": "",
-                "symfony/filesystem": "",
+                "symfony/lock": "",
                 "symfony/process": ""
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.4-dev"
                 }
             },
             "autoload": {
@@ -236,37 +647,36 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-26T01:39:17+00:00"
+            "time": "2018-07-26T11:19:56+00:00"
         },
         {
             "name": "symfony/debug",
-            "version": "v3.2.8",
+            "version": "v4.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "fd6eeee656a5a7b384d56f1072243fe1c0e81686"
+                "reference": "47ead688f1f2877f3f14219670f52e4722ee7052"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/fd6eeee656a5a7b384d56f1072243fe1c0e81686",
-                "reference": "fd6eeee656a5a7b384d56f1072243fe1c0e81686",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/47ead688f1f2877f3f14219670f52e4722ee7052",
+                "reference": "47ead688f1f2877f3f14219670f52e4722ee7052",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9",
+                "php": "^7.1.3",
                 "psr/log": "~1.0"
             },
             "conflict": {
-                "symfony/http-kernel": ">=2.3,<2.3.24|~2.4.0|>=2.5,<2.5.9|>=2.6,<2.6.2"
+                "symfony/http-kernel": "<3.4"
             },
             "require-dev": {
-                "symfony/class-loader": "~2.8|~3.0",
-                "symfony/http-kernel": "~2.8|~3.0"
+                "symfony/http-kernel": "~3.4|~4.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "4.1-dev"
                 }
             },
             "autoload": {
@@ -293,29 +703,30 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-19T20:17:50+00:00"
+            "time": "2018-08-03T11:13:38+00:00"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v3.2.8",
+            "version": "v4.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "040651db13cf061827a460cc10f6e36a445c45b4"
+                "reference": "c0f5f62db218fa72195b8b8700e4b9b9cf52eb5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/040651db13cf061827a460cc10f6e36a445c45b4",
-                "reference": "040651db13cf061827a460cc10f6e36a445c45b4",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/c0f5f62db218fa72195b8b8700e4b9b9cf52eb5e",
+                "reference": "c0f5f62db218fa72195b8b8700e4b9b9cf52eb5e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9"
+                "php": "^7.1.3",
+                "symfony/polyfill-ctype": "~1.8"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "4.1-dev"
                 }
             },
             "autoload": {
@@ -342,20 +753,78 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-12T14:13:17+00:00"
+            "time": "2018-08-18T16:52:46+00:00"
         },
         {
-            "name": "symfony/polyfill-mbstring",
-            "version": "v1.3.0",
+            "name": "symfony/polyfill-ctype",
+            "version": "v1.9.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4"
+                "url": "https://github.com/symfony/polyfill-ctype.git",
+                "reference": "e3d826245268269cd66f8326bd8bc066687b4a19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/e79d363049d1c2128f133a2667e4f4190904f7f4",
-                "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/e3d826245268269cd66f8326bd8bc066687b4a19",
+                "reference": "e3d826245268269cd66f8326bd8bc066687b4a19",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "suggest": {
+                "ext-ctype": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Ctype\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                },
+                {
+                    "name": "Gert de Pagter",
+                    "email": "BackEndTea@gmail.com"
+                }
+            ],
+            "description": "Symfony polyfill for ctype functions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "ctype",
+                "polyfill",
+                "portable"
+            ],
+            "time": "2018-08-06T14:22:27+00:00"
+        },
+        {
+            "name": "symfony/polyfill-mbstring",
+            "version": "v1.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-mbstring.git",
+                "reference": "d0cd638f4634c16d8df4508e847f14e9e43168b8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/d0cd638f4634c16d8df4508e847f14e9e43168b8",
+                "reference": "d0cd638f4634c16d8df4508e847f14e9e43168b8",
                 "shasum": ""
             },
             "require": {
@@ -367,7 +836,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.3-dev"
+                    "dev-master": "1.9-dev"
                 }
             },
             "autoload": {
@@ -401,27 +870,31 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-11-14T01:06:16+00:00"
+            "time": "2018-08-06T14:22:27+00:00"
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.2.8",
+            "version": "v3.4.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "acec26fcf7f3031e094e910b94b002fa53d4e4d6"
+                "reference": "c2f4812ead9f847cb69e90917ca7502e6892d6b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/acec26fcf7f3031e094e910b94b002fa53d4e4d6",
-                "reference": "acec26fcf7f3031e094e910b94b002fa53d4e4d6",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/c2f4812ead9f847cb69e90917ca7502e6892d6b8",
+                "reference": "c2f4812ead9f847cb69e90917ca7502e6892d6b8",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9"
+                "php": "^5.5.9|>=7.0.8",
+                "symfony/polyfill-ctype": "~1.8"
+            },
+            "conflict": {
+                "symfony/console": "<3.4"
             },
             "require-dev": {
-                "symfony/console": "~2.8|~3.0"
+                "symfony/console": "~3.4|~4.0"
             },
             "suggest": {
                 "symfony/console": "For validating YAML files using the lint command"
@@ -429,7 +902,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.4-dev"
                 }
             },
             "autoload": {
@@ -456,7 +929,59 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-05-01T14:55:58+00:00"
+            "time": "2018-08-10T07:34:36+00:00"
+        },
+        {
+            "name": "tburry/pquery",
+            "version": "v1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tburry/pquery.git",
+                "reference": "872339ffd38d261c4417ea1855428b1b4ff9abf1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tburry/pquery/zipball/872339ffd38d261c4417ea1855428b1b4ff9abf1",
+                "reference": "872339ffd38d261c4417ea1855428b1b4ff9abf1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "htmlawed/htmlawed": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "IQuery.php",
+                    "gan_formatter.php",
+                    "gan_node_html.php",
+                    "gan_parser_html.php",
+                    "gan_selector_html.php",
+                    "gan_tokenizer.php",
+                    "gan_xml2array.php",
+                    "pQuery.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Todd Burry",
+                    "email": "todd@vanillaforums.com",
+                    "role": "developer"
+                }
+            ],
+            "description": "A jQuery like html dom parser written in php.",
+            "keywords": [
+                "dom",
+                "ganon",
+                "php"
+            ],
+            "time": "2016-01-14T20:55:00+00:00"
         }
     ],
     "packages-dev": [],

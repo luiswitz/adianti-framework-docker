@@ -12,7 +12,7 @@ use Exception;
 /**
  * Database Sortlist Widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio

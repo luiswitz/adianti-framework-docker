@@ -3,14 +3,12 @@ namespace Adianti\Widget\Dialog;
 
 use Adianti\Core\AdiantiCoreTranslator;
 use Adianti\Control\TAction;
-use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Base\TScript;
-use Adianti\Widget\Util\TImage;
 
 /**
  * Message Dialog
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage dialog
  * @author     Pablo Dall'Oglio
@@ -20,9 +18,6 @@ use Adianti\Widget\Util\TImage;
  */
 class TMessage
 {
-    private $id;
-    private $action;
-    
     /**
      * Class Constructor
      * @param $type    Type of the message (info, error)
@@ -32,82 +27,24 @@ class TMessage
      */
     public function __construct($type, $message, TAction $action = NULL, $title_msg = '')
     {
-        $this->id = 'tmessage_'.mt_rand(1000000000, 1999999999);
-        
-        $modal_wrapper = new TElement('div');
-        $modal_wrapper->{'class'} = 'modal';
-        $modal_wrapper->{'id'}    = $this->id;
-        $modal_wrapper->{'style'} = 'padding-top: 10%; z-index:4000';
-        $modal_wrapper->{'tabindex'} = '-1';
-        
-        $modal_dialog = new TElement('div');
-        $modal_dialog->{'class'} = 'modal-dialog';
-        
-        $modal_content = new TElement('div');
-        $modal_content->{'class'} = 'modal-content';
-        
-        $modal_header = new TElement('div');
-        $modal_header->{'class'} = 'modal-header';
-        
-        if ($type=='info')
-        {
-            $image = new TImage("fa:fa fa-info-circle fa-5x blue");
-        }
-        else
-        {
-            $image = new TImage("fa:fa fa-exclamation-circle fa-5x red");
-        }
-        $image->{'style'} = 'float:left; margin-right: 10px;';
-        
-        $close = new TElement('button');
-        $close->{'type'} = 'button';
-        $close->{'class'} = 'close';
-        $close->{'data-dismiss'} = 'modal';
-        $close->{'aria-hidden'} = 'true';
-        $close->add('×');
-        
-        $title = new TElement('h4');
-        $title->{'class'} = 'modal-title';
-        $title->{'style'} = 'display:inline';
-        $title->add( $title_msg ? $title_msg : ( $type == 'info' ? AdiantiCoreTranslator::translate('Information') : AdiantiCoreTranslator::translate('Error')));
-        
-        $body = new TElement('div');
-        $body->{'style'} = 'text-align:left';
-        $body->{'class'} = 'modal-body';
-        $body->add($image);
-        
-        $span = new TElement('span');
-        $span->add($message);
-        
-        $body->add($span);
-        $button = new TElement('button');
-        $button->{'class'} = 'btn btn-default';
-        $button->{'data-dismiss'} = 'modal';
-        $button->{'onclick'} = "\$( '.modal-backdrop' ).last().remove(); \$('#{$this->id}').modal('hide'); \$('body').removeClass('modal-open');";
-        $button->add('OK');
+        $title    = $title_msg ? $title_msg : ( $type == 'info' ? AdiantiCoreTranslator::translate('Information') : AdiantiCoreTranslator::translate('Error'));
+        $callback = "function () {}";
         
         if ($action)
         {
-            $button->{'onclick'} .= "__adianti_load_page('{$action->serialize()}');";
-            $button->{'data-toggle'} = "modal";
+            $callback = "function () { __adianti_load_page('{$action->serialize()}') }";
         }
         
-        $footer = new TElement('div');
-        $footer->{'class'} = 'modal-footer';
+        $title = addslashes($title);
+        $message = addslashes($message);
         
-        $modal_wrapper->add($modal_dialog);
-        $modal_dialog->add($modal_content);
-        $modal_content->add($modal_header);
-        $modal_header->add($close);
-        $modal_header->add($title);
-        
-        $modal_content->add($body);
-        $modal_content->add($footer);
-        
-        $footer->add($button);
-        
-        $modal_wrapper->show();
-        $callback = 'function () {' . $button->{'onclick'} .'}';
-        TScript::create( "tdialog_start( '#{$this->id}', $callback );");
+        if ($type == 'info')
+        {
+            TScript::create("__adianti_message('{$title}', '{$message}', $callback)");
+        }
+        else
+        {
+            TScript::create("__adianti_error('{$title}', '{$message}', $callback)");
+        }
     }
 }

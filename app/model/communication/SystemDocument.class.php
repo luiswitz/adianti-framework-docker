@@ -1,7 +1,13 @@
 <?php
 /**
- * SystemDocument Active Record
- * @author  <your-name-here>
+ * SystemDocument
+ *
+ * @version    1.0
+ * @package    model
+ * @subpackage communication
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemDocument extends TRecord
 {
@@ -139,7 +145,7 @@ class SystemDocument extends TRecord
         {
             foreach ($users as $user)
             {
-                $user_ids[$user->id] = $user->name;
+                $user_ids[] = $user->id;
             }
         }
         return $user_ids;
@@ -195,7 +201,7 @@ class SystemDocument extends TRecord
      */
     public function hasGroupAccess($usergroupids)
     {
-        return (SystemDocumentGroup::where('system_group_id','IN', "NOESC:({$usergroupids})")
+        return (SystemDocumentGroup::where('system_group_id','IN', $usergroupids)
                                    ->where('document_id', '=', $this->id)->count() >0);
     }
 }

@@ -9,7 +9,7 @@ use SimpleXMLElement;
 /**
  * Menu Widget
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage menu
  * @author     Pablo Dall'Oglio

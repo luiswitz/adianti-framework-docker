@@ -7,7 +7,7 @@ use Adianti\Widget\Container\TTableRow;
 /**
  * Creates a table layout, with rows and columns
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -40,7 +40,13 @@ class TTable extends TElement
         {
             $this->section = new TElement('tbody');
         }
+        else if ($type == 'tfoot')
+        {
+            $this->section = new TElement('tfoot');
+        }
         parent::add($this->section);
+        
+        return $this->section;
     }
     
     /**

@@ -11,7 +11,7 @@ use Exception;
 /**
  * Exception visualizer
  *
- * @version    4.0
+ * @version    5.0
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -84,9 +84,6 @@ class TExceptionView
                                             '<font color=darkblue>'.$error['function'].'</font>'.
                                             '('.'<font color=maroon>'.implode(',', $args).'</font>'.')</i>');
         }
-        $scroll=new TScroll;
-        $scroll->setSize(690,390);
-        $scroll->add($table);
         
         ob_start();
         $table->show();

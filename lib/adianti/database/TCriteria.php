@@ -6,7 +6,7 @@ use Adianti\Database\TExpression;
 /**
  * Provides an interface for filtering criteria definition
  *
- * @version    4.0
+ * @version    5.0
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -35,7 +35,7 @@ class TCriteria extends TExpression
     /**
      * create criteria from array of filters
      */
-    public static function create($simple_filters)
+    public static function create($simple_filters, $properties = null)
     {
         $criteria = new TCriteria;
         if ($simple_filters)
@@ -45,6 +45,18 @@ class TCriteria extends TExpression
                 $criteria->add(new TFilter($left_operand, '=', $right_operand));
             }
         }
+        
+        if ($properties)
+        {
+            foreach ($properties as $property => $value)
+            {
+                if (!empty($value))
+                {
+                    $criteria->setProperty($property, $value);
+                }
+            }
+        }
+        
         return $criteria;
     }
     

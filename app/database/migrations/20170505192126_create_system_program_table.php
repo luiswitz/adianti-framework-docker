@@ -41,7 +41,11 @@ class CreateSystemProgramTable extends AbstractMigration
         ['id' => 27, 'name' => 'System Unit List','controller' => 'SystemUnitList'],
         ['id' => 28, 'name' => 'System Access stats','controller' => 'SystemAccessLogStats'],
         ['id' => 29, 'name' => 'System Preference form','controller' => 'SystemPreferenceForm'],
-        ['id' => 30, 'name' => 'System Support form','controller' => 'SystemSupportForm']
+        ['id' => 30, 'name' => 'System Support form','controller' => 'SystemSupportForm'],
+        ['id' => 31, 'name' => 'System PHP Error','controller' => 'SystemPHPErrorLogView'],
+        ['id' => 32, 'name' => 'System Database Browser','controller' => 'SystemDatabaseExplorer'],
+        ['id' => 33, 'name' => 'System Table List','controller' => 'SystemTableList'],
+        ['id' => 34, 'name' => 'System Data Browser','controller' => 'SystemDataBrowser']
       ];
 
       $this->insert('system_program', $data);
