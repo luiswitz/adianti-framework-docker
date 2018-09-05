@@ -27,9 +27,11 @@ class SystemDatabaseInformationService
                                      AND has_table_privilege(n.nspname || '.' || c.relname, 'select')
                                ORDER BY 1";
         $query['sqlite'] = "SELECT name FROM sqlite_master WHERE (type = 'table' or type='view')";
-        $query['mysql'] = 'SHOW TABLE STATUS';
+        $query['mysql']  = 'SHOW TABLE STATUS';
+        $query['oracle'] = "SELECT table_name FROM cat where table_type in ('TABLE', 'VIEW') AND table_name not like '%$%'";
+        $query['mssql']  = "select name from sysobjects where (type = 'U' or type='V') order by name";
         
-        if (in_array($info['type'], [ 'pgsql', 'mysql', 'sqlite'] ))
+        if (in_array($info['type'], [ 'pgsql', 'mysql', 'sqlite', 'oracle', 'mssql'] ))
         {
             $table_list = [];
             $sql = $query[ $info['type'] ];
