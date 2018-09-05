@@ -42,7 +42,11 @@ class CreateSystemGroupProgramTable extends AbstractMigration
         ['id' => 26, 'system_group_id' => 1, 'system_program_id' => 27],
         ['id' => 27, 'system_group_id' => 1, 'system_program_id' => 28],
         ['id' => 28, 'system_group_id' => 1, 'system_program_id' => 29],
-        ['id' => 29, 'system_group_id' => 2, 'system_program_id' => 30]
+        ['id' => 29, 'system_group_id' => 2, 'system_program_id' => 30], 
+        ['id' => 30, 'system_group_id' => 1, 'system_program_id' => 31],
+        ['id' => 31, 'system_group_id' => 1, 'system_program_id' => 32],
+        ['id' => 32, 'system_group_id' => 1, 'system_program_id' => 33],
+        ['id' => 33, 'system_group_id' => 1, 'system_program_id' => 34]
       ];
 
       $this->insert('system_group_program', $data);
