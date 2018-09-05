@@ -1,10 +1,15 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 /**
- * Facade for phpMailer
- * @author  Pablo Dall'Oglio
- * @version 2.0, 2007-08-01
- * Copyright (c) 2006-2007 Pablo Dall'Oglio
- * <pablo@adianti.com.br>. All rights reserved.
+ * TMail
+ *
+ * @version    5.0
+ * @package    util
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class TMail
 {
@@ -16,6 +21,15 @@ class TMail
     function __construct()
     {
         $this->pm = new PHPMailer(true);
+        
+        $this->pm->SMTPOptions = array(
+                'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                )
+            );
+            
         $this->pm-> CharSet = 'utf-8';
     }
     
@@ -188,4 +202,3 @@ class TMail
         return TRUE;
     }
 }
-?>
