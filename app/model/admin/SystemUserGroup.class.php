@@ -1,7 +1,13 @@
 <?php
 /**
- * System_user_group Active Record
- * @author  <your-name-here>
+ * SystemUserGroup
+ *
+ * @version    1.0
+ * @package    model
+ * @subpackage admin
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemUserGroup extends TRecord
 {
@@ -20,4 +26,3 @@ class SystemUserGroup extends TRecord
         parent::addAttribute('system_group_id');
     }
 }
-?>

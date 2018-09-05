@@ -1,7 +1,13 @@
 <?php
 /**
- * SystemNotification Active Record
- * @author  <your-name-here>
+ * SystemNotification
+ *
+ * @version    1.0
+ * @package    model
+ * @subpackage communication
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemNotification extends TRecord
 {

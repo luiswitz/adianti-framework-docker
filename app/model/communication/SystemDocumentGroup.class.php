@@ -1,7 +1,13 @@
 <?php
 /**
- * SystemDocumentGroup Active Record
- * @author  <your-name-here>
+ * SystemDocumentGroup
+ *
+ * @version    1.0
+ * @package    model
+ * @subpackage communication
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemDocumentGroup extends TRecord
 {
@@ -19,6 +25,4 @@ class SystemDocumentGroup extends TRecord
         parent::addAttribute('document_id');
         parent::addAttribute('system_group_id');
     }
-
-
 }

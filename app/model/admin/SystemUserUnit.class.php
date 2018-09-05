@@ -1,6 +1,6 @@
 <?php
 /**
- * SystemUserProgram
+ * SystemUserUnit
  *
  * @version    1.0
  * @package    model
@@ -9,9 +9,9 @@
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    http://www.adianti.com.br/framework-license
  */
-class SystemUserProgram extends TRecord
+class SystemUserUnit extends TRecord
 {
-    const TABLENAME = 'system_user_program';
+    const TABLENAME = 'system_user_unit';
     const PRIMARYKEY= 'id';
     const IDPOLICY =  'max'; // {max, serial}
     
@@ -23,6 +23,6 @@ class SystemUserProgram extends TRecord
     {
         parent::__construct($id);
         parent::addAttribute('system_user_id');
-        parent::addAttribute('system_program_id');
+        parent::addAttribute('system_unit_id');
     }
 }
