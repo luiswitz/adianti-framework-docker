@@ -10,17 +10,26 @@ if ( TSession::getValue('logged') )
     $content     = file_get_contents("app/templates/{$theme}/layout.html");
     $menu_string = AdiantiMenuBuilder::parse('menu.xml', $theme);
     $content     = str_replace('{MENU}', $menu_string, $content);
+    
+    if ((TSession::getValue('login') == 'admin') && isset($ini['general']['token']))
+    {
+        $content = str_replace('{IF-BUILDER}', '', $content);
+        $content = str_replace('{/IF-BUILDER}','', $content);
+    }
 }
 else
 {
     $content = file_get_contents("app/templates/{$theme}/login.html");
 }
 
-// $content  = ApplicationTranslator::translateTemplate($content);
+$content = str_replace('{IF-BUILDER}', '<!--', $content);
+$content = str_replace('{/IF-BUILDER}', '-->', $content);
+$content  = ApplicationTranslator::translateTemplate($content);
 $content  = str_replace('{LIBRARIES}', file_get_contents("app/templates/{$theme}/libraries.html"), $content);
 $content  = str_replace('{class}', $class, $content);
 $content  = str_replace('{template}', $theme, $content);
 $content  = str_replace('{username}', TSession::getValue('username'), $content);
+$content  = str_replace('{usermail}', TSession::getValue('usermail'), $content);
 $content  = str_replace('{frontpage}', TSession::getValue('frontpage'), $content);
 $content  = str_replace('{query_string}', $_SERVER["QUERY_STRING"], $content);
 $css      = TPage::getLoadedCSS();
