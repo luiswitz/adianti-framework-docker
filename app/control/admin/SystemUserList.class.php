@@ -1,7 +1,13 @@
 <?php
 /**
- * SystemUserList Listing
- * @author  <your name here>
+ * SystemUserList
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage admin
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemUserList extends TStandardList
 {
@@ -55,7 +61,8 @@ class SystemUserList extends TStandardList
         $this->form->setData( TSession::getValue('SystemUser_filter_data') );
         
         // add the search form actions
-        $this->form->addAction(_t('Find'), new TAction(array($this, 'onSearch')), 'fa:search');
+        $btn = $this->form->addAction(_t('Find'), new TAction(array($this, 'onSearch')), 'fa:search');
+        $btn->class = 'btn btn-sm btn-primary';
         $this->form->addAction(_t('New'),  new TAction(array('SystemUserForm', 'onEdit')), 'bs:plus-sign green');
         
         // creates a DataGrid
@@ -140,13 +147,16 @@ class SystemUserList extends TStandardList
         $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
+        $panel = new TPanelGroup;
+        $panel->add($this->datagrid);
+        $panel->addFooter($this->pageNavigation);
+        
         // vertical box container
         $container = new TVBox;
         $container->style = 'width: 90%';
         $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
         $container->add($this->form);
-        $container->add(TPanelGroup::pack('', $this->datagrid));
-        $container->add($this->pageNavigation);
+        $container->add($panel);
         
         parent::add($container);
     }

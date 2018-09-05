@@ -1,7 +1,13 @@
 <?php
 /**
- * System_userForm Registration
- * @author  <your name here>
+ * SystemUserForm
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage admin
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemUserForm extends TPage
 {
@@ -33,34 +39,36 @@ class SystemUserForm extends TPage
         $groups              = new TDBCheckGroup('groups','permission','SystemGroup','id','name');
         $frontpage_id        = new TDBSeekButton('frontpage_id', 'permission', 'form_System_user', 'SystemProgram', 'name', 'frontpage_id', 'frontpage_name');
         $frontpage_name      = new TEntry('frontpage_name');
+        $units               = new TDBCheckGroup('units','permission','SystemUnit','id','name');
         
-        $groups->setLayout('horizontal');
-        $groups->setBreakItems(3);
-        foreach ($groups->getLabels() as $label)
+        $units->setLayout('horizontal');
+        if ($units->getLabels())
         {
-            $label->setSize(120);
+            foreach ($units->getLabels() as $label)
+            {
+                $label->setSize(200);
+            }
         }
         
-        $frame_groups = new TFrame(NULL, 160);
-        $frame_groups->setLegend(_t('Groups'));
-        $frame_groups->style .= ';margin:0px;width:95%';
+        $groups->setLayout('horizontal');
+        if ($groups->getLabels())
+        {
+            foreach ($groups->getLabels() as $label)
+            {
+                $label->setSize(200);
+            }
+        }
         
-        $frame_programs = new TFrame(NULL, 280);
-        $frame_programs->setLegend(_t('Programs'));
-        $frame_programs->style .= ';margin:0px;width:95%';
-        
-        $this->form->addAction( _t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
-        $this->form->addAction( _t('New'), new TAction(array($this, 'onEdit')), 'fa:eraser red');
-        $this->form->addAction( _t('Back to the listing'), new TAction(array('SystemUserList','onReload')), 'fa:table blue');
+        $btn = $this->form->addAction( _t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
+        $btn->class = 'btn btn-sm btn-primary';
+        $this->form->addAction( _t('Clear'), new TAction(array($this, 'onEdit')), 'fa:eraser red');
+        $this->form->addAction( _t('Back'), new TAction(array('SystemUserList','onReload')), 'fa:arrow-circle-o-left blue');
         
         $add_button  = TButton::create('add',  array($this,'onAddProgram'), _t('Add'), 'fa:plus green');
         
-        $this->form->addField($groups);
         $this->form->addField($program_id);
         $this->form->addField($program_name);
         $this->form->addField($add_button);
-        
-        $frame_groups->add( $groups );
         
         $this->program_list = new TQuickGrid;
         $this->program_list->setHeight(180);
@@ -82,7 +90,6 @@ class SystemUserForm extends TPage
         $vbox->style='width:100%';
         $vbox->add( $hbox );
         $vbox->add($this->program_list);
-        $frame_programs->add($vbox);
 
         // define the sizes
         $id->setSize('50%');
@@ -109,11 +116,14 @@ class SystemUserForm extends TPage
         
         $this->form->addFields( [new TLabel('ID')], [$id],  [new TLabel(_t('Name'))], [$name] );
         $this->form->addFields( [new TLabel(_t('Login'))], [$login],  [new TLabel(_t('Email'))], [$email] );
-        $this->form->addFields( [new TLabel(_t('Unit'))], [$unit_id],  [new TLabel(_t('Front page'))], [$frontpage_id, $frontpage_name] );
+        $this->form->addFields( [new TLabel(_t('Main unit'))], [$unit_id],  [new TLabel(_t('Front page'))], [$frontpage_id, $frontpage_name] );
         $this->form->addFields( [new TLabel(_t('Password'))], [$password],  [new TLabel(_t('Password confirmation'))], [$repassword] );
-        
-        $this->form->addContent( [$frame_groups] );
-        $this->form->addContent( [$frame_programs] );
+        $this->form->addFields( [new TFormSeparator(_t('Units'))] );
+        $this->form->addFields( [$units] );
+        $this->form->addFields( [new TFormSeparator(_t('Groups'))] );
+        $this->form->addFields( [$groups] );
+        $this->form->addFields( [new TFormSeparator(_t('Programs'))] );
+        $this->form->addFields( [$vbox] );
         
         $container = new TVBox;
         $container->style = 'width: 90%';
@@ -193,6 +203,14 @@ class SystemUserForm extends TPage
                 }
             }
             
+            if( !empty($param['units']) )
+            {
+                foreach( $param['units'] as $unit_id )
+                {
+                    $object->addSystemUserUnit( new SystemUnit($unit_id) );
+                }
+            }
+            
             $programs = TSession::getValue('program_list');
             if (!empty($programs))
             {
@@ -244,12 +262,21 @@ class SystemUserForm extends TPage
                 unset($object->password);
                 
                 $groups = array();
+                $units  = array();
                 
                 if( $groups_db = $object->getSystemUserGroups() )
                 {
-                    foreach( $groups_db as $grup )
+                    foreach( $groups_db as $group )
                     {
-                        $groups[] = $grup->id;
+                        $groups[] = $group->id;
+                    }
+                }
+                
+                if( $units_db = $object->getSystemUserUnits() )
+                {
+                    foreach( $units_db as $unit )
+                    {
+                        $units[] = $unit->id;
                     }
                 }
                 
@@ -275,6 +302,7 @@ class SystemUserForm extends TPage
                 }
                 
                 $object->groups = $groups;
+                $object->units  = $units;
                 
                 // fill the form with the active record data
                 $this->form->setData($object);

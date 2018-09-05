@@ -1,4 +1,14 @@
 <?php
+/**
+ * SystemSQLPanel
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage admin
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
+ */
 class SystemSQLPanel extends TPage
 {
     private $form;
@@ -17,7 +27,12 @@ class SystemSQLPanel extends TPage
         {
             if (substr($entry, -4) == '.ini')
             {
-                $options[ substr($entry,0,-4) ] = $entry;
+                $ini = parse_ini_file('app/config/'.$entry);
+                
+                if (!empty($ini['type']) && in_array($ini['type'], ['pgsql', 'mysql', 'sqlite', 'oracle', 'mssql']))
+                {
+                    $options[ substr($entry,0,-4) ] = str_replace('.ini', '', $entry);
+                }
             }
         }
         
@@ -28,7 +43,8 @@ class SystemSQLPanel extends TPage
         $this->form->addFields( [ $ld=new TLabel(_t('Database'))], [ $database], [$lt=new TLabel(_t('Table'))], [$table] );
         $this->form->addFields( [ $ls=new TLabel('SELECT')], [$select] );
         
-        $this->form->addAction( _t('Generate'), new TAction(array($this, 'onGenerate')), 'fa:check-circle green');
+        $btn = $this->form->addAction( _t('Generate'), new TAction(array($this, 'onGenerate')), 'fa:check-circle');
+        $btn->class = 'btn btn-sm btn-primary';
         
         $ld->setFontColor('red');
         $lt->setFontColor('red');
@@ -84,9 +100,18 @@ class SystemSQLPanel extends TPage
         {
             $table = $param['table'];
             $obj = new stdClass;
-            $obj->select = "SELECT * FROM {$table} LIMIT 100";
+            $obj->select = "SELECT * FROM {$table}";
             TForm::sendData('sqlpanel', $obj);
         }
+    }
+    
+    public function onLoad($param)
+    {
+        $obj = new stdClass;
+        $obj->database = $param['database'];
+        $obj->table    = $param['table'];
+        $obj->select = "SELECT * FROM {$obj->table}";
+        TForm::sendData('sqlpanel', $obj);
     }
     
     /**

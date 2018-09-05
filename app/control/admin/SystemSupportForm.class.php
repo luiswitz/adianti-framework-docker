@@ -1,7 +1,13 @@
 <?php
 /**
- * SystemMessageForm Registration
- * @author  <your name here>
+ * SystemSupportForm
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage admin
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemSupportForm extends TWindow
 {
@@ -14,8 +20,9 @@ class SystemSupportForm extends TWindow
     function __construct()
     {
         parent::__construct();
-        parent::setSize(0.8, 370);
+        parent::setSize(0.8, null);
         parent::setTitle( _t('Open ticket') );
+        parent::setProperty('class', 'window_modal');
         
         // creates the form
         $this->form = new BootstrapFormWrapper(new TQuickForm('form_SystemMessage'));
@@ -30,9 +37,9 @@ class SystemSupportForm extends TWindow
         $message = new TText('message');
 
         // add the fields
-        $this->form->addQuickField(_t('Title'), $subject,  '50%', new TRequiredValidator );
-        $this->form->addQuickField(_t('Message'), $message,  '50%', new TRequiredValidator );
-        $message->setSize('50%', '100');
+        $this->form->addQuickField(_t('Title'), $subject,  '90%', new TRequiredValidator );
+        $this->form->addQuickField(_t('Message'), $message,  '90%', new TRequiredValidator );
+        $message->setSize('90%', '100');
         
         if (!empty($id))
         {
@@ -40,7 +47,8 @@ class SystemSupportForm extends TWindow
         }
         
         // create the form actions
-        $this->form->addQuickAction(_t('Send'), new TAction(array($this, 'onSend')), 'fa:envelope-o');
+        $btn = $this->form->addQuickAction(_t('Send'), new TAction(array($this, 'onSend')), 'fa:envelope-o');
+        $btn->class = 'btn btn-sm btn-primary';
         $this->form->addQuickAction(_t('Clear form'),  new TAction(array($this, 'onClear')), 'fa:eraser red');
         
         // vertical box container

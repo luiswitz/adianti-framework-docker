@@ -1,7 +1,13 @@
 <?php
 /**
- * SystemDocumentForm Form
- * @author  <your name here>
+ * SystemDocumentForm
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage communication
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemDocumentForm extends TPage
 {
@@ -63,8 +69,9 @@ class SystemDocumentForm extends TPage
         $user_ids->setSize('70%', 70);
         
         // create the form actions
-        $this->form->addAction(_t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
-        $this->form->addAction(_t('New'),  new TAction(array($this, 'onClear')), 'bs:plus-sign green');
+        $btn = $this->form->addAction(_t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
+        $btn->class = 'btn btn-sm btn-primary';
+        $this->form->addAction(_t('Clear'),  new TAction(array($this, 'onClear')), 'fa:eraser red');
         
         // vertical box container
         $container = new TVBox;
@@ -96,7 +103,7 @@ class SystemDocumentForm extends TPage
             
             if ($data->user_ids)
             {
-                foreach ($data->user_ids as $user_id => $user_name)
+                foreach ($data->user_ids as $user_id)
                 {
                     TTransaction::open('permission');
                     $system_user = SystemUser::find($user_id);

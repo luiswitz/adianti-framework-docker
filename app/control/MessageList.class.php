@@ -1,4 +1,13 @@
 <?php
+/**
+ * MessageList
+ *
+ * @version    1.0
+ * @package    control
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
+ */
 class MessageList extends TElement
 {
     public function __construct($param)
@@ -75,7 +84,7 @@ class MessageList extends TElement
                 $a->add( $i = TElement::tag('i', '', array('class'=>'fa fa-envelope-o') ));
                 parent::add($li);
             }
-            else if ($param['theme'] = 'theme3')
+            else if ($param['theme'] == 'theme3')
             {
                 $this->class = 'dropdown-menu';
                 
@@ -122,10 +131,77 @@ class MessageList extends TElement
                     
                     $ul_wrapper->add($li);
                 }
+                
                 TTransaction::close();
                 
                 parent::add(TElement::tag('li', TElement::tag('a', 'Read messages', array('href'=>'index.php?class=SystemMessageList&method=filterInbox', 'generator'=>'adianti') ), array('class'=>'footer')));
                 parent::add(TElement::tag('li', TElement::tag('a', 'Send messages', array('href'=>'index.php?class=SystemMessageForm', 'generator'=>'adianti') ), array('class'=>'footer')));
+            }
+            else if ($param['theme'] == 'theme4')
+            {
+                $this->class = 'dropdown-menu';
+                
+                $a = new TElement('a');
+                $a->{'class'} = "dropdown-toggle";
+                $a->{'data-toggle'}="dropdown";
+                $a->{'href'} = "#";
+                
+                $a->add( TElement::tag('i',    'email', array('class'=>"material-icons")) );
+                $a->add( TElement::tag('span', count($system_messages), array('class'=>"label-count")) );
+                $a->show();
+                
+                $li_master = new TElement('li');
+                $ul_wrapper = new TElement('ul');
+                $ul_wrapper->{'class'} = 'menu';
+                $ul_wrapper->{'style'} = 'list-style:none';
+                $li_master->{'class'} = 'body';
+                $li_master->add($ul_wrapper);
+                
+                parent::add( TElement::tag('li', _t('Messages'), ['class'=>'header']));
+                parent::add($li_master);
+                
+                TTransaction::open('permission');
+                foreach ($system_messages as $system_message)
+                {
+                    $name    = SystemUser::find($system_message->system_user_id)->name;
+                    $date    = $this->getShortPastTime($system_message->dt_message);
+                    $subject = $system_message->subject;
+                    
+                    $li  = new TElement('li');
+                    $a   = new TElement('a');
+                    $div = new TElement('div');
+                    $div2= new TElement('div');
+                    
+                    $a->href = 'index.php?class=SystemMessageFormView&method=onView&id='.$system_message->id;
+                    $a->class = 'waves-effect waves-block';
+                    $a->generator = 'adianti';
+                    $li->add($a);
+                    
+                    $div->{'class'} = 'icon-circle bg-light-green';
+                    $div2->{'class'} = 'menu-info';
+                    
+                    $div->add( TElement::tag('i', '', array('class' => 'fa fa-user fa-2x') ) );
+                    
+                    $h4 = new TElement('h4');
+                    $h4->add( $name );
+                    $h4->add( $subject );
+                    
+                    $div2->add($h4);
+                    $a->add($div);
+                    $a->add($div2);
+                    
+                    $p = new TElement('p');
+                    $p->add( TElement::tag('i', 'access_time', ['class' => 'material-icons']) );
+                    $p->add( $date );
+                    
+                    $div2->add( $p );
+                    $ul_wrapper->add($li);
+                }
+                
+                TTransaction::close();
+                
+                parent::add(TElement::tag('li', TElement::tag('a', _t('Read messages'), array('href'=>'index.php?class=SystemMessageList&method=filterInbox', 'generator'=>'adianti') ), array('class'=>'footer')));
+                parent::add(TElement::tag('li', TElement::tag('a', _t('Send message'), array('href'=>'index.php?class=SystemMessageForm', 'generator'=>'adianti') ), array('class'=>'footer')));
             }
             
             TTransaction::close();

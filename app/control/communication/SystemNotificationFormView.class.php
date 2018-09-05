@@ -1,7 +1,13 @@
 <?php
 /**
- * SystemNotificationFormView Form
- * @author  <your name here>
+ * SystemNotificationFormView
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage communication
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemNotificationFormView extends TPage
 {
@@ -16,11 +22,8 @@ class SystemNotificationFormView extends TPage
             $data = (object) $param;
             
             // load the html template
-            $html = new THtmlRenderer('app/resources/systemnotificationview.html');
+            $html = new THtmlRenderer('app/resources/system_notification_view.html');
             $html->enableTranslation(TRUE);
-            
-            // load CSS styles
-            parent::include_css('app/resources/styles.css');
             
             TTransaction::open('communication');
             if (isset($data->id))
@@ -65,7 +68,12 @@ class SystemNotificationFormView extends TPage
             
             TTransaction::close();
             
-            parent::add($html);
+            $vbox = new TVBox;
+            $vbox->style = 'width:100%';
+            $vbox->add(TBreadCrumb::create( [_t('Notifications'), _t('View')] ) );
+            $vbox->add($html);
+            
+            parent::add($vbox);
         }
         catch (Exception $e)
         {

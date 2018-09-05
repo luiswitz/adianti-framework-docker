@@ -1,9 +1,13 @@
 <?php
 /**
- * Cadastro de Preferences
- * @author  Pablo Dall'Oglio
- * Copyright (c) 2006-2007 Pablo Dall'Oglio
- * <pablo@adianti.com.br>. All rights reserved.
+ * SystemPreferenceForm
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage admin
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemPreferenceForm extends TStandardForm
 {
@@ -34,6 +38,8 @@ class SystemPreferenceForm extends TStandardForm
         $mail_from   = new TEntry('mail_from');
         $mail_support= new TEntry('mail_support');
         
+        $smtp_host->placeholder = 'ssl://smtp.gmail.com, tls://server.company.com';
+        
         $yesno = array();
         $yesno['1'] = _t('Yes');
         $yesno['0'] = _t('No');
@@ -55,10 +61,11 @@ class SystemPreferenceForm extends TStandardForm
         $smtp_pass->setSize('70%');
         $mail_support->setSize('70%');
         
-        $this->form->addAction(_t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
+        $btn = $this->form->addAction(_t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
+        $btn->class = 'btn btn-sm btn-primary';
         
         $container = new TVBox;
-        $container->{'style'} = 'width: 90%; max-width: 1200px';
+        $container->{'style'} = 'width: 90%;';
         $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
         $container->add($this->form);
         parent::add($container);

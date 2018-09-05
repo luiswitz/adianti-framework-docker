@@ -1,7 +1,13 @@
 <?php
 /**
- * SystemProgramList Listing
- * @author  <your name here>
+ * SystemProgramList
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage admin
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemProgramList extends TStandardList
 {
@@ -47,12 +53,13 @@ class SystemProgramList extends TStandardList
         $this->form->setData( TSession::getValue('SystemProgram_filter_data') );
         
         // add the search form actions
-        $this->form->addAction(_t('Find'), new TAction(array($this, 'onSearch')), 'fa:search');
+        $btn = $this->form->addAction(_t('Find'), new TAction(array($this, 'onSearch')), 'fa:search');
+        $btn->class = 'btn btn-sm btn-primary';
         $this->form->addAction(_t('New'),  new TAction(array('SystemProgramForm', 'onEdit')), 'bs:plus-sign green');
         
         // creates a DataGrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
-        
+        $this->datagrid->datatable = 'true';
         $this->datagrid->style = 'width: 100%';
         $this->datagrid->setHeight(320);
         
@@ -97,6 +104,27 @@ class SystemProgramList extends TStandardList
         $action_del->setField('id');
         $this->datagrid->addAction($action_del);
         
+        $ini = AdiantiApplicationConfig::get();
+        
+        if ((TSession::getValue('login') == 'admin') && isset($ini['general']['token']))
+        {
+            $action_edit_page = new TDataGridAction(array('SystemPageService', 'editPage'));
+            $action_edit_page->setButtonClass('btn btn-default');
+            $action_edit_page->setLabel(_t('Edit page'));
+            $action_edit_page->setImage('fa:external-link green fa-lg');
+            $action_edit_page->setField('controller');
+            $action_edit_page->setDisplayCondition( array($this, 'displayBuilderActions') );
+            $this->datagrid->addAction($action_edit_page);
+            
+            $action_get_page = new TDataGridAction(array('SystemPageUpdate', 'onEdit'));
+            $action_get_page->setButtonClass('btn btn-default');
+            $action_get_page->setLabel(_t('Update page'));
+            $action_get_page->setImage('fa:download purple fa-lg');
+            $action_get_page->setField('controller');
+            $action_get_page->setDisplayCondition( array($this, 'displayBuilderActions') );
+            $this->datagrid->addAction($action_get_page);
+        }
+        
         // create the datagrid model
         $this->datagrid->createModel();
         
@@ -105,16 +133,22 @@ class SystemProgramList extends TStandardList
         $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
-
+        $panel = new TPanelGroup;
+        $panel->add($this->datagrid);
+        $panel->addFooter($this->pageNavigation);
 
         // vertical box container
         $container = new TVBox;
         $container->style = 'width: 90%';
         $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
         $container->add($this->form);
-        $container->add(TPanelGroup::pack('', $this->datagrid));
-        $container->add($this->pageNavigation);
+        $container->add($panel);
         
         parent::add($container);
+    }
+    
+    public function displayBuilderActions($object)
+    {
+        return ( (strpos($object->controller, 'System') === false) and !in_array($object->controller, ['CommonPage', 'WelcomeView']));
     }
 }

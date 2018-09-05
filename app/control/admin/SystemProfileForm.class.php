@@ -1,4 +1,14 @@
 <?php
+/**
+ * SystemProfileForm
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage admin
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
+ */
 class SystemProfileForm extends TPage
 {
     private $form;
@@ -7,8 +17,7 @@ class SystemProfileForm extends TPage
     {
         parent::__construct();
         
-        $this->form = new TQuickForm;
-        $this->form->class = 'tform';
+        $this->form = new BootstrapFormWrapper(new TQuickForm);
         $this->form->setFormTitle(_t('Profile'));
         
         $name  = new TEntry('name');
@@ -21,23 +30,16 @@ class SystemProfileForm extends TPage
         $this->form->addQuickField( _t('Name'), $name, '80%', new TRequiredValidator );
         $this->form->addQuickField( _t('Login'), $login, '80%', new TRequiredValidator );
         $this->form->addQuickField( _t('Email'), $email, '80%', new TRequiredValidator );
-        
-        $table = $this->form->getContainer();
-        $row = $table->addRow();
-        $row->style = 'background: #FFFBCB;';
-        $cell = $row->addCell( new TLabel(_t('Change password') . ' ('. _t('Leave empty to keep old password') . ')') );
-        $cell->colspan = 2;
-        
         $this->form->addQuickField( _t('Password'), $password1, '80%' );
         $this->form->addQuickField( _t('Password confirmation'), $password2, '80%' );
         
-        $this->form->addQuickAction(_t('Save'), new TAction(array($this, 'onSave')), 'fa:save');
+        $btn = $this->form->addQuickAction(_t('Save'), new TAction(array($this, 'onSave')), 'fa:save');
+        $btn->class = 'btn btn-sm btn-primary';
         
-        $bc = new TBreadCrumb();
-        $bc->addHome();
-        $bc->addItem('Profile');
+        $panel = new TPanelGroup(_t('Profile'));
+        $panel->add($this->form);
         
-        $container = TVBox::pack($bc, $this->form);
+        $container = TVBox::pack($panel);
         $container->style = 'width:90%';
         parent::add($container);
     }

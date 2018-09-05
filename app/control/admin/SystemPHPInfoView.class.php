@@ -1,4 +1,14 @@
 <?php
+/**
+ * SystemPHPInfoView
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage admin
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
+ */
 class SystemPHPInfoView extends TPage
 {
     protected $form; // formulário
@@ -34,7 +44,7 @@ class SystemPHPInfoView extends TPage
         $styles.= '#phpinfo h2 {font-size: 125%;} ';
         $styles.= '#phpinfo .p {text-align: left;} ';
         $styles.= '#phpinfo .e {background-color: whiteSmoke; font-weight: bold; color: #000000;} ';
-        $styles.= '#phpinfo .h {background-color: #599FC7; font-weight: bold; color: white;} ';
+        $styles.= '#phpinfo .h {background-color: #888888; font-weight: bold; color: white;} ';
         $styles.= '#phpinfo .v {background-color: white; color: #000000;} ';
         $styles.= '#phpinfo i {color: #666666; background-color: #cccccc;} ';
         $styles.= '#phpinfo img {float: right; border: 0px;} ';
@@ -46,10 +56,15 @@ class SystemPHPInfoView extends TPage
         $div->add($styles);
         $div->add($content);
         
+        $panel = new TPanelGroup('PHP Info');
+        $panel->add(new TAlert('info', _t('The php.ini current location is <b>^1</b>', php_ini_loaded_file())));
+        
+        $panel->add($div);
+        
         $container = new TVBox;
         $container->style = 'width: 90%';
         $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
-        $container->add($div);
+        $container->add($panel);
         
         parent::add($container);
     }

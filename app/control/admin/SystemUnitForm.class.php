@@ -1,7 +1,13 @@
 <?php
 /**
- * SystemUnitForm Registration
- * @author  <your name here>
+ * SystemUnitForm
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage admin
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemUnitForm extends TStandardForm
 {
@@ -35,9 +41,10 @@ class SystemUnitForm extends TStandardForm
         $name->addValidation( _t('Name'), new TRequiredValidator );
         
         // create the form actions
-        $this->form->addAction(_t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
-        $this->form->addAction(_t('New'),  new TAction(array($this, 'onEdit')), 'fa:eraser red');
-        $this->form->addAction(_t('Back to the listing'),new TAction(array('SystemUnitList','onReload')),'fa:table blue');
+        $btn = $this->form->addAction(_t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
+        $btn->class = 'btn btn-sm btn-primary';
+        $this->form->addAction(_t('Clear'),  new TAction(array($this, 'onEdit')), 'fa:eraser red');
+        $this->form->addAction(_t('Back'),new TAction(array('SystemUnitList','onReload')),'fa:arrow-circle-o-left blue');
         
         // vertical box container
         $container = new TVBox;

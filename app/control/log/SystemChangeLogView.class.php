@@ -1,9 +1,13 @@
 <?php
 /**
- * Changelog View
- * @author  Pablo Dall'Oglio
- * Copyright (c) 2006-2007 Pablo Dall'Oglio
- * <pablo@adianti.com.br>. All rights reserved.
+ * SystemChangeLogView
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage log
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemChangeLogView extends TStandardList
 {
@@ -43,7 +47,8 @@ class SystemChangeLogView extends TStandardList
         $tablename->setSize('80%');
         $login->setSize('80%');
         
-        $this->form->addAction(_t('Search'), new TAction(array($this, 'onSearch')), 'fa:search');
+        $btn = $this->form->addAction(_t('Search'), new TAction(array($this, 'onSearch')), 'fa:search');
+        $btn->class = 'btn btn-sm btn-primary';
         
         $this->formgrid = new TForm;
         
@@ -114,13 +119,16 @@ class SystemChangeLogView extends TStandardList
         $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
+        $panel = new TPanelGroup;
+        $panel->add($this->datagrid);
+        $panel->addFooter($this->pageNavigation);
+        
         $container = new TVBox;
         $container->style = 'width: 97%';
         $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
         $container->add($this->form);
-        $container->add(TPanelGroup::pack('', $this->formgrid));
+        $container->add($panel);
         
-        $container->add($this->pageNavigation);
         parent::add($container);
     }
 }

@@ -1,7 +1,13 @@
 <?php
 /**
- * SystemDocumentForm Form
- * @author  <your name here>
+ * SystemDocumentUploadForm
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage communication
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemDocumentUploadForm extends TPage
 {
@@ -29,7 +35,9 @@ class SystemDocumentUploadForm extends TPage
         $this->form->addFields( [new TLabel(_t('File'))], [$filename] );
         $filename->setSize('80%');
         $filename->addValidation( _t('File'), new TRequiredValidator );
-        $this->form->addAction(_t('Next'), new TAction(array($this, 'onNext')), 'fa:arrow-circle-o-right');
+        
+        $btn = $this->form->addAction(_t('Next'), new TAction(array($this, 'onNext')), 'fa:arrow-circle-o-right');
+        $btn->class = 'btn btn-sm btn-primary';
         
         // vertical box container
         $container = new TVBox;

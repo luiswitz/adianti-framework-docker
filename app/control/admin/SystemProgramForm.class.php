@@ -1,7 +1,13 @@
 <?php
 /**
- * SystemProgramForm Registration
- * @author  <your name here>
+ * SystemProgramForm
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage admin
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemProgramForm extends TStandardForm
 {
@@ -29,10 +35,9 @@ class SystemProgramForm extends TStandardForm
         // create the form fields
         $id            = new TEntry('id');
         $name          = new TEntry('name');
-        $controller    = new TMultiSearch('controller');
+        $controller    = new TUniqueSearch('controller');
         
         $controller->addItems($this->getPrograms());
-        $controller->setMaxSize(1);
         $controller->setMinLength(0);
         $id->setEditable(false);
 
@@ -50,9 +55,11 @@ class SystemProgramForm extends TStandardForm
         $controller->addValidation(('Controller'), new TRequiredValidator);
 
         // add form actions
-        $this->form->addAction(_t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
-        $this->form->addAction(_t('New'), new TAction(array($this, 'onEdit')), 'fa:eraser red');
-        $this->form->addAction(_t('Back to the listing'),new TAction(array('SystemProgramList','onReload')),'fa:table blue');
+        $btn = $this->form->addAction(_t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
+        $btn->class = 'btn btn-sm btn-primary';
+        
+        $this->form->addAction(_t('Clear'), new TAction(array($this, 'onEdit')), 'fa:eraser red');
+        $this->form->addAction(_t('Back'),new TAction(array('SystemProgramList','onReload')),'fa:arrow-circle-o-left blue');
 
         $container = new TVBox;
         $container->style = 'width: 90%';
@@ -102,7 +109,6 @@ class SystemProgramForm extends TStandardForm
                 TTransaction::open($this->database);
                 $class = $this->activeRecord;
                 $object = new $class($key);
-                $object->controller = array($object->controller => $object->controller);
                 $this->form->setData($object);
                 TTransaction::close();
                 
@@ -135,7 +141,7 @@ class SystemProgramForm extends TStandardForm
             $object = new SystemProgram;
             $object->id = $data->id;
             $object->name = $data->name;
-            $object->controller = reset($data->controller);
+            $object->controller = $data->controller;
             
             $this->form->validate();
             $object->store();

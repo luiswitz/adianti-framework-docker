@@ -1,4 +1,13 @@
 <?php
+/**
+ * NotificationList
+ *
+ * @version    1.0
+ * @package    control
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
+ */
 class NotificationList extends TElement
 {
     public function __construct($param)
@@ -8,7 +17,7 @@ class NotificationList extends TElement
         try
         {
             TTransaction::open('communication');
-            // load the messages to the logged user
+            // load the notifications to the logged user
             $system_notifications = SystemNotification::where('checked', '=', 'N')->where('system_user_to_id', '=', TSession::getValue('userid'))->orderBy('id', 'desc')->load();
             
             if ($param['theme'] == 'theme2')
@@ -56,7 +65,7 @@ class NotificationList extends TElement
                 $a->add( TElement::tag('strong', 'See alerts') );
                 parent::add($li);
             }
-            else if ($param['theme'] = 'theme3')
+            else if ($param['theme'] == 'theme3')
             {
                 $this->class = 'dropdown-menu';
                 
@@ -97,9 +106,70 @@ class NotificationList extends TElement
                     
                     $ul_wrapper->add($li);
                 }
-                
-                parent::add(TElement::tag('li', TElement::tag('a', 'View all', array('href'=>'index.php?class=SystemNotificationList', 'generator'=>'adianti') ), array('class'=>'footer')));
             }
+            else if ($param['theme'] == 'theme4')
+            {
+                $this->class = 'dropdown-menu';
+                
+                $a = new TElement('a');
+                $a->{'class'} = "dropdown-toggle";
+                $a->{'data-toggle'}="dropdown";
+                $a->{'href'} = "#";
+                
+                $a->add( TElement::tag('i',    'notifications', array('class'=>"material-icons")) );
+                $a->add( TElement::tag('span', count($system_notifications), array('class'=>"label-count")) );
+                $a->show();
+                
+                $li_master = new TElement('li');
+                $ul_wrapper = new TElement('ul');
+                $ul_wrapper->{'class'} = 'menu';
+                $ul_wrapper->{'style'} = 'list-style:none';
+                $li_master->{'class'} = 'body';
+                $li_master->add($ul_wrapper);
+                
+                parent::add( TElement::tag('li', _t('Notifications'), ['class'=>'header']));
+                parent::add($li_master);
+                
+                foreach ($system_notifications as $system_notification)
+                {
+                    $date    = $this->getShortPastTime($system_notification->dt_message);
+                    $subject = $system_notification->subject;
+                    $icon    = $system_notification->icon ? $system_notification->icon : 'fa fa-bell-o text-aqua';
+                    
+                    $li  = new TElement('li');
+                    $a   = new TElement('a');
+                    $div = new TElement('div');
+                    $div2= new TElement('div');
+                    
+                    $a->href = 'index.php?class=SystemNotificationFormView&method=onView&id='.$system_notification->id;
+                    $a->class = 'waves-effect waves-block';
+                    $a->generator = 'adianti';
+                    $li->add($a);
+                    
+                    $div->{'class'} = 'icon-circle';
+                    $div->{'style'} = 'background:whitesmoke';
+                    $div2->{'class'} = 'menu-info';
+                    
+                    $div->add( TElement::tag('i', '', array('class' => $icon) ) );
+                    
+                    $h4 = new TElement('h4');
+                    $h4->add( $subject );
+                    
+                    $div2->add($h4);
+                    $a->add($div);
+                    $a->add($div2);
+                    
+                    $p = new TElement('p');
+                    $p->add( TElement::tag('i', 'access_time', ['class' => 'material-icons']) );
+                    $p->add( $date );
+                    
+                    $div2->add( $p );
+                    $ul_wrapper->add($li);
+                }
+                
+                parent::add(TElement::tag('li', TElement::tag('a', _t('View all'), array('href'=>'index.php?class=SystemNotificationList', 'generator'=>'adianti') ), array('class'=>'footer')));
+            }
+            
             TTransaction::close();
         }
         catch (Exception $e)

@@ -1,7 +1,13 @@
 <?php
 /**
- * SystemMessageList Listing
- * @author  <your name here>
+ * SystemMessageList
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage communication
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemMessageList extends TStandardList
 {
@@ -37,9 +43,12 @@ class SystemMessageList extends TStandardList
         $message = new TEntry('message');
         $button  = TButton::create( 'search', array($this, 'onSearch'), _t('Find'), 'fa:search');
         
+        $subject->placeholder = _t('Subject');
+        $message->placeholder = _t('Message');
+        
         $table = new TTable;
         $table->style = 'width: 100%';
-        $table->addRowSet( new TLabel(_t('Subject')), $subject, new TLabel(_t('Message')), $message, $button );
+        $table->addRowSet( $subject, $message, $button );
 
         $subject->setSize('100%');
         $message->setSize('100%');
@@ -103,14 +112,9 @@ class SystemMessageList extends TStandardList
         
         $panel = new TPanelGroup($this->form);
         $panel->add($this->datagrid);
+        $panel->addFooter($this->pageNavigation);
         
-        // vertical box container
-        $vbox = new TVBox;
-        $vbox->style = 'width: 100%';
-        $vbox->add($panel);
-        $vbox->add($this->pageNavigation);
-        
-        $this->folders = new THtmlRenderer('app/resources/mail_folders.html');
+        $this->folders = new THtmlRenderer('app/resources/system_message_folders.html');
         $this->folders->enableSection('main', ['class_inbox'    => (TSession::getValue('inbox_criteria_type')== 'inbox') ? 'active' : '']);
         $this->folders->enableSection('main', ['class_sent'     => (TSession::getValue('inbox_criteria_type')== 'sent') ? 'active' : '']);
         $this->folders->enableSection('main', ['class_archived' => (TSession::getValue('inbox_criteria_type')== 'archived') ? 'active' : '']);
@@ -118,17 +122,15 @@ class SystemMessageList extends TStandardList
         
         $hbox = new THBox;
         $hbox->style = 'width:100%';
-        $hbox->add(TPanelGroup::pack('', $this->folders))->style='width: 20%;float:left;margin-right:10px';
-        $hbox->add($vbox)->style='width: calc(80% - 10px);float:left';
+        $hbox->add(TPanelGroup::pack('', $this->folders), '')->class = 'left-mailbox';
+        $hbox->add($panel, '')->class = 'right-mailbox';
         
-        $bread = new TBreadCrumb;
-        $bread->addHome();
-        $bread->addItem('Mail');
+        $vbox = new TVBox;
+        $vbox->style = 'width:100%';
+        $vbox->add(TBreadCrumb::create( [_t('Messages'), _t('List')] ) );
+        $vbox->add($hbox);
         
-        $container = new TVBox;
-        $container->add($bread);
-        $container->add($hbox);
-        parent::add($container);
+        parent::add($vbox);
     }
     
     /**

@@ -1,7 +1,13 @@
 <?php
 /**
- * SystemSqlLogList Listing
- * @author  <your name here>
+ * SystemSqlLogList
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage log
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemSqlLogList extends TStandardList
 {
@@ -48,7 +54,8 @@ class SystemSqlLogList extends TStandardList
         $this->form->setData( TSession::getValue('SystemSqlLog_filter_data') );
         
         // add the search form actions
-        $this->form->addAction(_t('Find'), new TAction(array($this, 'onSearch')), 'ico_find.png');
+        $btn = $this->form->addAction(_t('Find'), new TAction(array($this, 'onSearch')), 'fa:search');
+        $btn->class = 'btn btn-sm btn-primary';
         
         // creates a DataGrid
         $this->datagrid = new BootstrapDatagridWrapper(new TQuickGrid);
@@ -71,12 +78,15 @@ class SystemSqlLogList extends TStandardList
         $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
+        $panel = new TPanelGroup;
+        $panel->add($this->datagrid);
+        $panel->addFooter($this->pageNavigation);
+        
         $container = new TVBox;
         $container->style = 'width: 97%';
         $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
         $container->add($this->form);
-        $container->add(TPanelGroup::pack('', $this->datagrid));
-        $container->add($this->pageNavigation);
+        $container->add($panel);
         
         parent::add($container);
     }

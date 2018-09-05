@@ -1,7 +1,13 @@
 <?php
 /**
- * SystemNotificationList Listing
- * @author  <your name here>
+ * SystemNotificationList
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage communication
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemNotificationList extends TStandardList
 {
@@ -50,16 +56,15 @@ class SystemNotificationList extends TStandardList
         $this->form->setData( TSession::getValue('SystemNotification_filter_data') );
         
         // add the search form actions
-        $this->form->addAction(_t('Find'), new TAction(array($this, 'onSearch')), 'fa:search');
+        $btn = $this->form->addAction(_t('Find'), new TAction(array($this, 'onSearch')), 'fa:search');
+        $btn->class = 'btn btn-sm btn-primary';
         
         // creates a DataGrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
-        
         $this->datagrid->style = 'width: 100%';
-        $this->datagrid->setHeight(320);
 
         // creates the datagrid columns
-        $column_checked = new TDataGridColumn('action', _t('Action'), 'center', 200);
+        $column_checked = new TDataGridColumn('action', _t('Action'), 'center');
         $column_message = new TDataGridColumn('message', _t('Message'), 'left');
         
         $column_message->setTransformer( function($value, $object, $row) {
@@ -106,14 +111,16 @@ class SystemNotificationList extends TStandardList
         $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
-
+        $panel = new TPanelGroup;
+        $panel->add($this->datagrid);
+        $panel->addFooter($this->pageNavigation);
 
         // vertical box container
         $container = new TVBox;
         $container->style = 'width: 90%';
+        $container->add(TBreadCrumb::create( [_t('Notifications'), _t('List')] ) );
         $container->add($this->form);
-        $container->add(TPanelGroup::pack('', $this->datagrid));
-        $container->add($this->pageNavigation);
+        $container->add($panel);
         
         parent::add($container);
     }
@@ -129,7 +136,7 @@ class SystemNotificationList extends TStandardList
             $button = new TElement('a');
             $button->generator = 'adianti';
             $button->class = 'btn btn-default';
-            $button->style="width:160px";
+            //$button->style="width:160px";
             
             if ($object->checked == 'Y')
             {

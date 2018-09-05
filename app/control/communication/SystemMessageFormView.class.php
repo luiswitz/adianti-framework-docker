@@ -1,7 +1,13 @@
 <?php
 /**
- * SystemMessageFormView Form
- * @author  <your name here>
+ * SystemMessageFormView
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage communication
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemMessageFormView extends TPage
 {
@@ -16,11 +22,8 @@ class SystemMessageFormView extends TPage
             $data = (object) $param;
             
             // load the html template
-            $html = new THtmlRenderer('app/resources/systemmessageformview.html');
+            $html = new THtmlRenderer('app/resources/system_message_form_view.html');
             $html->enableTranslation();
-            
-            // load CSS styles
-            parent::include_css('app/resources/styles.css');
             
             TTransaction::open('communication');
             if (isset($data->id))
@@ -74,23 +77,20 @@ class SystemMessageFormView extends TPage
             
             TTransaction::close();
             
-            $folders = new THtmlRenderer('app/resources/mail_folders.html');
+            $folders = new THtmlRenderer('app/resources/system_message_folders.html');
             $folders->enableSection('main', []);
             $folders->enableTranslation();
             
             $hbox = new THBox;
             $hbox->style = 'width:100%';
-            $hbox->add(TPanelGroup::pack('', $folders))->style='width: 20%;float:left;margin-right:10px';
-            $hbox->add($html)->style='width: calc(80% - 15px);float:left';
-            
-            $bread = new TBreadCrumb;
-            $bread->addHome();
-            $bread->addItem('Mail');
+            $hbox->add(TPanelGroup::pack('', $folders), '')->class = 'left-mailbox';
+            $hbox->add($html, '')->class = 'right-mailbox';
             
             $vbox = new TVBox;
-            $vbox->style = 'width: 100%';
-            $vbox->add($bread);
+            $vbox->style = 'width:100%';
+            $vbox->add(TBreadCrumb::create( [_t('Messages'), _t('View')] ) );
             $vbox->add($hbox);
+            
             parent::add($vbox);
         }
         catch (Exception $e)

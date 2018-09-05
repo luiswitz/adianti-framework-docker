@@ -1,7 +1,13 @@
 <?php
 /**
- * SystemDocumentCategoryFormList Registration
- * @author  <your name here>
+ * SystemDocumentCategoryFormList
+ *
+ * @version    1.0
+ * @package    control
+ * @subpackage communication
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class SystemDocumentCategoryFormList extends TPage
 {
@@ -40,7 +46,8 @@ class SystemDocumentCategoryFormList extends TPage
         $name->setSize('70%');
         
         // create the form actions
-        $this->form->addAction(_t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
+        $btn = $this->form->addAction(_t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
+        $btn->class = 'btn btn-sm btn-primary';
         $this->form->addAction(_t('Clear form'),  new TAction(array($this, 'onEdit')), 'fa:eraser red');
         
         // creates a DataGrid
@@ -86,13 +93,16 @@ class SystemDocumentCategoryFormList extends TPage
         $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
+        $panel = new TPanelGroup;
+        $panel->add($this->datagrid);
+        $panel->addFooter($this->pageNavigation);
+        
         // vertical box container
         $container = new TVBox;
         $container->style = 'width: 90%';
         $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
         $container->add($this->form);
-        $container->add(TPanelGroup::pack('', $this->datagrid));
-        $container->add($this->pageNavigation);
+        $container->add($panel);
         
         parent::add($container);
     }
