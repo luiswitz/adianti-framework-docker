@@ -6,7 +6,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
     
-        <title>Adianti Framework ERP Template III</title>
+        <title>Adianti Template III</title>
         
         {LIBRARIES}
         {HEAD}
@@ -14,30 +14,55 @@
         <link rel="stylesheet" href="app/templates/{template}/css/AdminLTE.min.css">
         <!-- AdminLTE Skins. Choose a skin from the css/skins
              folder instead of downloading all of them to reduce the load. -->
-        <link rel="stylesheet" href="app/templates/{template}/css/skins/skin-blue.min.css">
+        <link rel="stylesheet" href="app/templates/{template}/css/skins/_all-skins.min.css">
+        
+        <style>
+        .panel-heading
+        {
+            height: 57px !important;
+            background: #3c8dbc !important;
+            color: white !important;
+            display:block;
+            margin:auto;
+            text-align:center;
+            float:inherit !important;
+        }
+        
+        .panel-heading .panel-title
+        {
+            text-align:center;
+            float:inherit !important;
+            font-size: 20px;
+        }
+        .fb-inline-field-container
+        {
+            padding-right: 0 !important;
+        }
+        </style>
     </head>
     <body>
-        <div id="wrapper">
-            <!-- Navigation -->
-            <nav class="main-header navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0; text-align:center">
-                <div class="navbar-header" style="display: inline-block;float:none">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" style="color:black" href="http://www.adianti.com.br/framework">Adianti Framework ERP Template III</a>
-                </div>
-                <!-- /.navbar-header -->
-            </nav>
-    
+        <nav class="main-header navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0; text-align:center">
+            <div class="navbar-header" style="display: inline-block;float:none">
+                <a class="navbar-brand" style="color:black" href="http://www.adianti.com.br/framework">Adianti Framework ERP Template III</a>
+            </div>
+            <!-- /.navbar-header -->
+        </nav>
+        
+        <div id="wrapper" style="width:90%;margin:auto;margin-top:10px">
             <div id="adianti_div_content"></div>
             <div id="adianti_online_content"></div>
             <div id="adianti_online_content2"></div>
             
         </div>
-        <div style="text-align:center"><a href="index.php?class=PublicView">[public view]</a></div>
+        <div style="text-align:center">
+            <!--[CREATE-ACCOUNT]--> <a href="index.php?class=SystemRegistrationForm">[_t{Create account}]</a> <!--[/CREATE-ACCOUNT]-->
+            <!--[RESET-PASSWORD]--> <a href="index.php?class=SystemRequestPasswordResetForm">[_t{Reset password}]</a> <!--[/RESET-PASSWORD]-->
+        </div>
+        
+        <a class="little-float-button bg-yellow" title="PHP Modules" href="index.php?class=SystemModulesCheckView" style="pointer-events: auto;">
+            <i class="fa fa-cog internal-float-button"></i>
+        </a>
+        
         <!-- /#wrapper -->
     </body>
 </html>

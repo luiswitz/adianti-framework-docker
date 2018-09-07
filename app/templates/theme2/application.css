@@ -303,3 +303,32 @@ ul.navbar-top-links .open>a, ul.navbar-top-links .open>a:hover, ul.navbar-top-li
     padding: 8px;
     font-size: 17pt;
 }
+
+input[widget="tslider"] {
+    margin: auto;
+}
+
+input[widget="tfile"], input[widget="tmultifile"] {
+    padding-top: 0;
+}
+
+.file-response-icon {
+    position: absolute;
+    padding-left: 3px;
+    padding-top: 3px;
+}
+
+
+.panel-default>.panel-heading
+{
+    border-top: 1px solid #3c8dbc;
+    background: #f8f8f8;
+    height: 52px !important;
+    padding: 7px !important;
+}
+
+.fb-field-container:after {
+    content: '';
+    display: block;
+    clear: both;
+}

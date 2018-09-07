@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Adianti Framework ERP Template IV</title>
+    <title>Adianti Template IV</title>
     
     {LIBRARIES}
     {HEAD}
@@ -94,31 +94,7 @@
                     <!-- Call Search -->
                     <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
                     <!-- #END# Call Search -->
-                    
-                      {IF-BUILDER}
-                      <li class="dropdown" id="asdf">
-                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-cog fa-fw fa-lg"></i>
-                         </a>
-                         <ul class="dropdown-menu">
-                            <li>
-                                <a onclick="__adianti_builder_edit_page()" generator="adianti" style="cursor:pointer">
-                                    <i class="fa fa-pencil-square-o blue"></i> Editar a página
-                                </a>
-                            </li>
-                            <li>
-                                <a onclick="__adianti_builder_update_page()" generator="adianti" style="cursor:pointer">
-                                    <i class="fa fa-download green"></i> Atualizar a página
-                                </a>
-                            </li>
-                    <li>
-                        <a onclick="__adianti_builder_get_new_pages()" generator="adianti" style="cursor:pointer">
-                            <i class="fa fa-cloud-download orange"></i> Baixar novas páginas
-                        </a>
-                    </li>
-                         </ul>
-                      </li>
-                      {/IF-BUILDER}
+                      <!--{BUILDER-MENU}-->
                       
                       <!-- Notifications -->
                       <li>
@@ -144,7 +120,7 @@
             <!-- User Info -->
             <div class="user-info">
                 <div class="image">
-                    <img src="app/templates/{template}/images/user.png" width="48" height="48" alt="User" />
+                    <img src="app/images/photos/{login}.jpg" onError="this.onerror=null;this.src='app/templates/{template}/images/user.png';" width="48" height="48" alt="User" />
                 </div>
                 <div class="info-container">
                     <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{username}</div>

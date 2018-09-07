@@ -156,11 +156,14 @@ span.tcolor > i.tcolor-icon
 
 .panel form[type="bootstrap"] select.tcombo
 {
-    height: 28px;
     border: 0;
     border-radius: 0;
 }
 
+.panel form[type="bootstrap"] select.tcombo:not([multiple='1'])
+{
+    height: 28px;
+}
 
 label
 {
@@ -287,6 +290,26 @@ ul.navbar-top-links .open>a, ul.navbar-top-links .open>a:hover, ul.navbar-top-li
     #search-box {
         display:none !important;
     }
+    
+    ol.tbreadcrumb li 
+    {
+        padding: 0;
+    }
+    
+    .tbreadcrumb li span
+    {
+        font-size: 7pt;
+    }
+    
+    #div_breadcrumbs > ol > li:nth-child(1)
+    {
+        display: none;
+    }
+    
+    ol.tbreadcrumb li a
+    {
+        padding-right: 0.75em;
+    }
 }
 
 @media only screen and (max-width: 550px) {
@@ -310,6 +333,11 @@ ul.navbar-top-links .open>a, ul.navbar-top-links .open>a:hover, ul.navbar-top-li
 {
     border: 0;
     padding-left: 4px !important;
+}
+
+input.select2-search__field
+{
+    height: 20px;
 }
 
 .select2-container .select2-selection--single .select2-selection__rendered
@@ -495,14 +523,14 @@ input[type="radio"], input[type="checkbox"]
     box-shadow:none;
 }
 
-.panel > .panel-footer > .tpagenavigation
+.panel > .panel-footer > .tpagenavigation, .panel > .panel-footer > .tpagenavigation_resume
 {
     padding-top:0;
 }
 
-.tfield_disabled
+.tfield_disabled, .panel form[type="bootstrap"] input.tfield_disabled
 {
-    background: whitesmoke;
+    background: #eee;
 }
 
 .panel form[type="bootstrap"] .select2-choice
@@ -654,6 +682,7 @@ input[widget="tfile"], input[widget="tmultifile"] {
 
 .note-editor button.btn:not(.btn-link):not(.btn-circle) {
     box-shadow: none;
+    border: 1px solid #cecece;
 }
 
 .panel .tfieldlist select.tcombo,
@@ -691,6 +720,7 @@ input[widget="tfile"], input[widget="tmultifile"] {
     padding:8px;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
     margin-bottom: 10px;
+    overflow-x: auto;
 }
 
 .tsourcecode code
@@ -698,4 +728,69 @@ input[widget="tfile"], input[widget="tmultifile"] {
     font-family: Andale mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Lucida Console, Monaco, Consolas, Droid Sans monospace, Monospace;
     line-height: normal;
     background: #262722;
+}
+
+.file-response-icon {
+    position: absolute;
+    padding-left: 3px;
+    padding-top: 3px;
+}
+
+.input-fuse-search
+{
+    margin-top: -6px;
+}
+
+.input-data-search
+{
+    box-shadow:none;
+    border-radius: 0;
+    border: 1px solid #afafaf;
+}
+
+.input-data-search:focus
+{
+    border: 1px solid #8C8CF9;
+}
+
+.fc-scroller
+{
+    overflow-x: visible !important;
+}
+
+.little-float-button {
+    position: fixed;
+    width: 30px;
+    height: 30px;
+    bottom: 40px;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    box-shadow: 2px 2px 3px #999;
+    z-index: 20000;
+    font-size: 100%;
+    color: white;
+    right: 10px;
+}
+
+.little-float-button.disabled {
+    background-color: gray;
+}
+
+.little-float-button:hover, .little-float-button:focus {
+    color: white;
+}
+
+.little-float-button .internal-float-button {
+    margin-top: 8px;
+}
+
+div > div.panel > .panel-body {
+    padding: 10px;
+}
+
+.fb-field-container:after {
+    content: '';
+    display: block;
+    clear: both;
 }

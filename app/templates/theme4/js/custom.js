@@ -137,6 +137,10 @@ function tdatetime_start( id, mask, language, size, options) {
     };
     
     options = Object.assign(atributes, JSON.parse( options) );
+    if (options.pickDate == false)
+    {
+        options.date = false;
+    }
     
     $( id ).bootstrapMaterialDatePicker(options).on('change', function(e, date) {
         if ( $( id ).attr('exitaction')) {
