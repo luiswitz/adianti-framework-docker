@@ -15,7 +15,7 @@ use Exception;
 /**
  * FileChooser widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Nataniel Rabaioli
@@ -63,6 +63,7 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
     public function setAllowedExtensions($extensions)
     {
         $this->extensions = $extensions;
+        $this->tag->{'accept'} = '.' . implode(',.', $extensions);
     }
     
     /**
@@ -107,33 +108,47 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
      */
     public function setValue($value)
     {
-        if ($value)
+        if ($this->fileHandling)
         {
-            if ($this->fileHandling)
+            if (is_array($value))
             {
-                if (is_array($value))
+                $new_value = [];
+                
+                foreach ($value as $key => $item)
                 {
-                    $new_value = [];
-                    foreach ($value as $key => $item)
+                    if (is_array($item))
                     {
-                        if (is_array($item))
-                        {
-                            $new_value[] = urlencode(json_encode($item));
-                        }
-                        else
+                        $new_value[] = urlencode(json_encode($item));
+                    }
+                    else if (is_scalar($item) and (strpos($item, '%7B') === false))
+                    {
+                        if (!empty($item))
                         {
                             $new_value[] = urlencode(json_encode(['idFile'=>$key,'fileName'=>$item]));
                         }
                     }
-                    $value = $new_value;
+                    else
+                    {
+                        $value_object = json_decode(urldecode($item));
+                        
+                        if (!empty($value_object->{'delFile'}) AND $value_object->{'delFile'} == $value_object->{'fileName'})
+                        {
+                            $value = '';
+                        }
+                        else
+                        {
+                            $new_value[] = $item;
+                        }
+                    }
                 }
-                
-                parent::setValue($value);
+                $value = $new_value;
             }
-            else
-            {            
-                parent::setValue($value);
-            }
+            
+            parent::setValue($value);
+        }
+        else
+        {            
+            parent::setValue($value);
         }
     }
     
@@ -189,10 +204,6 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
         $div->{'style'} = "width:{$this->size}px;";
         $div->{'id'}    = 'div_file_'.$id_div;
         
-        $divParciais = new TElement('div');
-        $divParciais->{'style'} = 'width:100%;';
-        $divParciais->{'id'}    = 'div_parciais_'.$id_div;
-        
         foreach( (array)$this->value as $val )
         {
             $hdFileName = new THidden($this->name.'[]');
@@ -202,7 +213,6 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
         }
                 
         $div->add( $this->tag );
-        $div->add( $divParciais );
         $div->show();
         
         if (empty($this->extensions))
@@ -217,7 +227,7 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
         
         $fileHandling = $this->fileHandling ? '1' : '0';
         
-        TScript::create(" tmultifile_start( '{$this->tag-> id}', '{$action}', '{$divParciais-> id}', {$complete_action}, $fileHandling);");
+        TScript::create(" tmultifile_start( '{$this->tag-> id}', '{$div-> id}', '{$action}', {$complete_action}, $fileHandling);");
     }
     
     /**

@@ -14,7 +14,7 @@ use Exception;
 /**
  * Select Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -95,6 +95,15 @@ class TSelect extends TField implements AdiantiWidgetInterface
     {
         $this->size = $width;
         $this->height = $height;
+    }
+    
+    /**
+     * Returns the size
+     * @return array(width, height)
+     */
+    public function getSize()
+    {
+        return array( $this->size, $this->height );
     }
     
     /**
@@ -276,7 +285,8 @@ class TSelect extends TField implements AdiantiWidgetInterface
                     $option->add(htmlspecialchars($item));      // add the item label
                     
                     // verify if this option is selected
-                    if (@in_array($chave, (array) $this->value))
+                    if ( (is_array($this->value)  AND @in_array($chave, $this->value)) OR
+                         (is_scalar($this->value) AND strlen( (string) $this->value ) > 0 AND @in_array($chave, (array) $this->value)))
                     {
                         // mark as selected
                         $option->{'selected'} = 1;
@@ -304,14 +314,8 @@ class TSelect extends TField implements AdiantiWidgetInterface
         $this->tag->{'name'}  = $this->name.'[]';    // tag name
         $this->tag->{'id'}    = $this->id;
         
-        if (strstr($this->size, '%') !== FALSE)
-        {
-            $this->setProperty('style', "width:{$this->size};height:{$this->height}", false); //aggregate style info
-        }
-        else
-        {
-            $this->setProperty('style', "width:{$this->size}px;height:{$this->height}px", false); //aggregate style info
-        }
+        $this->setProperty('style', (strstr($this->size, '%') !== FALSE)   ? "width:{$this->size}"    : "width:{$this->size}px",   false); //aggregate style info
+        $this->setProperty('style', (strstr($this->height, '%') !== FALSE) ? "height:{$this->height}" : "height:{$this->height}px", false); //aggregate style info
         
         // verify whether the widget is editable
         if (parent::getEditable())

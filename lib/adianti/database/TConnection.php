@@ -8,7 +8,7 @@ use Exception;
 /**
  * Singleton manager for database connections
  *
- * @version    5.0
+ * @version    5.5
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -16,6 +16,8 @@ use Exception;
  */
 final class TConnection
 {
+    private static $config_path;
+    
     /**
      * Class Constructor
      * There'll be no instances of this class
@@ -45,6 +47,16 @@ final class TConnection
     }
     
     /**
+     * Change database configuration Path
+     * 
+     * @param $path Config path
+     */
+    public static function setConfigPath($path)
+    {
+        self::$config_path = $path;
+    }
+    
+    /**
      * Opens a database connection from array with db info
      * 
      * @param $db Array with database info
@@ -61,6 +73,7 @@ final class TConnection
         $port  = isset($db['port']) ? $db['port'] : NULL;
         $char  = isset($db['char']) ? $db['char'] : NULL;
         $flow  = isset($db['flow']) ? $db['flow'] : NULL;
+        $fkey  = isset($db['fkey']) ? $db['fkey'] : NULL;
         $type  = strtolower($type);
         
         // each database driver has a different instantiation process
@@ -87,7 +100,10 @@ final class TConnection
                 break;
             case 'sqlite':
                 $conn = new PDO("sqlite:{$name}");
-                $conn->query('PRAGMA foreign_keys = ON'); // referential integrity must be enabled
+                if (is_null($fkey) OR $fkey == '1')
+                {
+                    $conn->query('PRAGMA foreign_keys = ON'); // referential integrity must be enabled
+                }
                 break;
             case 'ibase':
             case 'fbird':
@@ -98,7 +114,17 @@ final class TConnection
             case 'oracle':
                 $port    = $port ? $port : '1521';
                 $charset = $char ? ";charset={$char}" : '';
-                $conn = new PDO("oci:dbname={$host}:{$port}/{$name}{$charset}", $user, $pass);
+                $tns     = isset($db['tns']) ? $db['tns'] : NULL;
+                
+                if ($tns)
+                {
+                    $conn = new PDO("oci:dbname={$tns}{$charset}", $user, $pass);
+                }
+                else
+                {
+                    $conn = new PDO("oci:dbname={$host}:{$port}/{$name}{$charset}", $user, $pass);
+                }
+                
                 if (isset($db['date']))
                 {
                     $date = $db['date'];
@@ -118,7 +144,14 @@ final class TConnection
             case 'mssql':
                 if (OS == 'WIN')
                 {
-                    $conn = new PDO("sqlsrv:Server={$host};Database={$name}", $user, $pass);
+                    if ($port)
+                    {
+                        $conn = new PDO("sqlsrv:Server={$host},{$port};Database={$name}", $user, $pass);
+                    }
+                    else
+                    {
+                        $conn = new PDO("sqlsrv:Server={$host};Database={$name}", $user, $pass);
+                    }
                 }
                 else
                 {
@@ -133,8 +166,24 @@ final class TConnection
                 }
                 break;
             case 'dblib':
-                $port = $port ? $port : '1433';
-                $conn = new PDO("dblib:host={$host},{$port};dbname={$name}", $user, $pass);
+                if ($port)
+                {
+                    $conn = new PDO("dblib:host={$host}:{$port};dbname={$name}", $user, $pass);
+                }
+                else
+                {
+                    $conn = new PDO("dblib:host={$host};dbname={$name}", $user, $pass);
+                }
+                break;
+            case 'sqlsrv':
+                if ($port)
+                {
+                    $conn = new PDO("sqlsrv:Server={$host},{$port};Database={$name}", $user, $pass);
+                }
+                else
+                {
+                    $conn = new PDO("sqlsrv:Server={$host};Database={$name}", $user, $pass);
+                }
                 break;
             default:
                 throw new Exception(AdiantiCoreTranslator::translate('Driver not found') . ': ' . $type);
@@ -159,11 +208,13 @@ final class TConnection
      */
     public static function getDatabaseInfo($database)
     {
+        $path = empty(self::$config_path) ? 'app/config' : self::$config_path;
+        
         // check if the database configuration file exists
-        if (file_exists("app/config/{$database}.ini"))
+        if (file_exists("{$path}/{$database}.ini"))
         {
             // read the INI and retuns an array
-            return parse_ini_file("app/config/{$database}.ini");
+            return parse_ini_file("{$path}/{$database}.ini");
         }
         else
         {

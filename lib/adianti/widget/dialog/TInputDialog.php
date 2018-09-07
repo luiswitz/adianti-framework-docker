@@ -9,13 +9,14 @@ use Adianti\Widget\Form\TButton;
 use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Wrapper\TQuickForm;
 use Adianti\Wrapper\BootstrapFormWrapper;
+use Adianti\Wrapper\BootstrapFormBuilder;
 
 use Exception;
 
 /**
  * Input Dialog
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage dialog
  * @author     Pablo Dall'Oglio
@@ -68,7 +69,7 @@ class TInputDialog
         $form_name = $form->getName();
         $wait_message = AdiantiCoreTranslator::translate('Loading');
         
-        if ($form instanceof TQuickForm or $form instanceof BootstrapFormWrapper)
+        if ($form instanceof TQuickForm or $form instanceof BootstrapFormWrapper or $form instanceof BootstrapFormBuilder)
         {
             $actionButtons = $form->getActionButtons();
             $form->delActions();
@@ -116,6 +117,12 @@ class TInputDialog
         
         $modal_content->add($form);
         $modal_content->add($footer);
+        
+        if ($form instanceof BootstrapFormBuilder)
+        {
+            // remove panel class, remove borders
+            $form->setProperty('class', '');
+        }
         
         if (isset($buttons) AND $buttons)
         {

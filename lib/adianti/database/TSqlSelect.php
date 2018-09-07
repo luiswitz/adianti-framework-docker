@@ -9,7 +9,7 @@ use PDO;
 /**
  * Provides an Interface to create SELECT statements
  *
- * @version    5.0
+ * @version    5.5
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)

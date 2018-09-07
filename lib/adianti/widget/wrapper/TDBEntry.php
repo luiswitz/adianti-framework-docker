@@ -12,7 +12,7 @@ use Exception;
 /**
  * Database Entry Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -22,6 +22,7 @@ use Exception;
 class TDBEntry extends TEntry
 {
     protected $minLength;
+    protected $service;
     private $database;
     private $model;
     private $column;
@@ -64,9 +65,19 @@ class TDBEntry extends TEntry
         $this->database = $database;
         $this->model = $model;
         $this->column = $value;
-        $this->operator = 'like';
+        $this->operator = null;
         $this->orderColumn = isset($orderColumn) ? $orderColumn : NULL;
         $this->criteria = $criteria;
+        $this->service = 'AdiantiAutocompleteService';
+    }
+    
+    /**
+     * Define the search service
+     * @param $service Search service
+     */
+    public function setService($service)
+    {
+        $this->service = $service;
     }
     
     /**
@@ -104,8 +115,8 @@ class TDBEntry extends TEntry
         $seed = APPLICATION_NAME.'s8dkld83kf73kf094';
         $hash = md5("{$seed}{$this->database}{$this->column}{$this->model}");
         $length = $this->minLength;
-
-        $class = 'AdiantiAutocompleteService';
+        
+        $class = $this->service;
         $callback = array($class, 'onSearch');
         $method = $callback[1];
         $url = "engine.php?class={$class}&method={$method}&static=1&database={$this->database}&column={$this->column}&model={$this->model}&orderColumn={$orderColumn}&criteria={$criteria}&operator={$this->operator}&hash={$hash}";

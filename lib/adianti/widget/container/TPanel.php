@@ -7,7 +7,7 @@ use Adianti\Widget\Base\TStyle;
 /**
  * Panel Container: Allows to organize the widgets using fixed (absolute) positions
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -27,6 +27,8 @@ class TPanel extends TElement
      */
     public function __construct($width, $height)
     {
+        parent::__construct('div');
+		
         $this->{'id'} = 'tpanel_' . mt_rand(1000000000, 1999999999);
         
         // creates the panel style
@@ -35,7 +37,6 @@ class TPanel extends TElement
         $this->width = $width;
         $this->height = $height;
         
-        parent::__construct('div');
         $this->{'class'} = 'style_'.$this->{'id'};
     }
     

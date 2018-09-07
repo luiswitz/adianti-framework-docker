@@ -14,7 +14,7 @@ use Exception;
 /**
  * MultiSearch backend
  *
- * @version    5.0
+ * @version    5.5
  * @package    service
  * @author     Pablo Dall'Oglio
  * @author     Matheus Agnes Dias
@@ -32,7 +32,6 @@ class AdiantiMultiSearchService
         $ini  = AdiantiApplicationConfig::get();
         $seed = APPLICATION_NAME . ( !empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094' );
         $hash = md5("{$seed}{$param['database']}{$param['key']}{$param['column']}{$param['model']}");
-        $operator = $param['operator'] ? $param['operator'] : 'like';
         $mask = $param['mask'];
         
         if ($hash == $param['hash'])
@@ -40,7 +39,10 @@ class AdiantiMultiSearchService
             try
             {
                 TTransaction::open($param['database']);
-
+                $info = TTransaction::getDatabaseInfo();
+                $default_op = $info['type'] == 'pgsql' ? 'ilike' : 'like';
+                $operator   = !empty($param['operator']) ? $param['operator'] : $default_op;
+                
                 $repository = new TRepository($param['model']);
                 $criteria = new TCriteria;
                 if ($param['criteria'])
@@ -50,21 +52,30 @@ class AdiantiMultiSearchService
     
                 $columns = explode(',', $param['column']);
                 
+                if (!isset($param['value']))
+                {
+                    $param['value'] = '';
+                }
+                
                 if ($columns)
                 {
                     $dynamic_criteria = new TCriteria;
-                    foreach ($columns as $column)
+                    
+                    if (empty($param['onlyidsearch']))
                     {
-                        if (stristr(strtolower($operator),'like') !== FALSE)
+                        foreach ($columns as $column)
                         {
-                            $filter = new TFilter($column, $operator, "NOESC:'%{$param['value']}%'");
+                            if (stristr(strtolower($operator),'like') !== FALSE)
+                            {
+                                $filter = new TFilter($column, $operator, "NOESC:'%{$param['value']}%'");
+                            }
+                            else
+                            {
+                                $filter = new TFilter($column, $operator, "NOESC:'{$param['value']}'");
+                            }
+        
+                            $dynamic_criteria->add($filter, TExpression::OR_OPERATOR);
                         }
-                        else
-                        {
-                            $filter = new TFilter($column, $operator, "NOESC:'{$param['value']}'");
-                        }
-    
-                        $dynamic_criteria->add($filter, TExpression::OR_OPERATOR);
                     }
                     
                     if ($param['idsearch'] == '1')

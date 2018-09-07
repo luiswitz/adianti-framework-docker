@@ -9,7 +9,7 @@ use SimpleXMLElement;
 /**
  * Menu Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage menu
  * @author     Pablo Dall'Oglio
@@ -82,7 +82,9 @@ class TMenu extends TElement
             
             if ($xmlElement->menu)
             {
-                $menu = new TMenu($xmlElement-> menu-> menuitem, $permission_callback, $this->menu_level +1, $this->menu_class, $this->item_class, $this->link_class);
+                $menu_atts = $xmlElement->menu->attributes();
+                $menu_class = !empty( $menu_atts['class'] ) ? $menu_atts['class']: $this->menu_class;
+                $menu = new TMenu($xmlElement-> menu-> menuitem, $permission_callback, $this->menu_level +1, $menu_class, $this->item_class, $this->link_class);
                 $menuItem->setMenu($menu);
                 if ($this->item_class)
                 {

@@ -4,7 +4,7 @@ namespace Adianti\Core;
 /**
  * Framework translation class for internal messages
  *
- * @version    5.0
+ * @version    5.5
  * @package    core
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -119,6 +119,15 @@ class AdiantiCoreTranslator
         $this->messages['en'][] = 'Constructor';
         $this->messages['en'][] = 'Records';
         $this->messages['en'][] = 'Description';
+        $this->messages['en'][] = 'Error while copying file to ^1';
+        $this->messages['en'][] = 'Permission denied';
+        $this->messages['en'][] = 'Extension not allowed';
+        $this->messages['en'][] = 'Hash error';
+        $this->messages['en'][] = 'Invalid parameter (^1) in ^2';
+        $this->messages['en'][] = 'Warning';
+        $this->messages['en'][] = 'No records found';
+        $this->messages['en'][] = '^1 to ^2 from ^3 records';
+        $this->messages['en'][] = 'PHP Module not found';
         
         $this->messages['pt'][] = 'Carregando';
         $this->messages['pt'][] = 'Arquivo não encontrado';
@@ -218,6 +227,15 @@ class AdiantiCoreTranslator
         $this->messages['pt'][] = 'Construtor';
         $this->messages['pt'][] = 'Registros';
         $this->messages['pt'][] = 'Descrição';
+        $this->messages['pt'][] = 'Falha ao copiar arquivo para ^1';
+        $this->messages['pt'][] = 'Permissão negada';
+        $this->messages['pt'][] = 'Extensão não permitida';
+        $this->messages['pt'][] = 'Erro de hash';
+        $this->messages['pt'][] = 'Parâmetro (^1) inválido em ^2';
+        $this->messages['pt'][] = 'Atenção';
+        $this->messages['pt'][] = 'Nenhum registro encontrado';
+        $this->messages['pt'][] = '^1 a ^2 de ^3 registros';
+        $this->messages['pt'][] = 'Módulo PHP não encontrado';
     }
     
     /**

@@ -2,11 +2,13 @@
 namespace Adianti\Widget\Datagrid;
 
 use Adianti\Control\TAction;
+use Adianti\Core\AdiantiCoreTranslator;
+use Exception;
 
 /**
  * Represents an action inside a datagrid
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage datagrid
  * @author     Pablo Dall'Oglio
@@ -15,14 +17,74 @@ use Adianti\Control\TAction;
  */
 class TDataGridAction extends TAction
 {
-    private $image;
-    private $label;
     private $field;
     private $fields;
-    private $displayCondition;
+    private $image;
+    private $label;
     private $buttonClass;
     private $useButton;
-
+    private $displayCondition;
+    
+    /**
+     * Define wich Active Record's property will be passed along with the action
+     * @param $field Active Record's property
+     */
+    public function setField($field)
+    {
+        $this->field = $field;
+        
+        $this->setParameter('key',  '{'.$field.'}');
+        $this->setParameter($field, '{'.$field.'}');
+    }
+    
+    /**
+     * Define wich Active Record's properties will be passed along with the action
+     * @param $field Active Record's property
+     */
+    public function setFields($fields)
+    {
+        $this->fields = $fields;
+        
+        if ($fields)
+        {
+            if (empty($this->field))
+            {
+                $this->setParameter('key', '{'.$fields[0].'}');
+            }
+            
+            foreach ($fields as $field)
+            {
+                $this->setParameter($field, '{'.$field.'}');
+            }
+        }
+    }
+    
+    /**
+     * Returns the Active Record's property that 
+     * will be passed along with the action
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+    
+    /**
+     * Returns the Active Record's properties that 
+     * will be passed along with the action
+     */
+    public function getFields()
+    {
+        return $this->fields;
+    }
+    
+    /**
+     * Return if there at least one field defined
+     */
+    public function fieldDefined()
+    {
+        return (!empty($this->field) or !empty($this->fields));
+    }
+    
     /**
      * Define an icon for the action
      * @param $image  The Image path
@@ -55,44 +117,6 @@ class TDataGridAction extends TAction
     public function getLabel()
     {
         return $this->label;
-    }
-    
-    /**
-     * Define wich Active Record's property
-     * will be passed along with the action
-     * @param $field Active Record's property
-     */
-    public function setField($field)
-    {
-        $this->field = $field;
-    }
-    
-    /**
-     * Define wich Active Record's properties
-     * will be passed along with the action
-     * @param $field Active Record's property
-     */
-    public function setFields($fields)
-    {
-        $this->fields = $fields;
-    }
-    
-    /**
-     * Returns the Active Record's property that 
-     * will be passed along with the action
-     */
-    public function getField()
-    {
-        return $this->field;
-    }
-    
-    /**
-     * Returns the Active Record's properties that 
-     * will be passed along with the action
-     */
-    public function getFields()
-    {
-        return $this->fields;
     }
     
     /**
@@ -144,6 +168,39 @@ class TDataGridAction extends TAction
     public function getDisplayCondition()
     {
         return $this->displayCondition;
+    }
+    
+    /**
+     * Prepare action for use over an object
+     * @param $object Data Object
+     */
+    public function prepare($object)
+    {
+        if ( !$this->fieldDefined() )
+        {
+            throw new Exception(AdiantiCoreTranslator::translate('Field for action ^1 not defined', parent::toString()) . '.<br>' . 
+                                AdiantiCoreTranslator::translate('Use the ^1 method', 'setField'.'()').'.');
+        }
+        
+        if ($field = $this->getField())
+        {
+            if ( !isset( $object->$field ) )
+            {
+                throw new Exception(AdiantiCoreTranslator::translate('Field ^1 not exists or contains NULL value', $field));
+            }
+        }
+        
+        if ($fields = $this->getFields())
+        {
+            $field = $fields[0];
+            
+            if ( !isset( $object->$field ) )
+            {
+                throw new Exception(AdiantiCoreTranslator::translate('Field ^1 not exists or contains NULL value', $field));
+            }
+        }
+        
+        return parent::prepare($object);
     }
     
     /**

@@ -9,7 +9,7 @@ use Adianti\Widget\Container\TFrame;
 /**
  * Notebook
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -42,6 +42,7 @@ class TNotebook extends TElement
         $this->counter = ++ self::$noteCounter;
         
         // define some default values
+        $this->pages = [];
         $this->width = $width;
         $this->height = $height;
         $this->currentPage = 0;

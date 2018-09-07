@@ -8,7 +8,7 @@ use SimpleXMLIterator;
 /**
  * FPDF Adapter that parses XML files from Adianti Framework
  *
- * @version    5.0
+ * @version    5.5
  * @package    wrapper
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -17,6 +17,7 @@ use SimpleXMLIterator;
  */
 class AdiantiPDFDesigner extends FPDF
 {
+    private $current_locale;
     private $elements;
     private $anchors;
     private $orientation;
@@ -464,6 +465,8 @@ class AdiantiPDFDesigner extends FPDF
      */
     public function setLocale()
     {
+        $this->current_locale = setlocale(LC_ALL, 0);
+        
         if (OS == 'WIN')
         {
             setlocale(LC_ALL, 'english');
@@ -480,14 +483,7 @@ class AdiantiPDFDesigner extends FPDF
      */
     public function unsetLocale()
     {
-        if (OS == 'WIN')
-        {
-            setlocale(LC_ALL, 'english');
-        }
-        else
-        {
-            setlocale(LC_ALL, 'pt_BR');
-        }
+        setlocale(LC_ALL, $this->current_locale);
     }
 
     /**

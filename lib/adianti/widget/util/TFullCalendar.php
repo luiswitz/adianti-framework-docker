@@ -10,7 +10,7 @@ use stdClass;
 /**
  * FullCalendar Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -32,6 +32,8 @@ class TFullCalendar extends TElement
     private $popover;
     private $poptitle;
     private $popcontent;
+    private $resizable;
+    private $movable;
 
 
     /**
@@ -50,6 +52,8 @@ class TFullCalendar extends TElement
         $this->max_time  = '24:00:00';
         $this->enabled_days = [0,1,2,3,4,5,6];
         $this->popover = FALSE;
+        $this->resizable = TRUE;
+        $this->movable = TRUE;
     }
     
     /**
@@ -136,6 +140,22 @@ class TFullCalendar extends TElement
     }
     
     /**
+     * Disable event resize
+     */
+    public function disableResizing()
+    {
+        $this->resizable = FALSE;
+    }
+    
+    /**
+     * Disable event dragging
+     */
+    public function disableDragging()
+    {
+        $this->movable = FALSE;
+    }
+    
+    /**
      * Add an event
      * @param $id Event id
      * @param $title Event title
@@ -153,7 +173,7 @@ class TFullCalendar extends TElement
         {
             $poptitle   = $this->replace($this->poptitle, $object);
             $popcontent = $this->replace($this->popcontent, $object);
-            $event->{'title'} = "<div popover='true' poptitle='{$poptitle}' popcontent='{$popcontent}' style='display:inline'> {$title} </div>";
+            $event->{'title'} = self::renderPopover($title, $poptitle, $popcontent);
         }
         else
         {
@@ -165,6 +185,17 @@ class TFullCalendar extends TElement
         $event->{'color'} = $color;
         
         $this->events[] = $event;
+    }
+    
+    /**
+     * Render title popover
+     * @param $title Event title
+     * @param $poptitle Popover Title
+     * @param $popcontent Popover Content
+     */
+    public static function renderPopover($title, $poptitle, $popcontent)
+    {
+        return "<div popover='true' poptitle='{$poptitle}' popcontent='{$popcontent}' style='display:inline;cursor:pointer'> {$title} </div>";
     }
     
     /**
@@ -235,9 +266,11 @@ class TFullCalendar extends TElement
         
         $events = json_encode($this->events);
         $editable = ($this->update_action) ? 'true' : 'false';
+        $movable = ($this->movable) ? 'true' : 'false';
+        $resizable = ($this->resizable) ? 'true' : 'false';
         $hidden_days = json_encode(array_values(array_diff([0,1,2,3,4,5,6], $this->enabled_days)));
         
-        TScript::create("tfullcalendar_start( '{$id}', {$editable}, '{$this->default_view}', '{$this->current_date}', '$language', $events, '{$day_action_string}', '{$event_action_string}', '{$update_action_string}', '{$this->min_time}', '{$this->max_time}', $hidden_days );");
+        TScript::create("tfullcalendar_start( '{$id}', {$editable}, '{$this->default_view}', '{$this->current_date}', '$language', $events, '{$day_action_string}', '{$event_action_string}', '{$update_action_string}', '{$this->min_time}', '{$this->max_time}', $hidden_days, {$movable}, {$resizable} );");
         parent::show();
     }
 }

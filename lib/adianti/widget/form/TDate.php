@@ -11,7 +11,7 @@ use DateTime;
 /**
  * DatePicker Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -25,6 +25,7 @@ class TDate extends TEntry implements AdiantiWidgetInterface
     protected $id;
     protected $size;
     protected $options;
+    protected $replaceOnPost;
     
     /**
      * Class Constructor
@@ -37,6 +38,7 @@ class TDate extends TEntry implements AdiantiWidgetInterface
         $this->mask = 'yyyy-mm-dd';
         $this->dbmask = null;
         $this->options = [];
+        $this->replaceOnPost = FALSE;
         
         $newmask = $this->mask;
         $newmask = str_replace('dd',   '99',   $newmask);
@@ -107,13 +109,16 @@ class TDate extends TEntry implements AdiantiWidgetInterface
      * Define the field's mask
      * @param $mask  Mask for the field (dd-mm-yyyy)
      */
-    public function setMask($mask)
+    public function setMask($mask, $replaceOnPost = FALSE)
     {
         $this->mask = $mask;
+        $this->replaceOnPost = $replaceOnPost;
+        
         $newmask = $this->mask;
         $newmask = str_replace('dd',   '99',   $newmask);
         $newmask = str_replace('mm',   '99',   $newmask);
         $newmask = str_replace('yyyy', '9999', $newmask);
+        
         parent::setMask($newmask);
     }
     

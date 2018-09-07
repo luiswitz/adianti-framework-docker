@@ -15,7 +15,7 @@ use Exception;
 /**
  * Multi Search Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Matheus Agnes Dias
@@ -50,13 +50,12 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
         $this->id   = 'tmultisearch_'.mt_rand(1000000000, 1999999999);
 
         $this->height = 100;
-        $this->minLength = 5;
+        $this->minLength = 3;
         $this->maxSize = 0;
         $this->allowClear = TRUE;
         $this->allowSearch = TRUE;
         
         parent::setDefaultOption(FALSE);
-        $this->tag->{'name'}  = $this->name.'[]';    // tag name
         $this->tag->{'component'} = 'multisearch';
         $this->tag->{'widget'} = 'tmultisearch';
     }
@@ -237,7 +236,12 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
     public function show()
     {
         // define the tag properties
-        $this->tag->{'id'}  = $this->id;    // tag name
+        $this->tag->{'id'}    = $this->id; // tag id
+        
+        if (empty($this->tag->{'name'})) // may be defined by child classes
+        {
+            $this->tag->{'name'}  = $this->name.'[]'; // tag name
+        }
         
         if (strstr($this->size, '%') !== FALSE)
         {
@@ -251,7 +255,7 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
         }
         
         $multiple = $this->maxSize == 1 ? 'false' : 'true';
-        $search_word = AdiantiCoreTranslator::translate('Search');
+        $search_word = !empty($this->getProperty('placeholder'))? $this->getProperty('placeholder') : AdiantiCoreTranslator::translate('Search');
         $change_action = 'function() {}';
         $allowclear  = $this->allowClear  ? 'true' : 'false';
         $allowsearch = $this->allowSearch ? '1' : 'Infinity';

@@ -8,7 +8,7 @@ use Adianti\Widget\Base\TScript;
 /**
  * Question Dialog
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage dialog
  * @author     Pablo Dall'Oglio
@@ -31,6 +31,16 @@ class TQuestion
         $callback_no  = "function () {}";
         $label_yes    = AdiantiCoreTranslator::translate('Yes');
         $label_no     = AdiantiCoreTranslator::translate('No');
+        
+        if ($action_yes && $action_yes->isStatic())
+        {
+            $action_yes->setParameter('static', '1' );
+        }
+        
+        if ($action_no && $action_no->isStatic())
+        {
+            $action_no->setParameter('static', '1' );
+        }
         
         $title = addslashes($title);
         $message = addslashes($message);

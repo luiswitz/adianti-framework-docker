@@ -8,7 +8,7 @@ use Exception;
 /**
  * Email validation
  *
- * @version    5.0
+ * @version    5.5
  * @package    validator
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -24,11 +24,14 @@ class TEmailValidator extends TFieldValidator
      */
     public function validate($label, $value, $parameters = NULL)
     {
-        $filter = filter_var(trim($value), FILTER_VALIDATE_EMAIL);
-        
-        if ($filter === FALSE)
+        if (!empty($value))
         {
-            throw new Exception(AdiantiCoreTranslator::translate('The field ^1 contains an invalid e-mail', $label));
+            $filter = filter_var(trim($value), FILTER_VALIDATE_EMAIL);
+            
+            if ($filter === FALSE)
+            {
+                throw new Exception(AdiantiCoreTranslator::translate('The field ^1 contains an invalid e-mail', $label));
+            }
         }
     }
 }

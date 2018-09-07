@@ -6,7 +6,7 @@ use Adianti\Control\TAction;
 /**
  * Representes a DataGrid column
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage datagrid
  * @author     Pablo Dall'Oglio
@@ -23,6 +23,7 @@ class TDataGridColumn
     private $editaction;
     private $transformer;
     private $properties;
+    private $dataProperties;
     private $totalFunction;
     
     /**
@@ -39,10 +40,11 @@ class TDataGridColumn
         $this->align = $align;
         $this->width = $width;
         $this->properties = array();
+        $this->dataProperties = array();
     }
     
     /**
-     * Define a field property
+     * Define a column header property
      * @param $name  Property Name
      * @param $value Property Value
      */
@@ -52,7 +54,17 @@ class TDataGridColumn
     }
     
     /**
-     * Return a field property
+     * Define a data property
+     * @param $name  Property Name
+     * @param $value Property Value
+     */
+    public function setDataProperty($name, $value)
+    {
+        $this->dataProperties[$name] = $value;
+    }
+    
+    /**
+     * Return a column property
      * @param $name  Property Name
      */
     public function getProperty($name)
@@ -64,11 +76,31 @@ class TDataGridColumn
     }
     
     /**
-     * Return field properties
+     * Return a data property
+     * @param $name  Property Name
+     */
+    public function getDataProperty($name)
+    {
+        if (isset($this->dataProperties[$name]))
+        {
+            return $this->dataProperties[$name];
+        }
+    }
+    
+    /**
+     * Return column properties
      */
     public function getProperties()
     {
         return $this->properties;
+    }
+    
+    /**
+     * Return data properties
+     */
+    public function getDataProperties()
+    {
+        return $this->dataProperties;
     }
     
     /**
@@ -130,11 +162,17 @@ class TDataGridColumn
     /**
      * Define the action to be executed when
      * the user clicks over the column header
-     * @param $action   A TAction object
+     * @param $action     TAction object
+     * @param $parameters Action parameters
      */
-    public function setAction(TAction $action)
+    public function setAction(TAction $action, $parameters = null)
     {
         $this->action = $action;
+        
+        if ($parameters)
+        {
+            $this->action->setParameters($parameters);
+        }
     }
     
     /**

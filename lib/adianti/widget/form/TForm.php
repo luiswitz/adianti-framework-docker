@@ -13,7 +13,7 @@ use ReflectionClass;
 /**
  * Wrapper class to deal with forms
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -152,7 +152,7 @@ class TForm implements AdiantiFormInterface
                         {
                             $data = addslashes($data);
                         }
-                        $data = str_replace(array("\n", "\r"), array( ' ', ' '), $data );
+                        $data = str_replace(array("\n", "\r"), array( '\n', '\r'), $data );
                         // send the property value to the form
                         TScript::create( " tform_send_data('{$form_name}', '{$field}_{$property}', '$data', $fire_param); " );
                     }
@@ -161,7 +161,7 @@ class TForm implements AdiantiFormInterface
                 {
                     if (is_array($value))
                     {
-                        $value = implode(',', $value);
+                        $value = implode('|', $value);
                     }
                     
                     // if inside ajax request, then utf8_encode if isn't utf8
@@ -174,7 +174,7 @@ class TForm implements AdiantiFormInterface
                         $value = addslashes($value);
                     }
                     
-                    $value = str_replace(array("\n", "\r"), array( ' ', ' '), $value );
+                    $value = str_replace(array("\n", "\r"), array( '\n', '\r'), $value );
                     
                     // send the property value to the form
                     if ($aggregate)
@@ -392,32 +392,35 @@ class TForm implements AdiantiFormInterface
         }
         
         $object = new $class;
-        foreach ($this->fields as $key => $field)
+        if ($this->fields)
         {
-            $key = str_replace(['[',']'], ['',''], $key);
-            
-            if (!$field instanceof TButton)
+            foreach ($this->fields as $key => $field)
             {
-                if ($withOptions AND method_exists($field, 'getItems'))
+                $key = str_replace(['[',']'], ['',''], $key);
+                
+                if (!$field instanceof TButton)
                 {
-                    $items = $field->getItems();
-                    
-                    if (is_array($field->getValue()))
+                    if ($withOptions AND method_exists($field, 'getItems'))
                     {
-                        $value = [];
-                        foreach ($field->getValue() as $field_value)
+                        $items = $field->getItems();
+                        
+                        if (is_array($field->getValue()))
                         {
-                            if ($field_value)
+                            $value = [];
+                            foreach ($field->getValue() as $field_value)
                             {
-                                $value[] = $items[$field_value];
+                                if ($field_value)
+                                {
+                                    $value[] = $items[$field_value];
+                                }
                             }
+                            $object->$key = $value;
                         }
                     }
-                    $object->$key = $value;
-                }
-                else
-                {
-                    $object->$key = $field->getValue();
+                    else
+                    {
+                        $object->$key = $field->getValue();
+                    }
                 }
             }
         }

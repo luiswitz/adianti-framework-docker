@@ -1,12 +1,13 @@
 <?php
 namespace Adianti\Service;
 
+use Adianti\Core\AdiantiCoreTranslator;
 use Adianti\Core\AdiantiApplicationConfig;
 
 /**
  * File uploader listener
  *
- * @version    5.0
+ * @version    5.5
  * @package    service
  * @author     Nataniel Rabaioli
  * @author     Pablo Dall'Oglio
@@ -38,7 +39,7 @@ class AdiantiUploaderService
                     {
                         $response = array();
                         $response['type'] = 'error';
-                        $response['msg'] = "Extension not allowed";
+                        $response['msg']  = AdiantiCoreTranslator::translate('Extension not allowed');
                         echo json_encode($response);
                         return;
                     }
@@ -54,7 +55,7 @@ class AdiantiUploaderService
                     {
                         $response = array();
                         $response['type'] = 'error';
-                        $response['msg'] = "Hash error";
+                        $response['msg']  = AdiantiCoreTranslator::translate('Hash error');
                         echo json_encode($response);
                         return;
                     }
@@ -66,7 +67,7 @@ class AdiantiUploaderService
                     {
                         $response = array();
                         $response['type'] = 'error';
-                        $response['msg'] = "Extension not allowed";
+                        $response['msg']  = AdiantiCoreTranslator::translate('Extension not allowed');
                         echo json_encode($response);
                         return;
                     }
@@ -88,7 +89,7 @@ class AdiantiUploaderService
                 else
                 {
                     $response['type'] = 'error';
-                    $response['msg'] = "Permission denied: {$path}";
+                    $response['msg']  = AdiantiCoreTranslator::translate('Permission denied') . ": {$path}";
                 }
                 echo json_encode($response);
             }

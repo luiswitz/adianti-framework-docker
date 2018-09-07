@@ -12,7 +12,7 @@ use Exception;
 /**
  * Password Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -43,6 +43,18 @@ class TPassword extends TField implements AdiantiWidgetInterface
     }
     
     /**
+     * Define max length
+     * @param  $length Max length
+     */
+    public function setMaxLength($length)
+    {
+        if ($length > 0)
+        {
+            $this->tag->{'maxlength'} = $length;
+        }
+    }
+    
+    /**
      * Define the javascript function to be executed when the user leaves the form field
      * @param $function Javascript function
      */
@@ -60,13 +72,17 @@ class TPassword extends TField implements AdiantiWidgetInterface
         $this->tag-> name  =  $this->name;   // tag name
         $this->tag-> value =  $this->value;  // tag value
         $this->tag-> type  =  'password';    // input type
-        if (strstr($this->size, '%') !== FALSE)
+        
+        if (!empty($this->size))
         {
-            $this->setProperty('style', "width:{$this->size};", FALSE); //aggregate style info
-        }
-        else
-        {
-            $this->setProperty('style', "width:{$this->size}px;", FALSE); //aggregate style info
+            if (strstr($this->size, '%') !== FALSE)
+            {
+                $this->setProperty('style', "width:{$this->size};", FALSE); //aggregate style info
+            }
+            else
+            {
+                $this->setProperty('style', "width:{$this->size}px;", FALSE); //aggregate style info
+            }
         }
         
         // verify if the field is not editable

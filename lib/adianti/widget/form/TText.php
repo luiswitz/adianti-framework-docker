@@ -13,7 +13,7 @@ use Exception;
 /**
  * Text Widget (also known as Memo)
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -22,11 +22,12 @@ use Exception;
  */
 class TText extends TField implements AdiantiWidgetInterface
 {
-    private   $height;
     private   $exitAction;
     private   $exitFunction;
+    protected $id;
     protected $formName;
     protected $size;
+    protected $height;
     
     /**
      * Class Constructor
@@ -35,6 +36,7 @@ class TText extends TField implements AdiantiWidgetInterface
     public function __construct($name)
     {
         parent::__construct($name);
+        $this->id   = 'ttext_' . mt_rand(1000000000, 1999999999);
         
         // creates a <textarea> tag
         $this->tag = new TElement('textarea');
@@ -109,6 +111,11 @@ class TText extends TField implements AdiantiWidgetInterface
         {
             $height = (strstr($this->height, '%') !== FALSE) ? $this->height : "{$this->height}px";
             $this->setProperty('style', "height:{$height}", FALSE); //aggregate style info
+        }
+        
+        if ($this->id and empty($this->tag->{'id'}))
+        {
+            $this->tag->{'id'} = $this->id;
         }
         
         // check if the field is not editable

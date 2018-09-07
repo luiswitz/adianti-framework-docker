@@ -9,7 +9,7 @@ use Exception;
 /**
  * Provides an Interface to create an INSERT statement
  *
- * @version    5.0
+ * @version    5.5
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -17,9 +17,18 @@ use Exception;
  */
 final class TSqlInsert extends TSqlStatement
 {
-    protected $sql;         // stores the SQL
+    protected $sql;
     private $columnValues;
     private $preparedVars;
+    
+    /**
+     * Constructor method
+     */
+    public function __construct()
+    {
+        $this->columnValues = [];
+        $this->preparedVars = [];
+    }
     
     /**
      * Assign values to the database columns

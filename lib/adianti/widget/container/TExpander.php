@@ -7,7 +7,7 @@ use Adianti\Widget\Base\TScript;
 /**
  * Expander Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -40,7 +40,6 @@ class TExpander extends TElement
         
         $this->container = new TElement('ul');
         $this->container->{'class'} = 'dropdown-menu texpander-container';
-        $this->container->{'style'} = 'z-index: inherit';
         
         $this->container->{'aria-labelledby'} = $this->button->{'id'};
         

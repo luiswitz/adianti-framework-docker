@@ -12,7 +12,7 @@ use Exception;
 /**
  * Entry Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -22,12 +22,12 @@ use Exception;
 class TEntry extends TField implements AdiantiWidgetInterface
 {
     private $mask;
-    private $completion;
-    private $numericMask;
-    private $decimals;
-    private $decimalsSeparator;
-    private $thousandSeparator;
-    private $replaceOnPost;
+    protected $completion;
+    protected $numericMask;
+    protected $decimals;
+    protected $decimalsSeparator;
+    protected $thousandSeparator;
+    protected $replaceOnPost;
     protected $exitFunction;
     protected $exitAction;
     protected $id;
@@ -61,9 +61,10 @@ class TEntry extends TField implements AdiantiWidgetInterface
      * Define the field's mask
      * @param $mask A mask for input data
      */
-    public function setMask($mask)
+    public function setMask($mask, $replaceOnPost = FALSE)
     {
         $this->mask = $mask;
+        $this->replaceOnPost = $replaceOnPost;
     }
     
     /**
@@ -89,9 +90,13 @@ class TEntry extends TField implements AdiantiWidgetInterface
     {
         if ($this->replaceOnPost)
         {
-            if (is_numeric($value))
+            if ($this->numericMask && is_numeric($value))
             {
                 $this->value = number_format($value, $this->decimals, $this->decimalsSeparator, $this->thousandSeparator);
+            }
+            else if ($this->mask)
+            {
+                $this->value = $this->formatMask($this->mask, $value);
             }
             else
             {
@@ -116,9 +121,21 @@ class TEntry extends TField implements AdiantiWidgetInterface
             if ($this->replaceOnPost)
             {
                 $value = $_POST[$name];
-                $value = str_replace( $this->thousandSeparator, '', $value);
-                $value = str_replace( $this->decimalsSeparator, '.', $value);
-                return $value;
+                
+                if ($this->numericMask)
+                {
+                    $value = str_replace( $this->thousandSeparator, '', $value);
+                    $value = str_replace( $this->decimalsSeparator, '.', $value);
+                    return $value;
+                }
+                else if ($this->mask)
+                {
+                    return preg_replace('/[^a-z\d]+/i', '', $value);
+                }
+                else
+                {
+                    return $value;
+                }
             }
             else
             {
@@ -139,7 +156,7 @@ class TEntry extends TField implements AdiantiWidgetInterface
     {
         if ($length > 0)
         {
-            $this->tag-> maxlength = $length;
+            $this->tag->{'maxlength'} = $length;
         }
     }
     
@@ -199,6 +216,52 @@ class TEntry extends TField implements AdiantiWidgetInterface
         $this->tag->{'onBlur'} = "return tentry_upper(this)";
         $this->tag->{'forceupper'} = "1";
         $this->setProperty('style', 'text-transform: uppercase');
+    }
+    
+    /**
+     * Reload completion
+     * 
+     * @param $field Field name or id
+     * @param $options array of options for autocomplete
+     */
+    public static function reloadCompletion($field, $options)
+    {
+        $options = json_encode($options);
+        TScript::create(" tentry_autocomplete( '{$field}', $options); ");
+    }
+    
+    /**
+     * Apply mask
+     * 
+     * @param $mask  Mask
+     * @param $value Value
+     */
+    protected function formatMask($mask, $value)
+    {
+        if ($value)
+        {
+            $value_index  = 0;
+            $clear_result = '';
+        
+            $value = preg_replace('/[^a-z\d]+/i', '', $value);
+            
+            for ($mask_index=0; $mask_index < strlen($mask); $mask_index ++)
+            {
+                $mask_char = substr($mask, $mask_index,  1);
+                $text_char = substr($value, $value_index, 1);
+        
+                if (in_array($mask_char, array('-', '_', '.', '/', '\\', ':', '|', '(', ')', '[', ']', '{', '}', ' ')))
+                {
+                    $clear_result .= $mask_char;
+                }
+                else
+                {
+                    $clear_result .= $text_char;
+                    $value_index ++;
+                }
+            }
+            return $clear_result;
+        }
     }
     
     /**
@@ -271,7 +334,7 @@ class TEntry extends TField implements AdiantiWidgetInterface
         else
         {
             $this->tag->{'readonly'} = "1";
-            $this->tag->{'class'} = 'tfield_disabled'; // CSS
+            $this->tag->{'class'} .= ' tfield_disabled'; // CSS
             $this->tag->{'onmouseover'} = "style.cursor='default'";
         }
         

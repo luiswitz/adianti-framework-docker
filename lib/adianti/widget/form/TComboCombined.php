@@ -11,7 +11,7 @@ use Adianti\Widget\Base\TStyle;
 /**
  * ComboBox Widget with an entry
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio

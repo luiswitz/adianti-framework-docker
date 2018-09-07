@@ -47,7 +47,7 @@ use SimpleXMLElement;
 /**
  * Interface builder that takes a XML file save by Adianti Studio Designer and renders the form into the interface.
  *
- * @version    5.0
+ * @version    5.5
  * @package    wrapper
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)

@@ -1,12 +1,13 @@
 <?php
 namespace Adianti\Control;
 
+use Adianti\Control\TAction;
 use Adianti\Widget\Container\TJQueryDialog;
 
 /**
  * Window Container (JQueryDialog wrapper)
  *
- * @version    5.0
+ * @version    5.5
  * @package    control
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -26,6 +27,14 @@ class TWindow extends TPage
         $this->wrapper->setModal(TRUE);
         $this->wrapper->{'widget'} = 'T'.'Window';
         parent::add($this->wrapper);
+    }
+    
+    /**
+     * Returns ID
+     */
+    public function getId()
+    {
+        return $this->wrapper->getId();
     }
     
     /**
@@ -69,6 +78,14 @@ class TWindow extends TPage
     }
     
     /**
+     * Disable scrolling
+     */
+    public function disableScrolling()
+    {
+        $this->wrapper->disableScrolling();
+    }
+    
+    /**
      * Define the window's size
      * @param  $width  Window's width
      * @param  $height Window's height
@@ -108,10 +125,26 @@ class TWindow extends TPage
     }
     
     /**
+     * set close action
+     * @param $action close action
+     */
+    public function setCloseAction(TAction $action)
+    {
+        $this->wrapper->setCloseAction($action);
+    }
+    
+    /**
      * Close TJQueryDialog's
      */
-    public static function closeWindow()
+    public static function closeWindow($id = null)
     {
-        TJQueryDialog::closeAll();
+        if (!empty($id))
+        {
+            TJQueryDialog::closeById($id);
+        }
+        else
+        {
+            TJQueryDialog::closeAll();
+        }
     }
 }

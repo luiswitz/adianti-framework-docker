@@ -1,6 +1,6 @@
 .tpagenavigation
 {
-    padding-top: 17px;
+    padding-top: 7px;
 }
 
 .tpagenavigation > ul.pagination
@@ -11,4 +11,13 @@
 .tpagenavigation li.off a
 {
     color: #c0c0c0;
+}
+
+.tpagenavigation_resume
+{
+    width: 100%;
+    text-align: center;
+    color: gray;
+    padding: 2px;
+    padding-top: 7px;
 }

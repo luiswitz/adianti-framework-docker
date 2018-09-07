@@ -31,3 +31,10 @@
     width: 90%;
     vertical-align: text-top;
 }
+
+.tseek-group
+{
+    display:inline-table;
+    border-spacing:0;
+    width: 100%;
+}

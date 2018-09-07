@@ -12,7 +12,7 @@ use Exception;
 /**
  * Database ComboBox Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -110,8 +110,9 @@ class TDBCombo extends TCombo
      * @param  $ordercolumn column to order the fields (optional)
      * @param  $criteria    criteria (TCriteria object) to filter the model (optional)
      * @param  $startEmpty  if the combo will have an empty first item
+     * @param  $fire_events  if change action will be fired
      */
-    public static function reloadFromModel($formname, $field, $database, $model, $key, $value, $ordercolumn = NULL, $criteria = NULL, $startEmpty = FALSE)
+    public static function reloadFromModel($formname, $field, $database, $model, $key, $value, $ordercolumn = NULL, $criteria = NULL, $startEmpty = FALSE, $fire_events = TRUE)
     {
         TTransaction::open($database);
         
@@ -143,6 +144,6 @@ class TDBCombo extends TCombo
             }
         }
         TTransaction::close();
-        parent::reload($formname, $field, $items, $startEmpty);
+        parent::reload($formname, $field, $items, $startEmpty, $fire_events);
     }
 }

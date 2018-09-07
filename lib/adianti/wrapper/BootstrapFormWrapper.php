@@ -13,7 +13,7 @@ use Adianti\Widget\Form\AdiantiWidgetInterface;
 /**
  * Bootstrap form decorator for Adianti Framework
  *
- * @version    5.0
+ * @version    5.5
  * @package    wrapper
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -175,15 +175,22 @@ class BootstrapFormWrapper implements AdiantiFormInterface
         {
             foreach ($input_rows as $input_row)
             {
-                $field_label = $input_row[0];
-                $fields      = $input_row[1];
-                $required    = $input_row[2];
+                $field_label  = $input_row[0];
+                $fields       = $input_row[1];
+                $required     = $input_row[2];
+                $original_row = $input_row[3];
                 
                 // form vertical doesn't group elements, just change form group grid class
                 if ( empty($this->currentGroup) OR ( $fieldCount % $fieldsByRow ) == 0 OR (strpos($this->element->{'class'}, 'form-vertical') !== FALSE) )
                 {
                     // add the field to the container
                     $this->currentGroup = new TElement('div');
+                    
+                    foreach ($original_row->getProperties() as $property => $value)
+                    {
+                        $this->currentGroup->$property = $value;
+                    }
+                    
                     $this->currentGroup->{'class'}  = 'tformrow form-group';
                     $this->currentGroup->{'class'} .= ( ( strpos($this->element->{'class'}, 'form-vertical') !== FALSE ) ? ' col-sm-'.(12/$fieldsByRow) : '');
                     $this->element->add($this->currentGroup);
