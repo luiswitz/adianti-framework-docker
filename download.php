@@ -33,7 +33,7 @@ if (isset($_GET['file']) AND TSession::getValue('logged') )
     $content_type_list['bz2']  = 'application/x-bzip2';
     $content_type_list['tar']  = 'application/x-tar';
     
-    if (in_array(strtolower($extension), array_keys($content_type_list)))
+    if (file_exists($file) AND in_array(strtolower($extension), array_keys($content_type_list)))
     {
         $basename = basename($file);
         $filesize = filesize($file); // get the filesize
@@ -41,7 +41,7 @@ if (isset($_GET['file']) AND TSession::getValue('logged') )
         header("Pragma: public");
         header("Expires: 0"); // set expiration time
         header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-        header("Content-type: " . $content_type_list[$extension] );
+        header("Content-type: " . $content_type_list[strtolower($extension)] );
         header("Content-Length: {$filesize}");
         header("Content-disposition: inline; filename=\"{$basename}\"");
         header("Content-Transfer-Encoding: binary");
