@@ -41,6 +41,8 @@ class LoginForm extends TPage
         
         $login->placeholder = _t('User');
         $password->placeholder = _t('Password');
+        
+        $login->autofocus = 'autofocus';
 
         $user = '<span style="float:left;margin-left:44px;height:35px;" class="login-avatar"><span class="glyphicon glyphicon-user"></span></span>';
         $locker = '<span style="float:left;margin-left:44px;height:35px;" class="login-avatar"><span class="glyphicon glyphicon-lock"></span></span>';
@@ -128,9 +130,25 @@ class LoginForm extends TPage
                 throw new Exception( AdiantiCoreTranslator::translate('The field ^1 is required', _t('Password')) );
             }
             
-            $user = SystemUser::authenticate( $data->login, $data->password );
+            if (!empty($ini['general']['multiunit']) and $ini['general']['multiunit'] == '1' and empty($data->unit_id))
+            {    
+                throw new Exception( AdiantiCoreTranslator::translate('The field ^1 is required', _t('Unit')) );
+            }
+            
+            $user = SystemUser::validate( $data->login );
+            
             if ($user)
             {
+                if (!empty($ini['permission']['auth_service']) and class_exists($ini['permission']['auth_service']))
+                {
+                    $service = $ini['permission']['auth_service'];
+                    $service::authenticate( $data->login, $data->password );
+                }
+                else
+                {
+                    SystemUser::authenticate( $data->login, $data->password );
+                }
+                
                 TSession::regenerate();
                 $programs = $user->getPrograms();
                 $programs['LoginForm'] = TRUE;
@@ -157,7 +175,7 @@ class LoginForm extends TPage
                 
                 $frontpage = $user->frontpage;
                 SystemAccessLog::registerLogin();
-                if ($frontpage instanceof SystemProgram AND $frontpage->controller)
+                if ($frontpage instanceof SystemProgram and $frontpage->controller)
                 {
                     AdiantiCoreApplication::gotoPage($frontpage->controller); // reload
                     TSession::setValue('frontpage', $frontpage->controller);
@@ -187,6 +205,7 @@ class LoginForm extends TPage
         {
             TTransaction::open('permission');
             $user = SystemUser::newFromLogin( TSession::getValue('login') );
+            
             if ($user)
             {
                 $programs = $user->getPrograms();
@@ -209,6 +228,13 @@ class LoginForm extends TPage
         {
             new TMessage('error', $e->getMessage());
         }
+    }
+    
+    /**
+     *
+     */
+    public function onLoad($param)
+    {
     }
     
     /**

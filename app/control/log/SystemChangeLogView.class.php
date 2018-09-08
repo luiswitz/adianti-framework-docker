@@ -116,6 +116,7 @@ class SystemChangeLogView extends TStandardList
         
         // cria o paginador
         $this->pageNavigation = new TPageNavigation;
+        $this->pageNavigation->enableCounters();
         $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         

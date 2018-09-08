@@ -26,7 +26,6 @@ class SystemSupportForm extends TWindow
         
         // creates the form
         $this->form = new BootstrapFormWrapper(new TQuickForm('form_SystemMessage'));
-        //$this->form->class = 'tform'; // change CSS class
         $this->form->style = 'display: table;width:100%'; // change style
         
         // define the form title
@@ -54,7 +53,7 @@ class SystemSupportForm extends TWindow
         // vertical box container
         $container = new TVBox;
         $container->style = 'width: 100%';
-        $container->add(TPanelGroup::pack(_t('Ticket'), $this->form));
+        $container->add(TPanelGroup::pack('', $this->form));
         
         parent::add($container);
     }
@@ -73,29 +72,11 @@ class SystemSupportForm extends TWindow
             // validate data
             $this->form->validate();
             
-            // open a transaction with database
             TTransaction::open('permission');
-            
             $preferences = SystemPreference::getAllPreferences();
-            
-            $mail = new TMail;
-            $mail->setFrom( trim($preferences['mail_from']) , TSession::getValue('username'));
-            $mail->addAddress( trim($preferences['mail_support']) );
-            $mail->setSubject( $data->subject );
-            
-            if ($preferences['smtp_auth'])
-            {
-                $mail->SetUseSmtp();
-                $mail->SetSmtpHost($preferences['smtp_host'], $preferences['smtp_port']);
-                $mail->SetSmtpUser($preferences['smtp_user'], $preferences['smtp_pass']);
-            }
-            
-            $mail->setTextBody($data->message);
-            
-            $mail->send();
-            
-            // close the transaction
             TTransaction::close();
+            
+            MailService::send( trim($preferences['mail_support']), $data->subject, $data->message );
             
             // shows the success message
             new TMessage('info', _t('Message sent successfully'));

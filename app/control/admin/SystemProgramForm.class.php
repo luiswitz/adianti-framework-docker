@@ -17,7 +17,7 @@ class SystemProgramForm extends TStandardForm
      * Class constructor
      * Creates the page and the registration form
      */
-    function __construct()
+    function __construct($param)
     {
         parent::__construct();
                 
@@ -34,18 +34,31 @@ class SystemProgramForm extends TStandardForm
         
         // create the form fields
         $id            = new TEntry('id');
-        $name          = new TEntry('name');
         $controller    = new TUniqueSearch('controller');
+        $name          = new TEntry('name');
+        $groups        = new TDBCheckGroup('groups', 'permission', 'SystemGroup', 'id', 'name');
         
-        $controller->addItems($this->getPrograms());
-        $controller->setMinLength(0);
         $id->setEditable(false);
-
+        $controller->addItems($this->getPrograms( empty($param['id']) ));
+        $controller->setMinLength(0);
+        $controller->setChangeAction(new TAction([$this, 'onChangeController']));
+        $groups->setLayout('horizontal');
+        
+        if ($groups->getLabels())
+        {
+            foreach ($groups->getLabels() as $label)
+            {
+                $label->setSize(200);
+            }
+        }
+        
         // add the fields
         $this->form->addFields( [new TLabel('ID')], [$id] );
-        $this->form->addFields( [new TLabel(_t('Name'))], [$name] );
         $this->form->addFields( [new TLabel(_t('Controller'))], [$controller] );
-
+        $this->form->addFields( [new TLabel(_t('Name'))], [$name] );
+        $this->form->addFields( [new TFormSeparator(_t('Groups'))] );
+        $this->form->addFields( [$groups] );
+        
         $id->setSize('30%');
         $name->setSize('70%');
         $controller->setSize('70%');
@@ -58,7 +71,7 @@ class SystemProgramForm extends TStandardForm
         $btn = $this->form->addAction(_t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
         $btn->class = 'btn btn-sm btn-primary';
         
-        $this->form->addAction(_t('Clear'), new TAction(array($this, 'onEdit')), 'fa:eraser red');
+        $this->form->addActionLink(_t('Clear'), new TAction(array($this, 'onEdit')), 'fa:eraser red');
         $this->form->addAction(_t('Back'),new TAction(array('SystemProgramList','onReload')),'fa:arrow-circle-o-left blue');
 
         $container = new TVBox;
@@ -72,25 +85,60 @@ class SystemProgramForm extends TStandardForm
     }
     
     /**
+     * Change controller, generate name
+     */
+    public static function onChangeController($param)
+    {
+        if (!empty($param['controller']) AND empty($param['name']))
+        {
+            $obj = new stdClass;
+            $obj->name = preg_replace('/([a-z])([A-Z])/', '$1 $2', $param['controller']);
+            TForm::sendData('form_SystemProgram', $obj);
+        }
+    }
+    
+    /**
      * Return all the programs under app/control
      */
-    public function getPrograms()
+    public function getPrograms( $just_new_programs = false )
     {
-        $entries = array();
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('app/control'),
-                                                         RecursiveIteratorIterator::CHILD_FIRST) as $arquivo)
+        try
         {
-            if (substr($arquivo, -4) == '.php')
+            TTransaction::open('permission');
+            $registered_programs = SystemProgram::getIndexedArray('id', 'controller');
+            TTransaction::close();
+            
+            $entries = array();
+            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('app/control'),
+                                                             RecursiveIteratorIterator::CHILD_FIRST) as $arquivo)
             {
-                $name = $arquivo->getFileName();
-                $pieces = explode('.', $name);
-                $class = (string) $pieces[0];
-                $entries[$class] = $class;
+                if (substr($arquivo, -4) == '.php')
+                {
+                    $name = $arquivo->getFileName();
+                    $pieces = explode('.', $name);
+                    $class = (string) $pieces[0];
+                    
+                    if ($just_new_programs)
+                    {
+                        if (!in_array($class, $registered_programs) AND !in_array($class, array_keys(TApplication::getDefaultPermissions())) AND substr($class,0,6) !== 'System')
+                        {
+                            $entries[$class] = $class;
+                        } 
+                    }
+                    else
+                    {
+                        $entries[$class] = $class;
+                    }
+                }
             }
+            
+            ksort($entries);
+            return $entries;
         }
-        
-        ksort($entries);
-        return $entries;
+        catch (Exception $e)
+        {
+            new TMessage('error', $e->getMessage());
+        }
     }
     
     /**
@@ -109,7 +157,19 @@ class SystemProgramForm extends TStandardForm
                 TTransaction::open($this->database);
                 $class = $this->activeRecord;
                 $object = new $class($key);
+                
+                $groups = array();
+                
+                if( $groups_db = $object->getSystemGroups() )
+                {
+                    foreach( $groups_db as $group )
+                    {
+                        $groups[] = $group->id;
+                    }
+                }
+                $object->groups = $groups;
                 $this->form->setData($object);
+                
                 TTransaction::close();
                 
                 return $object;
@@ -147,6 +207,17 @@ class SystemProgramForm extends TStandardForm
             $object->store();
             $data->id = $object->id;
             $this->form->setData($data);
+            
+            $object->clearParts();
+            
+            if( !empty($data->groups) )
+            {
+                foreach( $data->groups as $group_id )
+                {
+                    $object->addSystemGroup( new SystemGroup($group_id) );
+                }
+            }
+            
             TTransaction::close();
             
             new TMessage('info', AdiantiCoreTranslator::translate('Record saved'));

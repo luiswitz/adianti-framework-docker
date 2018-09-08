@@ -39,12 +39,18 @@ class SystemSQLPanel extends TPage
         $database = new TCombo('database');
         $table = new TCombo('table');
         $select = new TText('select');
+        $select->style = 'font-family: Andale mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Lucida Console, Monaco, Consolas, Droid Sans monospace, Monospace; background: #2f2f2f; color: white';
+        
+        //$database->enableSearch();
+        //$table->enableSearch();
         
         $this->form->addFields( [ $ld=new TLabel(_t('Database'))], [ $database], [$lt=new TLabel(_t('Table'))], [$table] );
         $this->form->addFields( [ $ls=new TLabel('SELECT')], [$select] );
         
         $btn = $this->form->addAction( _t('Generate'), new TAction(array($this, 'onGenerate')), 'fa:check-circle');
         $btn->class = 'btn btn-sm btn-primary';
+        
+        $this->form->addAction( 'CSV', new TAction(array($this, 'onExportCSV')), 'fa:table');
         
         $ld->setFontColor('red');
         $lt->setFontColor('red');
@@ -58,7 +64,7 @@ class SystemSQLPanel extends TPage
         $table->addValidation(_t('Table'), new TRequiredValidator);
         $database->setSize('100%');
         $table->setSize('100%');
-        $select->setSize('100%', 100);
+        $select->setSize('100%', 150);
         
         $this->container = new TVBox;
         $this->container->style = 'width: 90%';
@@ -128,7 +134,8 @@ class SystemSQLPanel extends TPage
             if (isset($param['table']))
             {
                 $obj->table = $param['table'];
-                TForm::sendData('sqlpanel', $obj);
+                $obj->select = $param['select'];
+                TForm::sendData('sqlpanel', $obj, false, false);
             }
             
             $this->form->validate();
@@ -141,6 +148,7 @@ class SystemSQLPanel extends TPage
             // creates a DataGrid
             $datagrid = new BootstrapDatagridWrapper(new TDataGrid);
             $datagrid->datatable = 'true';
+            $datagrid->width = '100%';
             
             $panel = new TPanelGroup( _t('Results') );
             $panel->add($datagrid);
@@ -176,6 +184,68 @@ class SystemSQLPanel extends TPage
             }
             $panel->addFooter( _t('^1 records shown', "<b>{$i}</b>"));
             $this->container->add($panel);
+            TTransaction::close();
+        }
+        catch (Exception $e)
+        {
+            new TMessage('error', $e->getMessage());
+        }
+    }
+    
+    /**
+     * Export as CSV
+     */
+    public function onExportCSV($param)
+    {
+        try
+        {
+            self::onDatabaseChange($param);
+            $obj = new stdClass;
+            
+            // keep table filled via javascript
+            if (isset($param['table']))
+            {
+                $obj->table = $param['table'];
+                $obj->select = $param['select'];
+                TForm::sendData('sqlpanel', $obj, false, false);
+            }
+            
+            $this->form->validate();
+            $data = $this->form->getData();
+            
+            if (strtoupper(substr( $data->select, 0, 6)) !== 'SELECT')
+            {
+                throw new Exception(_t('Invalid command'));
+            }
+            
+            if (!is_writable('tmp'))
+            {
+                throw new Exception( _t('Permission denied') . ': tmp');
+            }
+            
+            TTransaction::open( $data->database );
+            $conn = TTransaction::get();
+            $result = $conn->query( $data->select );
+            
+            $file = 'tmp/sql' . mt_rand(1000000000, 1999999999) . '.csv';
+            $handler = fopen($file, 'w');
+            
+            $first_row = $result->fetch( PDO::FETCH_ASSOC );
+            if ($first_row)
+            {
+                // CSV headers
+                fputcsv($handler, array_keys($first_row));
+                fputcsv($handler, $first_row);
+                
+                // add other rows
+                while ($row = $result->fetch( PDO::FETCH_ASSOC ))
+                {
+                    fputcsv($handler, $row);
+                }
+                
+                fclose($handler);
+                parent::openFile($file);
+            }
             TTransaction::close();
         }
         catch (Exception $e)

@@ -101,6 +101,8 @@ class MessageList extends TElement
                 $ul_wrapper = new TElement('ul');
                 $ul_wrapper->{'class'} = 'menu';
                 $li_master->add($ul_wrapper);
+                
+                parent::add( TElement::tag('li', _t('Messages'), ['class'=>'header']));
                 parent::add($li_master);
                 
                 TTransaction::open('permission');

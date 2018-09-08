@@ -48,7 +48,7 @@ class SystemGroupForm extends TPage
         $this->form->addFields( [new TLabel('ID')], [$id]);
         $this->form->addFields( [new TLabel(_t('Name'))], [$name]);
         
-        $this->program_list = new TQuickGrid();
+        $this->program_list = new BootstrapDatagridWrapper(new TQuickGrid);
         $this->program_list->setHeight(200);
         $this->program_list->makeScrollable();
         $this->program_list->style='width: 100%';
@@ -70,7 +70,7 @@ class SystemGroupForm extends TPage
         $vbox = new TVBox;
         $vbox->style='width:100%';
         $vbox->add( $hbox );
-        $vbox->add($this->program_list);
+        $vbox->add(TPanelGroup::pack('', $this->program_list));
         
         $this->form->addFields( [new TFormSeparator(_t('Programs'))] );
         $this->form->addFields( [$vbox] );
