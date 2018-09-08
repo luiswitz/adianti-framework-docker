@@ -5,10 +5,12 @@ use Adianti\Core\AdiantiCoreTranslator;
 use Exception;
 use ApplicationTranslator;
 
+use Math\Parser;
+
 /**
  * Html Renderer
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage template
  * @author     Pablo Dall'Oglio
@@ -139,6 +141,82 @@ class THtmlRenderer
                 }
             }
         }
+        
+        // replace some php functions
+        $content = self::replaceFunctions($content);
+        
+        return $content;
+    }
+    
+    /**
+     * replace some php functions
+     */
+    public static function replaceFunctions($content)
+    {
+        preg_match_all('/date_format\(([0-9]{4}-[0-9]{2}-[0-9]{2}),\s*\'([A-z_\/\-0-9\s\:]*)\'\)/', $content, $matches1);
+        
+        if (count($matches1)>0)
+        {
+            foreach ($matches1[0] as $key => $value)
+            {
+                $raw    = $matches1[0][$key];
+                $date   = $matches1[1][$key];
+                $mask   = $matches1[2][$key];
+                $content = str_replace($raw, date_format(date_create($date), $mask), $content);
+            }
+        }
+        
+        preg_match_all('/date_format\(([0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9]{2}),\s*\'([A-z_\/\-0-9\s\:]*)\'\)/', $content, $matches1);
+        
+        if (count($matches1)>0)
+        {
+            foreach ($matches1[0] as $key => $value)
+            {
+                $raw    = $matches1[0][$key];
+                $date   = $matches1[1][$key];
+                $mask   = $matches1[2][$key];
+                $content = str_replace($raw, date_format(date_create($date), $mask), $content);
+            }
+        }
+        
+        preg_match_all('/number_format\(([\d+\.\d]*),\s*([0-9])+,\s*\'(\,*\.*)\',\s*\'(\,*\.*)\'\)/', $content, $matches2);
+        
+        if (count($matches2)>0)
+        {
+            foreach ($matches2[0] as $key => $value)
+            {
+                $raw      = $matches2[0][$key];
+                $number   = $matches2[1][$key];
+                $decimals = $matches2[2][$key];
+                $dec_sep  = $matches2[3][$key];
+                $tho_sep  = $matches2[4][$key];
+                $content  = str_replace($raw, number_format($number, $decimals, $dec_sep, $tho_sep), $content);
+            }
+        }
+        
+        preg_match_all('/evaluate\(([-+\/\d\s\(\))*]*)\)/', $content, $matches3);
+        
+        if (count($matches3)>0)
+        {
+            $parser = new Parser;
+            foreach ($matches3[0] as $key => $value)
+            {
+                $raw        = $matches3[0][$key];
+                $expression = $matches3[1][$key];
+                
+                $expression = str_replace('+', ' + ', $expression);
+                $expression = str_replace('-', ' - ', $expression);
+                $expression = str_replace('*', ' * ', $expression);
+                $expression = str_replace('/', ' / ', $expression);
+                $expression = str_replace('(', ' ( ', $expression);
+                $expression = str_replace(')', ' ) ', $expression);
+                
+                $result = $parser->evaluate($expression);
+                
+                $content = str_replace($raw, $result, $content);
+            }
+        }
+        
         return $content;
     }
     
@@ -285,15 +363,18 @@ class THtmlRenderer
      */
     public static function recursiveKeyArraySearch($needle,$haystack)
     {
-        foreach($haystack as $key=>$value)
+        if ($haystack)
         {
-            if($needle === $key)
+            foreach($haystack as $key=>$value)
             {
-                return $value;
-            }
-            else if (is_array($value) && self::recursiveKeyArraySearch($needle,$value) !== false)
-            {
-                return self::recursiveKeyArraySearch($needle,$value);
+                if($needle === $key)
+                {
+                    return $value;
+                }
+                else if (is_array($value) && self::recursiveKeyArraySearch($needle,$value) !== false)
+                {
+                    return self::recursiveKeyArraySearch($needle,$value);
+                }
             }
         }
         return false;

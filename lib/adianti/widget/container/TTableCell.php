@@ -6,7 +6,7 @@ use Adianti\Widget\Base\TElement;
 /**
  * TableCell: Represents a cell inside a table
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -19,9 +19,9 @@ class TTableCell extends TElement
      * Class Constructor
      * @param $value  TableCell content
      */
-    public function __construct($value)
+    public function __construct($value, $tag = 'td')
     {
-        parent::__construct('td');
+        parent::__construct($tag);
         parent::add($value);
     }
 }

@@ -4,7 +4,7 @@ namespace Adianti\Database;
 /**
  * Base class for TCriteria and TFilter (composite pattern implementation)
  *
- * @version    5.0
+ * @version    5.5
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)

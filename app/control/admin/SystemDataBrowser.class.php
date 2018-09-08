@@ -27,6 +27,7 @@ class SystemDataBrowser extends TPage
         
         // creates the datagrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
+        $this->datagrid->width = '100%';
         
         // creates the pagination
         $this->pageAction = new TAction(array($this, 'onLoad'));
@@ -148,6 +149,7 @@ class SystemDataBrowser extends TPage
                         $entry = new TEntry($key);
                         $entry->setSize('100%');
                         $entry->style = 'max-width:150px';
+                        $entry->class = 'input-data-search';
                         
                         // define the filter action
                         $request = $param;

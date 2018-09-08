@@ -36,6 +36,7 @@ class SystemPageUpdate extends TWindow
         $name = new THidden('name');
         $type = new TEntry('type');
         $module_dir = new TEntry('module_dir');
+        $module_icon = new THidden('module_icon');
         $controller = new TEntry('controller');
         $code = new THidden('code');
         $on_menu = new THidden('on_menu');
@@ -63,6 +64,7 @@ class SystemPageUpdate extends TWindow
         
         $this->form->addFields( [$index] );
         $this->form->addFields( [$name] );
+        $this->form->addFields( [$module_icon] );
         $this->form->addFields( [new TLabel(_t('Type'))], [$type] );
         $this->form->addFields( [new TLabel(_t('Directory'))], [$module_dir] );
         $this->form->addFields( [new TLabel(_t('Page'))], [$controller] );
@@ -88,13 +90,14 @@ class SystemPageUpdate extends TWindow
             $index     = isset($param['index']) ? $param['index'] : 0;
             
             $obj = new stdClass;
-            $obj->controller = $page_data['data'][$index]->controller;
-            $obj->code       = $page_data['data'][$index]->code;
-            $obj->module_dir = $page_data['data'][$index]->module_dir;
-            $obj->type       = $page_data['data'][$index]->type;
-            $obj->name       = $page_data['data'][$index]->name;
-            $obj->module     = $page_data['data'][$index]->module;
-            $obj->on_menu    = (string) $page_data['data'][$index]->on_menu;
+            $obj->controller  = $page_data['data'][$index]->controller;
+            $obj->code        = $page_data['data'][$index]->code;
+            $obj->module_dir  = $page_data['data'][$index]->module_dir;
+            $obj->module_icon = $page_data['data'][$index]->module_icon;
+            $obj->type        = $page_data['data'][$index]->type;
+            $obj->name        = $page_data['data'][$index]->name;
+            $obj->module      = $page_data['data'][$index]->module;
+            $obj->on_menu     = (string) $page_data['data'][$index]->on_menu;
             
             $this->source->loadString( base64_decode( $page_data['data'][$index]->code ) );
             
@@ -124,7 +127,7 @@ class SystemPageUpdate extends TWindow
             $file_path   = 'app/'.$first_level.'/' . $param['module_dir'] . '/' . $param['controller'];
             $class_name  = str_replace('.php', '', $param['controller']);
             
-            if ($param['type'] !== 'control')
+            if ($param['type'] !== 'control' AND !empty($param['module_dir']))
             {
                 $path      = str_replace('/'.$param['module_dir'], '', $path);
                 $file_path = str_replace('/'.$param['module_dir'], '', $file_path);
@@ -152,6 +155,10 @@ class SystemPageUpdate extends TWindow
                     if (file_exists('menu.xml') AND is_writable('menu.xml'))
                     {
                         $menu = new TMenuParser('menu.xml');
+                        if (!$menu->moduleExists( $param['module'] ))
+                        {
+                            $menu->appendModule( $param['module'], $param['module_icon'] );
+                        }
                         $menu->appendPage( $param['module'], $param['name'], $class_name, 'fa:circle-o fa-fw' );
                     }
                     else

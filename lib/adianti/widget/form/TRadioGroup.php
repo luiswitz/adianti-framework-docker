@@ -16,7 +16,7 @@ use Exception;
 /**
  * A group of RadioButton's
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -300,7 +300,7 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
                 $active = FALSE;
                 
                 // check if contains any value
-                if ($this->value == $index)
+                if ( $this->value == $index AND !(is_null($this->value)) AND strlen((string) $this->value) > 0)
                 {
                     // mark as checked
                     $button->setProperty('checked', '1');

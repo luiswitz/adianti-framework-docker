@@ -65,14 +65,25 @@ class SystemProgramList extends TStandardList
         
         // creates the datagrid columns
         $column_id = new TDataGridColumn('id', 'Id', 'center', 50);
-        $column_name = new TDataGridColumn('name', _t('Name'), 'left');
         $column_controller = new TDataGridColumn('controller', _t('Controller'), 'left');
+        $column_name = new TDataGridColumn('name', _t('Name'), 'left');
+        $column_menu = new TDataGridColumn('controller', _t('Menu path'), 'left');
 
+        $column_menu->setTransformer( function($value, $object, $row) {
+            $menuparser = new TMenuParser('menu.xml');
+            $paths = $menuparser->getPath($value);
+            
+            if ($paths)
+            {
+                return implode(' &raquo; ', $paths);
+            }
+        });
 
         // add the columns to the DataGrid
         $this->datagrid->addColumn($column_id);
-        $this->datagrid->addColumn($column_name);
         $this->datagrid->addColumn($column_controller);
+        $this->datagrid->addColumn($column_name);
+        $this->datagrid->addColumn($column_menu);
 
 
         // creates the datagrid column actions
@@ -104,6 +115,38 @@ class SystemProgramList extends TStandardList
         $action_del->setField('id');
         $this->datagrid->addAction($action_del);
         
+        // create EXECUTE action
+        $action_ope = new TDataGridAction(array($this, 'onOpen'));
+        $action_ope->setButtonClass('btn btn-default');
+        $action_ope->setLabel(_t('Open'));
+        $action_ope->setImage('fa:folder-open-o green fa-lg');
+        $action_ope->setField('controller');
+        $this->datagrid->addAction($action_ope);
+
+        // create ADD MENU action
+        $action_add_menu = new TDataGridAction(array($this, 'onAddMenu'));
+        $action_add_menu->setDisplayCondition( array($this, 'displayAddMenu') );
+        $action_add_menu->setButtonClass('btn btn-default');
+        $action_add_menu->setLabel(_t('Add to menu'));
+        $action_add_menu->setImage('fa:plus green fa-lg');
+        $action_add_menu->setFields(['controller', 'name']);
+        
+        // create DEL MENU action
+        $action_del_menu = new TDataGridAction(array($this, 'onDelMenu'));
+        $action_del_menu->setDisplayCondition( array($this, 'displayDelMenu') );
+        $action_del_menu->setButtonClass('btn btn-default');
+        $action_del_menu->setLabel(_t('Remove from menu'));
+        $action_del_menu->setImage('fa:times red fa-lg');
+        $action_del_menu->setField('controller');
+        
+        $action_group = new TDataGridActionGroup('', 'fa:list');
+        $action_group->addHeader('Menu');
+        $action_group->addAction($action_add_menu);
+        $action_group->addAction($action_del_menu);
+        
+        // add the actions to the datagrid
+        $this->datagrid->addActionGroup($action_group);
+        
         $ini = AdiantiApplicationConfig::get();
         
         if ((TSession::getValue('login') == 'admin') && isset($ini['general']['token']))
@@ -130,6 +173,7 @@ class SystemProgramList extends TStandardList
         
         // create the page navigation
         $this->pageNavigation = new TPageNavigation;
+        $this->pageNavigation->enableCounters();
         $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
@@ -147,6 +191,127 @@ class SystemProgramList extends TStandardList
         parent::add($container);
     }
     
+    /**
+     * Display condition for add to menu option
+     */
+    public function displayAddMenu($object)
+    {
+        $menuparser = new TMenuParser('menu.xml');
+        return count((array) $menuparser->getPath($object->controller)) == 0;
+    }
+    
+    /**
+     * Display condition for del from menu option
+     */
+    public function displayDelMenu($object)
+    {
+        $menuparser = new TMenuParser('menu.xml');
+        return count((array) $menuparser->getPath($object->controller)) > 0;
+    }
+    
+    /**
+     * Open controller
+     */
+    public function onOpen($param)
+    {
+        AdiantiCoreApplication::loadPage($param['controller']);
+    }
+    
+    /**
+     * Add item on menu
+     */
+    public function onAddMenu($param)
+    {
+        try
+        {
+            TTransaction::open('permission');
+            
+            $modules = (new TMenuParser('menu.xml'))->getModules();
+            
+            $form = new TQuickForm('input_form');
+            $form->class = 'input_form';
+            $form->style = 'padding:20px';
+            
+            $module = new TCombo('module');
+            $module->addItems($modules);
+            $module->enableSearch();
+            
+            $name = new TEntry('name');
+            
+            $icon = new TIcon('icon');
+            $icon->setValue('fa-circle-o');
+            
+            $form->addQuickField(_t('Module'), $module);
+            $form->addQuickField(_t('Name'), $name);
+            $form->addQuickField(_t('Icon'), $icon);
+            
+            $module->setSize('70%');
+            $icon->setSize('70%');
+            $name->setSize('70%');
+            
+            $name->setValue($param['name']);
+            
+            $action = new TAction(array($this, 'addItemMenu'));
+            $action->setParameters($param);
+            
+            $form->addQuickAction(_t('Add'), $action, 'fa:save green');
+            new TInputDialog(_t('Add to menu'), $form);
+            
+            TTransaction::close();
+        }
+        catch (Exception $e)
+        {
+            new TMessage('error', $e->getMessage());
+        }
+    }
+    
+    /**
+     * Add item at menu
+     */
+    public function addItemMenu($param)
+    {
+        try
+        {
+            TTransaction::open('permission');
+            
+            $menu = new TMenuParser('menu.xml');
+            $menu->appendPage( $param['module'], $param['name'], $param['controller'], str_replace('fa-', 'fa:', $param['icon'] . ' fa-fw'));
+            
+            $posaction = new TAction([$this, 'onReload']);
+            new TMessage('info', _t('Item added to menu'), $posaction);
+            TTransaction::close();
+        }
+        catch (Exception $e)
+        {
+            new TMessage('error', $e->getMessage());
+        }
+    }
+    
+    /**
+     * Remove item from menu
+     */
+    public function onDelMenu($param)
+    {
+        try
+        {
+            TTransaction::open('permission');
+            
+            $menu = new TMenuParser('menu.xml');
+            $menu->removePage($param['controller']);
+            
+            $posaction = new TAction([$this, 'onReload']);
+            new TMessage('info', _t('Item removed from menu'), $posaction);
+            TTransaction::close();
+        }
+        catch (Exception $e)
+        {
+            new TMessage('error', $e->getMessage());
+        }
+    }
+    
+    /**
+     * Display condition
+     */
     public function displayBuilderActions($object)
     {
         return ( (strpos($object->controller, 'System') === false) and !in_array($object->controller, ['CommonPage', 'WelcomeView']));

@@ -9,7 +9,7 @@ use Adianti\Widget\Form\TField;
 /**
  * Label Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -28,7 +28,7 @@ class TLabel extends TField implements AdiantiWidgetInterface
      * Class Constructor
      * @param  $value text label
      */
-    public function __construct($value, $color = null, $size = null, $decoration = null)
+    public function __construct($value, $color = null, $fontsize = null, $decoration = null, $size = null)
     {
         $this->id = mt_rand(1000000000, 1999999999);
         $stylename = 'tlabel_'.$this->id;
@@ -43,14 +43,19 @@ class TLabel extends TField implements AdiantiWidgetInterface
             $this->setFontColor($color);
         }
         
-        if (!empty($size))
+        if (!empty($fontsize))
         {
-            $this->setFontSize($size);
+            $this->setFontSize($fontsize);
         }
         
         if (!empty($decoration))
         {
             $this->setFontStyle($decoration);
+        }
+        
+        if (!empty($size))
+        {
+            $this->setSize($size);
         }
         
         // create a new element

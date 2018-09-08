@@ -15,7 +15,7 @@ use Exception;
 /**
  * FileChooser widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Nataniel Rabaioli
@@ -43,7 +43,6 @@ class TFile extends TField implements AdiantiWidgetInterface
     {
         parent::__construct($name);
         $this->id = $this->name . '_' . mt_rand(1000000000, 1999999999);
-        $this->height = 25;
         $this->uploaderClass = 'AdiantiUploaderService';
         $this->fileHandling = FALSE;
         
@@ -73,6 +72,7 @@ class TFile extends TField implements AdiantiWidgetInterface
     public function setAllowedExtensions($extensions)
     {
         $this->extensions = $extensions;
+        $this->tag->{'accept'} = '.' . implode(',.', $extensions);
     }
     
     /**
@@ -129,10 +129,20 @@ class TFile extends TField implements AdiantiWidgetInterface
         {
             if (strpos($value, '%7B') === false)
             {
-                $this->value = urlencode(json_encode(['fileName'=>$value]));
+                if (!empty($value))
+                {
+                    $this->value = urlencode(json_encode(['fileName'=>$value]));
+                }
             }
             else
             {
+                $value_object = json_decode(urldecode($value));
+                
+                if (!empty($value_object->{'delFile'}) AND $value_object->{'delFile'} == $value_object->{'fileName'})
+                {
+                    $value = '';
+                }
+                
                 parent::setValue($value);
             }
         }
@@ -148,10 +158,11 @@ class TFile extends TField implements AdiantiWidgetInterface
     public function show()
     {
         // define the tag properties
-        $this->tag->{'id'}    = $this->id;
-        $this->tag->{'name'}  = 'file_' . $this->name;  // tag name
-        $this->tag->{'value'} = $this->value; // tag value
-        $this->tag->{'type'}  = 'file';       // input type
+        $this->tag->{'id'}       = $this->id;
+        $this->tag->{'name'}     = 'file_' . $this->name;  // tag name
+        $this->tag->{'receiver'} = $this->name;  // tag name
+        $this->tag->{'value'}    = $this->value; // tag value
+        $this->tag->{'type'}     = 'file';       // input type
         
         if (!empty($this->size))
         {
@@ -165,7 +176,10 @@ class TFile extends TField implements AdiantiWidgetInterface
             }
         }
         
-        $this->setProperty('style', "height:{$this->height}px;", false); //aggregate style info
+        if (!empty($this->height))
+        {
+            $this->setProperty('style', "height:{$this->height}px;", false); //aggregate style info
+        }
         
         $hdFileName = new THidden($this->name);
         $hdFileName->setValue( $this->value );
@@ -237,7 +251,7 @@ class TFile extends TField implements AdiantiWidgetInterface
         
         $fileHandling = $this->fileHandling ? '1' : '0';
         
-        TScript::create(" tfile_start( '{$this->tag-> id}', '{$action}', '{$div-> id}', {$complete_action}, $fileHandling);");
+        TScript::create(" tfile_start( '{$this->tag-> id}', '{$div-> id}', '{$action}', {$complete_action}, $fileHandling);");
     }
     
     /**

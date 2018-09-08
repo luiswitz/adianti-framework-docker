@@ -1,7 +1,11 @@
 <?php
 /**
- * Write tables in PDF
- * @author Pablo Dall'Oglio
+ * PDF Writer
+ *
+ * @version    5.5
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class TTableWriterPDF implements ITableWriter
 {
@@ -45,6 +49,24 @@ class TTableWriterPDF implements ITableWriter
     }
     
     /**
+     * Set Header callback
+     */
+    public function setHeaderCallback( $callback )
+    {
+        // call the first time
+        call_user_func($callback, $this);
+        $this->pdf->setHeaderCallback($callback, $this);
+    }
+    
+    /**
+     * Set Footer callback
+     */
+    public function setFooterCallback( $callback )
+    {
+        $this->pdf->setFooterCallback($callback, $this);
+    }
+    
+    /**
      * Returns the native writer
      */
     public function getNativeWriter()
@@ -61,9 +83,10 @@ class TTableWriterPDF implements ITableWriter
      * @param @fontcolor font color
      * @param @fillcolor fill color
      */
-    public function addStyle($stylename, $fontface, $fontsize, $fontstyle, $fontcolor, $fillcolor)
+    public function addStyle($stylename, $fontface, $fontsize, $fontstyle, $fontcolor, $fillcolor, $border = null)
     {
-        $this->styles[$stylename] = array($fontface, $fontsize, $fontstyle, $fontcolor, $fillcolor);
+        $border = is_null($border) ? 1 : $border;
+        $this->styles[$stylename] = array($fontface, $fontsize, $fontstyle, $fontcolor, $fillcolor, $border);
     }
     
     /**
@@ -146,7 +169,7 @@ class TTableWriterPDF implements ITableWriter
             $width += $this->widths[$n];
         }
         // exibe a célula com o conteúdo passado
-        $this->pdf->Cell( $width, $fontsize * 1.5, $content, 1, 0, strtoupper(substr($align,0,1)), true);
+        $this->pdf->Cell( $width, $fontsize * 1.5, $content, $this->styles[$stylename][5], 0, strtoupper(substr($align,0,1)), true);
         $this->colcounter += $colspan;
     }
     

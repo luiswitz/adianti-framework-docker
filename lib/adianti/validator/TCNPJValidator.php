@@ -7,7 +7,7 @@ use Exception;
 /**
  * CNPJ validation (Valid only in Brazil)
  *
- * @version    5.0
+ * @version    5.5
  * @package    validator
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -29,8 +29,8 @@ class TCNPJValidator extends TFieldValidator
             throw new Exception(AdiantiCoreTranslator::translate('The field ^1 has not a valid CNPJ', $label));
         }
         $k = 6;
-        $soma1 = "";
-        $soma2 = "";
+        $soma1 = 0;
+        $soma2 = 0;
         for( $i = 0; $i < 13; $i++ )
         {
             $k = $k == 1 ? 9 : $k;

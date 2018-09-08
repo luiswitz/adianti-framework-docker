@@ -6,7 +6,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
     
-        <title>Adianti Framework ERP Template IV</title>
+        <title>Adianti Template IV</title>
         
         {LIBRARIES}
         {HEAD}
@@ -17,27 +17,39 @@
         <link href="app/templates/{template}/css/themes/all-themes.css" rel="stylesheet" />
         
         <style>
-        .navbar
+        html
         {
-            position: relative;
+            height: unset;
         }
         </style>
     </head>
     <body>
-        <nav class="bg-red main-header navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0; text-align:center">
-            <div class="navbar-header" style="display: inline-block;float:none">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" style="color:white" href="http://www.adianti.com.br/framework">Adianti Framework ERP Template IV</a>
+        <!-- Page Loader -->
+        <div class="page-loader-wrapper">
+            <div class="loader">
+                <div class="preloader">
+                    <div class="spinner-layer pl-red">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+                <p>Carregando...</p>
+            </div>
+        </div>
+        <!-- #END# Page Loader -->
+        
+        <nav class="bg-red main-header navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0; text-align:center; position:relative">
+            <div class="navbar-header" style="display: inline-block;float:none; width:100%;">
+                <span class="navbar-brand" style="color:white">Adianti Template IV</san>
             </div>
             <!-- /.navbar-header -->
         </nav>
         
-        <div id="wrapper">
+        <div id="wrapper" style="width:90%;margin:auto;margin-top:10px">
             <!-- Navigation -->
     
             <div id="adianti_div_content"></div>
@@ -45,7 +57,15 @@
             <div id="adianti_online_content2"></div>
             
         </div>
-        <div style="text-align:center"><a href="index.php?class=PublicView">[public view]</a></div>
+        <div style="text-align:center">
+            <!--[CREATE-ACCOUNT]--> <a href="index.php?class=SystemRegistrationForm">[_t{Create account}]</a> <!--[/CREATE-ACCOUNT]-->
+            <!--[RESET-PASSWORD]--> <a href="index.php?class=SystemRequestPasswordResetForm">[_t{Reset password}]</a> <!--[/RESET-PASSWORD]-->
+        </div>
+        
+        <a class="little-float-button bg-orange" title="PHP Modules" href="index.php?class=SystemModulesCheckView" style="pointer-events: auto;">
+            <i class="fa fa-cog internal-float-button"></i>
+        </a>
+        
         <!-- /#wrapper -->
         
         <script src="app/templates/{template}/js/admin-login.js"></script>

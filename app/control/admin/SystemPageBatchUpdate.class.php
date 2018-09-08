@@ -28,6 +28,7 @@ class SystemPageBatchUpdate extends TPage
         
         // creates one datagrid
         $this->datagrid = new BootstrapDatagridWrapper(new TQuickGrid);
+        $this->datagrid->width = '100%';
         
         // add the columns
         $this->datagrid->addQuickColumn(_t('Name'),       'name',       'left');
@@ -44,16 +45,13 @@ class SystemPageBatchUpdate extends TPage
         
         try
         {
-            $pages = SystemPageService::getPageCodes();
+            $pages = SystemPageService::getPages();
             if ($pages)
             {
                 foreach ($pages['data'] as $page)
                 {
-                    if ($page->type == 'control')
-                    {
-                        $page->controller = pathinfo($page->controller, PATHINFO_FILENAME);
-                        $this->datagrid->addItem((object) $page);
-                    }
+                    $page->controller = pathinfo($page->controller, PATHINFO_FILENAME);
+                    $this->datagrid->addItem((object) $page);
                 }
             }
         }

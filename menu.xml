@@ -30,6 +30,10 @@
                   <icon>fa:info-circle fa-fw</icon>
                   <action>SystemPHPInfoView</action>
               </menuitem>
+              <menuitem label='PHP Modules'>
+                  <icon>fa:info-circle fa-fw</icon>
+                  <action>SystemModulesCheckView</action>
+              </menuitem>
               <menuitem label='_t{Preferences}'>
                   <icon>fa:cog fa-fw</icon>
                   <action>SystemPreferenceForm#method=onEdit</action>

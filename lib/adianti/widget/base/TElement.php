@@ -4,7 +4,7 @@ namespace Adianti\Widget\Base;
 /**
  * Base class for all HTML Elements
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage base
  * @author     Pablo Dall'Oglio
@@ -32,6 +32,7 @@ class TElement
         $this->useLineBreaks = TRUE;
         $this->useSingleQuotes = FALSE;
         $this->wrapped = FALSE;
+        $this->properties = [];
         $this->voidelements = array('area', 'base', 'br', 'col', 'command', 'embed', 'hr',
                                     'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr');
     }
@@ -79,6 +80,14 @@ class TElement
     }
     
     /**
+     * Returns tag name
+     */
+    public function getName()
+    {
+        return $this->tagname;
+    }
+    
+    /**
      * Define if the element is wrapped inside another one
      * @param @bool Boolean TRUE if is wrapped
      */
@@ -93,6 +102,30 @@ class TElement
     public function getIsWrapped()
     {
         return $this->wrapped;
+    }
+    
+    /**
+     * Set tag property
+     * @param $name     Property Name
+     * @param $value    Property Value
+     */
+    public function setProperty($name, $value)
+    {
+        // objects and arrays are not set as properties
+        if (is_scalar($value))
+        {
+            // store the property's value
+            $this->properties[$name] = $value;
+        }
+    }
+    
+    /**
+     * Return a property
+     * @param $name property name
+     */
+    public function getProperty($name)
+    {
+        return isset($this->properties[$name]) ? $this->properties[$name] : null;
     }
     
     /**
@@ -112,7 +145,7 @@ class TElement
     {
         // objects and arrays are not set as properties
         if (is_scalar($value))
-        {              
+        {
             // store the property's value
             $this->properties[$name] = $value;
         }

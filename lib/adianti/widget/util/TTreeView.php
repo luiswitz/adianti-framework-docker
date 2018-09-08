@@ -7,7 +7,7 @@ use Adianti\Widget\Base\TScript;
 /**
  * TreeView
  * 
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -26,9 +26,9 @@ class TTreeView extends TElement
      */
     public function __construct()
     {
+        parent::__construct('ul');
         $this->{'id'} = 'ttreeview_'.mt_rand(1000000000, 1999999999);
         $this->collapsed = FALSE;
-        parent::__construct('ul');
     }
     
     /**
@@ -118,12 +118,13 @@ class TTreeView extends TElement
                         $element->{'id'} = $this->{'id'} . '_' . md5($key);
                     }
                     $span->{'key'} = $key;
-                    $element->add($span);
                     
                     if (is_callable($this->callback))
                     {
-                        call_user_func($this->callback, $span);
+                        $span = call_user_func($this->callback, $span);
                     }
+
+                    $element->add($span);
                     
                     parent::add($element);
                 }
@@ -173,12 +174,13 @@ class TTreeView extends TElement
                         $element->{'id'} = $this->{'id'} . '_' . md5($key);
                     }
                     $span->{'key'} = $key;
-                    $element->add($span);
                     
                     if (is_callable($this->callback))
                     {
-                        call_user_func($this->callback, $span);
+                        $span = call_user_func($this->callback, $span);
                     }
+
+                    $element->add($span);
                 }
                 else if (is_array($option))
                 {
@@ -188,6 +190,11 @@ class TTreeView extends TElement
                     $span->add($key);
                     $element->add($span);
                     $element->add($this->fromOptions($option));
+                }
+                else if (is_object($option))
+                {
+                    $element = new TElement('li');
+                    $element->add($option);
                 }
                 $ul->add($element);
             }

@@ -9,7 +9,7 @@ use ReflectionMethod;
 /**
  * Structure to encapsulate an action
  *
- * @version    5.0
+ * @version    5.5
  * @package    control
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -19,6 +19,7 @@ class TAction
 {
     protected $action;
     protected $param;
+    protected $properties;
     
     /**
      * Class Constructor
@@ -114,6 +115,63 @@ class TAction
     public function getAction()
     {
         return $this->action;
+    }
+    
+    /**
+     * Set property
+     */
+    public function setProperty($property, $value)
+    {
+        $this->properties[$property] = $value;
+    }
+    
+    /**
+     * Get property
+     */
+    public function getProperty($property)
+    {
+        return $this->properties[$property];
+    }
+    
+    /**
+     * Prepare action for use over an object
+     * @param $object Data Object
+     */
+    public function prepare($object)
+    {
+        $parameters = $this->param;
+        $action     = clone $this;
+        
+        if ($parameters)
+        {
+            foreach ($parameters as $parameter => $value)
+            {
+                // replace {attribute}s
+                $action->setParameter($parameter, $this->replace($value, $object) );
+            }
+        }
+        
+        return $action;
+    }
+    
+    /**
+     * Replace a string with object properties within {pattern}
+     * @param $content String with pattern
+     * @param $object  Any object
+     */
+    private function replace($content, $object)
+    {
+        if (preg_match_all('/\{(.*?)\}/', $content, $matches) )
+        {
+            foreach ($matches[0] as $match)
+            {
+                $property = substr($match, 1, -1);
+                $value    = isset($object->$property)? $object->$property : null;
+                $content  = str_replace($match, $value, $content);
+            }
+        }
+        
+        return $content;
     }
     
     /**

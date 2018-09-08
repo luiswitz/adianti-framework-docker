@@ -18,7 +18,7 @@ use Exception;
 /**
  * Base class for Active Records
  *
- * @version    5.0
+ * @version    5.5
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -320,11 +320,13 @@ abstract class TRecord
                     $this->data[$key] = $data[$key];
                 }
             }
-
         }
         else
         {
-            $this->data = $data;
+            foreach ($data as $key => $value)
+            {
+                $this->data[$key] = $data[$key];
+            }
         }
     }
     
@@ -376,7 +378,11 @@ abstract class TRecord
             foreach ($matches[0] as $match)
             {
                 $property = substr($match, 1, -1);
-                $value    = $this->$property;
+                if (substr($property, 0, 1) == '$')
+                {
+                    $property = substr($property, 1);
+                }
+                $value = $this->$property;
                 if ($cast)
                 {
                     settype($value, $cast);
@@ -424,6 +430,21 @@ abstract class TRecord
     public function getAttributes()
     {
         return $this->attributes;
+    }
+    
+    /**
+     * Get attribute list
+     */
+    public function getAttributeList()
+    {
+        if (count($this->attributes) > 0)
+        {
+            $attributes = $this->attributes;
+            $attributes[] = $this->getPrimaryKey();
+            return implode(',', $attributes);
+        }
+        
+        return '*';
     }
     
     /**
@@ -589,7 +610,7 @@ abstract class TRecord
         // creates a SELECT instruction
         $sql = new TSqlSelect;
         $sql->setEntity($this->getEntity());
-        $sql->addColumn('*');
+        $sql->addColumn($this->getAttributeList());
         
         // creates a select criteria based on the ID
         $criteria = new TCriteria;
@@ -677,7 +698,8 @@ abstract class TRecord
         // creates a SELECT instruction
         $sql = new TSqlSelect;
         $sql->setEntity($this->getEntity());
-        $sql->addColumn('*');
+        // use *, once this is called before addAttribute()s
+        $sql->addColumn($this->getAttributeList());
         
         // creates a select criteria based on the ID
         $criteria = new TCriteria;
@@ -705,25 +727,20 @@ abstract class TRecord
             // if there's a result
             if ($result)
             {
-                if (method_exists($this, 'onAfterLoad'))
+                $activeClass = get_class($this);
+                $fetched_object = $result-> fetchObject();
+                if ($fetched_object)
                 {
-                    $fetched_object = $result-> fetchObject();
-                    if ($fetched_object)
+                    if (method_exists($this, 'onAfterLoad'))
                     {
                         $this->onAfterLoad($fetched_object);
-                        $activeClass = get_class($this);
-                        $object = new $activeClass;
-                        $object->fromArray( (array) $fetched_object );
                     }
-                    else
-                    {
-                        $object = NULL;
-                    }
+                    $object = new $activeClass;
+                    $object->fromArray( (array) $fetched_object );
                 }
                 else
                 {
-                    // returns the data as an object of this class
-                    $object = $result-> fetchObject(get_class($this));
+                    $object = NULL;
                 }
                 
                 if ($object)
@@ -1041,7 +1058,6 @@ abstract class TRecord
      * @param $join_class Active Record Join Class (Parent / Aggregated)
      * @param $foreign_key_parent Foreign key in Join Class to parent object
      * @param $foreign_key_child Foreign key in Join Class to child object
-     * @param $id Primary key of parent object
      * @returns Array of Active Records
      */
     public function belongsToMany($aggregate_class, $join_class = NULL, $foreign_key_parent = NULL, $foreign_key_child = NULL)
@@ -1076,6 +1092,28 @@ abstract class TRecord
                 $join->store();
             }
         }
+    }
+    
+    /**
+     * Returns the first object
+     */
+    public static function first()
+    {
+        $object = new static;
+        $id = $object->getFirstID();
+        
+        return self::find($id);
+    }
+    
+    /**
+     * Returns the last object
+     */
+    public static function last()
+    {
+        $object = new static;
+        $id = $object->getLastID();
+        
+        return self::find($id);
     }
     
     /**
@@ -1127,14 +1165,10 @@ abstract class TRecord
         {
             foreach ($objects as $object)
             {
-                if (isset($object->$valueColumn))
-                {
-                    $indexedArray[ $object->$indexColumn ] = $object->$valueColumn;
-                }
-                else
-                {
-                    $indexedArray[ $object->$indexColumn ] = $object->render($valueColumn);
-                }
+                $key = (isset($object->$indexColumn)) ? $object->$indexColumn : $object->render($indexColumn);
+                $val = (isset($object->$valueColumn)) ? $object->$valueColumn : $object->render($valueColumn);
+                
+                $indexedArray[ $key ] = $val;
             }
         }
         
@@ -1143,6 +1177,17 @@ abstract class TRecord
             asort($indexedArray);
         }
         return $indexedArray;
+    }
+    
+    /**
+     * Creates a Repository with filter
+     * @returns the TRepository object with a filter
+     */
+    public static function select()
+    {
+        $class = get_called_class(); // get the Active Record class name
+        $repository = new TRepository( $class ); // create the repository
+        return $repository->select( func_get_args() );
     }
     
     /**

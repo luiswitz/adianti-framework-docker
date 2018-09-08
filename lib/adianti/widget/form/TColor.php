@@ -10,7 +10,7 @@ use Adianti\Control\TAction;
 /**
  * Color Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -19,7 +19,6 @@ use Adianti\Control\TAction;
  */
 class TColor extends TEntry implements AdiantiWidgetInterface
 {
-    private $mask;
     protected $formName;
     protected $name;
     protected $id;

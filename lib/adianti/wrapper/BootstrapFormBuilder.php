@@ -17,6 +17,7 @@ use Adianti\Widget\Form\TSeekButton;
 use Adianti\Widget\Form\TRadioGroup;
 use Adianti\Widget\Form\TCheckGroup;
 use Adianti\Widget\Form\TMultiSearch;
+use Adianti\Widget\Util\TActionLink;
 use Adianti\Widget\Wrapper\TDBMultiSearch;
 use Adianti\Widget\Wrapper\TDBRadioGroup;
 use Adianti\Widget\Wrapper\TDBCheckGroup;
@@ -28,7 +29,7 @@ use Exception;
 /**
  * Bootstrap form builder for Adianti Framework
  *
- * @version    5.0
+ * @version    5.5
  * @package    wrapper
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -36,6 +37,7 @@ use Exception;
  */
 class BootstrapFormBuilder implements AdiantiFormInterface
 {
+    private $id;
     private $decorated;
     private $tabcontent;
     private $tabcurrent;
@@ -45,8 +47,12 @@ class BootstrapFormBuilder implements AdiantiFormInterface
     private $header_actions;
     private $title;
     private $column_classes;
+    private $header_properties;
     private $padding;
     private $name;
+    private $tabFunction;
+    private $tabAction;
+    private $field_sizes;
     
     /**
      * Constructor method
@@ -61,13 +67,30 @@ class BootstrapFormBuilder implements AdiantiFormInterface
         $this->actions        = array();
         $this->padding        = 10;
         $this->name           = $name;
+        $this->id             = 'bform_' . mt_rand(1000000000, 1999999999);
+        $this->field_sizes    = null;
         
         $this->column_classes = array();
-        $this->column_classes[1] = ['col-sm-12'];
-        $this->column_classes[2] = ['col-sm-2', 'col-sm-10'];
-        $this->column_classes[3] = ['col-sm-2', 'col-sm-4','col-sm-2'];
-        $this->column_classes[4] = ['col-sm-2', 'col-sm-4','col-sm-2', 'col-sm-4'];
-        $this->column_classes[6] = ['col-sm-2', 'col-sm-2','col-sm-2', 'col-sm-2', 'col-sm-2', 'col-sm-2'];
+        $this->column_classes[1]  = ['col-sm-12'];
+        $this->column_classes[2]  = ['col-sm-2', 'col-sm-10'];
+        $this->column_classes[3]  = ['col-sm-2', 'col-sm-4','col-sm-2'];
+        $this->column_classes[4]  = ['col-sm-2', 'col-sm-4','col-sm-2', 'col-sm-4'];
+        $this->column_classes[5]  = ['col-sm-2', 'col-sm-2','col-sm-2', 'col-sm-2', 'col-sm-2'];
+        $this->column_classes[6]  = ['col-sm-2', 'col-sm-2','col-sm-2', 'col-sm-2', 'col-sm-2', 'col-sm-2'];
+        $this->column_classes[7]  = ['col-sm-1', 'col-sm-1','col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1'];
+        $this->column_classes[8]  = ['col-sm-1', 'col-sm-1','col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1'];
+        $this->column_classes[9]  = ['col-sm-1', 'col-sm-1','col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1'];
+        $this->column_classes[10] = ['col-sm-1', 'col-sm-1','col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1'];
+        $this->column_classes[11] = ['col-sm-1', 'col-sm-1','col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1'];
+        $this->column_classes[12] = ['col-sm-1', 'col-sm-1','col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1', 'col-sm-1'];
+    }
+    
+    /**
+     * Set field sizes
+     */
+    public function setFieldSizes($size)
+    {
+        $this->field_sizes = $size;
     }
     
     /**
@@ -114,13 +137,23 @@ class BootstrapFormBuilder implements AdiantiFormInterface
     }
     
     /**
-     * Define a field property
+     * Define a style property
      * @param $name  Property Name
      * @param $value Property Value
      */
-    public function setProperty($name, $value, $replace = TRUE)
+    public function setProperty($name, $value)
     {
         $this->properties[$name] = $value;
+    }
+    
+    /**
+     * Define a header style property
+     * @param $name  Property Name
+     * @param $value Property Value
+     */
+    public function setHeaderProperty($name, $value)
+    {
+        $this->header_properties[$name] = $value;
     }
     
     /**
@@ -237,6 +270,24 @@ class BootstrapFormBuilder implements AdiantiFormInterface
     }
     
     /**
+     * Set tab click function
+     */
+    public function setTabFunction($function)
+    {
+        $this->tabFunction = $function;
+    }
+    
+    /**
+     * Define the action for the Notebook tab
+     * @param $action Action taken when the user
+     * clicks over Notebook tab (A TAction object)
+     */
+    public function setTabAction(TAction $action)
+    {
+        $this->tabAction = $action;
+    }
+    
+    /**
      * Add form fields
      * @param mixed $fields,... Form fields
      */
@@ -336,6 +387,21 @@ class BootstrapFormBuilder implements AdiantiFormInterface
     }
     
     /**
+     * Add a form action link
+     * @param $label Button label
+     * @param $action Button action
+     * @param $icon Button icon
+     */
+    public function addActionLink($label, TAction $action, $icon = 'fa:save')
+    {
+        $label_info = ($label instanceof TLabel) ? $label->getValue() : $label;
+        $button = new TActionLink($label_info, $action, null, null, null, $icon);
+        $button->{'class'} = 'btn btn-sm btn-default';
+        $this->actions[] = $button;
+        return $button;
+    }
+    
+    /**
      * Add a form header action
      * @param $label Button label
      * @param $action Button action
@@ -384,6 +450,28 @@ class BootstrapFormBuilder implements AdiantiFormInterface
     }
     
     /**
+     * Clear actions row
+     */
+    public function delActions()
+    {
+        if ($this->actions)
+        {
+            foreach ($this->actions as $key => $button)
+            {
+                unset($this->actions[$key]);
+            }
+        }
+    }
+    
+    /**
+     * Return an array with action buttons
+     */
+    public function getActionButtons()
+    {
+        return $this->actions;
+    }
+    
+    /**
      *
      */
     public function setColumnClasses($key, $classes)
@@ -420,6 +508,21 @@ class BootstrapFormBuilder implements AdiantiFormInterface
             $heading->{'style'} = 'width: 100%;height:43px;padding:5px;';
             $heading->add(TElement::tag('div', $this->title, ['class'=>'panel-title', 'style'=>'padding:5px;float:left']));
             
+            if ($this->header_properties)
+            {
+                foreach ($this->header_properties as $property => $value)
+                {
+                    if (isset($heading->$property))
+                    {
+                        $heading->$property .= ' ' . $value;
+                    }
+                    else
+                    {
+                        $heading->$property = $value;
+                    }
+                }
+            }
+            
             if ($this->header_actions)
             {
                 $title_actions = new TElement('div');
@@ -455,11 +558,24 @@ class BootstrapFormBuilder implements AdiantiFormInterface
                 $tab_li->{'class'} = ($tab_counter == $this->current_page) ? 'active' : '';
                 
                 $tab_link = new TElement('a');
-                $tab_link->{'href'} = '#tab_'.$tab_counter;
-                $tab_link->{'aria-controls'} = 'tab_0';
+                $tab_link->{'href'} = "#tab_{$this->id}_{$tab_counter}";
                 $tab_link->{'role'} = 'tab';
                 $tab_link->{'data-toggle'} = 'tab';
                 $tab_link->{'aria-expanded'} = 'true';
+                
+                if ($this->tabFunction)
+                {
+                    $tab_link->{'onclick'} = $this->tabFunction;
+                    $tab_link->{'data-current_page'} = $tab_counter;
+                }
+                
+                if ($this->tabAction)
+                {
+                    $this->tabAction->setParameter('current_page', $tab_counter);
+                    $string_action = $this->tabAction->serialize(FALSE);
+                    $tab_link->{'onclick'} = "__adianti_ajax_exec('$string_action')";
+                }
+                
                 $tab_li->add($tab_link);
                 $tab_link->add( TElement::tag('span', $tab, ['class'=>'tab-name'])); 
                 
@@ -485,7 +601,7 @@ class BootstrapFormBuilder implements AdiantiFormInterface
             {
                 $tabpanel->{'style'} .= 'border: 1px solid #DDDDDD';
             }
-            $tabpanel->{'id'}    = 'tab_'.$tab_counter;
+            $tabpanel->{'id'}    = "tab_{$this->id}_{$tab_counter}";
             
             $content->add($tabpanel);
             
@@ -506,15 +622,15 @@ class BootstrapFormBuilder implements AdiantiFormInterface
                         $form_group->{'style'} = $row->{'style'};
                     }
                     
-                    $slot_counter  = count($slots);
-                    $row_counter = 0;
+                    $slot_counter = count($slots);
+                    $row_counter  = 0;
                     
                     foreach ($slots as $slot)
                     {
-                        $label_css = ((count($slots)>1) AND (count($slot)==1) AND $slot[0] instanceof TLabel) ? 'control-label' : '';
-                         
+                        $label_css    = ((count($slots)>1) AND (count($slot)==1) AND $slot[0] instanceof TLabel AND empty($row->layout)) ? 'control-label' : '';
+                        $column_class = (!empty($row->layout) ? $row->layout[$row_counter] : $this->column_classes[$slot_counter][$row_counter]);
                         $slot_wrapper = new TElement('div');
-                        $slot_wrapper->{'class'} = $this->column_classes[$slot_counter][$row_counter] . ' fb-field-container '.$label_css;
+                        $slot_wrapper->{'class'} = $column_class . ' fb-field-container '.$label_css;
                         $slot_wrapper->{'style'} = 'min-height:26px';
                         $form_group->add($slot_wrapper);
                         
@@ -523,7 +639,7 @@ class BootstrapFormBuilder implements AdiantiFormInterface
                         {
                             foreach ($slot as $field)
                             {
-                                $field_wrapper = self::wrapField($field, 'inherit');
+                                $field_wrapper = self::wrapField($field, 'inherit', $this->field_sizes);
                                 
                                 $slot_wrapper->add($field_wrapper);
                                 
@@ -538,7 +654,7 @@ class BootstrapFormBuilder implements AdiantiFormInterface
                             $field_counter = 0;
                             foreach ($slot as $field)
                             {
-                                $field_wrapper = self::wrapField($field, 'inline-block');
+                                $field_wrapper = self::wrapField($field, 'inline-block', $this->field_sizes);
                                 
                                 if ( ($field_counter+1 < count($slot)) and (!$field instanceof TDBSeekButton) ) // padding less last element
                                 {
@@ -587,7 +703,7 @@ class BootstrapFormBuilder implements AdiantiFormInterface
     /**
      * Create a field wrapper
      */
-    public static function wrapField($field, $display)
+    public static function wrapField($field, $display, $default_field_size = null)
     {
         $object = $field; // BC Compability
         $field_size = method_exists($object, 'getSize') ? $field->getSize() : null;
@@ -595,6 +711,18 @@ class BootstrapFormBuilder implements AdiantiFormInterface
         $field_wrapper = new TElement('div');
         $field_wrapper->{'class'} = 'fb-inline-field-container ' . ((($field instanceof TField) and ($has_underline)) ? 'form-line' : '');
         $field_wrapper->{'style'} = "display: {$display};vertical-align:top;" . ($display=='inline-block'?'float:left':'');
+        
+        if (!empty($default_field_size))
+        {
+            if (is_array($field_size))
+            {
+                $field_size[0] = $default_field_size;
+            }
+            else
+            {
+                $field_size = $default_field_size;
+            }
+        }
         
         if ($field instanceof TField)
         {
@@ -608,7 +736,7 @@ class BootstrapFormBuilder implements AdiantiFormInterface
                     $field_wrapper->{'style'} .= ( (strpos($height, '%') !== FALSE) ? ';height: ' . $height : ';height: ' . $height.'px');
                 }
             }
-            else if ($field_size AND !$object instanceof TRadioGroup AND !$object instanceof TCheckGroup)
+            else if ($field_size AND !$object instanceof TRadioGroup AND !$object instanceof TCheckGroup AND (!$object instanceof TSeekButton OR !empty($default_field_size)))
             {
                 $field_wrapper->{'style'} .= ( (strpos($field_size, '%') !== FALSE) ? ';width: '.$field_size : ';width: '.$field_size.'px');
             }
@@ -624,14 +752,18 @@ class BootstrapFormBuilder implements AdiantiFormInterface
         
         if ($object instanceof TLabel)
         {
-            $object->{'style'} .= ';margin-top:3px;margin-left:3px';
+            $object->{'style'} .= ';margin-top:3px';
             $object->setSize('100%');
         }
         else if (method_exists($object, 'setSize'))
         {
             if ($object instanceof TSeekButton)
             {
-                $object->setSize('calc(100% - 24px)');
+                $extra_size = $object->getExtraSize();
+                if (!$object->hasAuxiliar())
+                {
+                    $object->setSize("calc(100% - {$extra_size}px)");
+                }
             }
             else if ( ($field_size) AND ($object instanceof TMultiSearch OR $object instanceof TDBMultiSearch OR $object instanceof THtmlEditor))
             {

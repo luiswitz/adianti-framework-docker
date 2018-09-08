@@ -14,7 +14,7 @@ use Exception;
 /**
  * A Sortable list
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -33,6 +33,9 @@ class TSortList extends TField implements AdiantiWidgetInterface
     private $limit;
     protected $id;
     protected $changeFunction;
+    protected $width;
+    protected $height;
+    protected $separator;
     
     /**
      * Class Constructor
@@ -85,7 +88,17 @@ class TSortList extends TField implements AdiantiWidgetInterface
      */
     public function setSize($width, $height = NULL)
     {
-        $this->tag->{'style'} = "width:{$width}px;height:{$height}px";
+        $this->width = $width;
+        $this->height = $height;
+    }
+    
+    /**
+     * Define the field's separator
+     * @param $sep A string containing the field's separator
+     */
+    public function setValueSeparator($sep)
+    {
+        $this->separator = $sep;
     }
     
     /**
@@ -94,6 +107,11 @@ class TSortList extends TField implements AdiantiWidgetInterface
      */
     public function setValue($value)
     {
+        if (!empty($this->separator))
+        {
+            $value = explode($this->separator, $value);
+        }
+        
         $items = $this->initialItems;
         if (is_array($value))
         {
@@ -156,7 +174,14 @@ class TSortList extends TField implements AdiantiWidgetInterface
     {
         if (isset($_POST[$this->name]))
         {
-            return $_POST[$this->name];
+            if (empty($this->separator))
+            {
+                return $_POST[$this->name];
+            }
+            else
+            {
+                return implode($this->separator, $_POST[$this->name]);
+            }
         }
         else
         {
@@ -219,6 +244,9 @@ class TSortList extends TField implements AdiantiWidgetInterface
     public function show()
     {
         $this->tag->{'id'} = $this->id;
+        
+        $this->setProperty('style', (strstr($this->width, '%') !== FALSE)  ? "width:{$this->width};"   : "width:{$this->width}px;",   false); //aggregate style info
+        $this->setProperty('style', (strstr($this->height, '%') !== FALSE) ? "height:{$this->height};" : "height:{$this->height}px;", false); //aggregate style info
         
         if ($this->orientation == 'horizontal')
         {

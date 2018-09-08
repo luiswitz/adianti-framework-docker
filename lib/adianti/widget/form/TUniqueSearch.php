@@ -7,7 +7,7 @@ use Adianti\Widget\Form\AdiantiWidgetInterface;
 /**
  * Unique Search Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -28,7 +28,6 @@ class TUniqueSearch extends TMultiSearch implements AdiantiWidgetInterface
         parent::setDefaultOption(TRUE);
         parent::disableMultiple();
         
-        $this->tag->{'name'}  = $this->name;    // tag name
         $this->tag->{'widget'} = 'tuniquesearch';
     }
     
@@ -54,5 +53,14 @@ class TUniqueSearch extends TMultiSearch implements AdiantiWidgetInterface
         {
             return '';
         }
+    }
+    
+    /**
+     * Show the component
+     */
+    public function show()
+    {
+        $this->tag->{'name'}  = $this->name; // tag name
+        parent::show();
     }
 }

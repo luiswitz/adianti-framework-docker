@@ -1,13 +1,14 @@
 <?php
 namespace Adianti\Widget\Container;
 
+use Adianti\Control\TAction;
 use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Base\TScript;
 
 /**
  * JQuery dialog container
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -26,6 +27,7 @@ class TJQueryDialog extends TElement
     private $resizable;
     private $useOKButton;
     private $stackOrder;
+    private $closeAction;
     
     /**
      * Class Constructor
@@ -42,7 +44,31 @@ class TJQueryDialog extends TElement
         $this->resizable = 'true';
         $this->stackOrder = 2000;
         $this->{'id'} = 'jquery_dialog_'.mt_rand(1000000000, 1999999999);
-        $this->{'style'}="overflow:auto";
+        $this->{'style'} = "overflow:auto";
+    }
+    
+    /**
+     * Disable scrolling
+     */
+    public function disableScrolling()
+    {
+        $this->{'style'} = "overflow: hidden";
+    }
+    
+    /**
+     * Set close action
+     */
+    public function setCloseAction(TAction $action)
+    {
+        if ($action->isStatic())
+        {
+            $this->closeAction = $action;
+        }
+        else
+        {
+            $string_action = $action->toString();
+            throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
+        }
     }
     
     /**
@@ -166,9 +192,7 @@ class TJQueryDialog extends TElement
         $ok_button = '';
         if ($this->useOKButton)
         {
-            $ok_button = '  OK: function() {
-                				$( this ).remove();
-                			}';
+            $ok_button = '  OK: function() { $( this ).remove(); }';
         }
         
         $left = $this->left ? $this->left : 0;
@@ -176,7 +200,16 @@ class TJQueryDialog extends TElement
         
         $pos_string = '';
         $id = $this->{'id'};
-        parent::add(TScript::create("tjquerydialog_start( '#{$id}', {$this->modal}, {$this->draggable}, {$this->resizable}, {$this->width}, {$this->height}, {$top}, {$left}, {$this->stackOrder}, { {$action_code} {$ok_button} } ); ", FALSE));
+        
+        $close_action = ''; // cannot be function, because it is tested inside tjquerydialog.js
+        
+        if (isset($this->closeAction))
+        {
+            $string_action = $this->closeAction->serialize(FALSE);
+            $close_action = "function() { __adianti_ajax_exec('{$string_action}') }";
+        }
+        
+        parent::add(TScript::create("tjquerydialog_start( '#{$id}', {$this->modal}, {$this->draggable}, {$this->resizable}, {$this->width}, {$this->height}, {$top}, {$left}, {$this->stackOrder}, { {$action_code} {$ok_button} }, $close_action ); ", FALSE));
         parent::show();
     }
     
@@ -185,10 +218,15 @@ class TJQueryDialog extends TElement
      */
     public function close()
     {
-        $script = new TElement('script');
-        $script->{'type'} = 'text/javascript';
-        $script->add( '$( "#' . $this->{'id'} . '" ).remove();');
-        parent::add($script);
+        parent::add(TScript::create('$( "#' . $this->{'id'} . '" ).remove();', false));
+    }
+    
+    /**
+     * Close window by id
+     */
+    public static function closeById($id)
+    {
+        TScript::create('$( "#' . $id . '" ).remove();');
     }
     
     /**

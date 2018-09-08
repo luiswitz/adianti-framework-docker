@@ -1,7 +1,11 @@
 <?php
 /**
- * Write tables in RTF
- * @author Pablo Dall'Oglio
+ * RTF writer
+ *
+ * @version    5.5
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class TTableWriterRTF implements ITableWriter
 {
@@ -52,6 +56,23 @@ class TTableWriterRTF implements ITableWriter
             }
         }
         
+        foreach ($this->widths as $key => $columnwidth)
+        {
+            $this->widths[$key] = $columnwidth / 28;
+        }
+        
+        $total_width = array_sum($this->widths);
+        $page_width = ($orientation == 'P' ? $pagesize[strtoupper($format)][0] : $pagesize[strtoupper($format)][1]) -4;
+        
+        if ($total_width > $page_width)
+        {
+            foreach ($this->widths as $key => $width)
+            {
+                //echo "($width / $total_width) * $page_width <br>";
+                $this->widths[$key] = ($width / $total_width) * $page_width;
+            }
+        }
+        
         // acrescenta uma seção ao documento
         $section = $this->rtf->addSection();
         
@@ -59,9 +80,9 @@ class TTableWriterRTF implements ITableWriter
         $this->table = $section->addTable();
         
         // acrescenta as colunas na tabela
-        foreach ($widths as $columnwidth)
+        foreach ($this->widths as $columnwidth)
         {
-            $this->table->addColumn($columnwidth / 28);
+            $this->table->addColumn($columnwidth);
         }
     }
     
@@ -74,6 +95,60 @@ class TTableWriterRTF implements ITableWriter
     }
     
     /**
+     * Set Header callback
+     */
+    public function setHeaderCallback( $callback )
+    {
+        $container = $this->rtf->addHeader();
+        $table = $container->addTable();
+        
+        foreach ($this->widths as $columnwidth)
+        {
+            $table->addColumn($columnwidth);
+        }
+        
+        $aux = $this->table;
+        $this->table = $table;
+        
+        $this->rowcounter = 0;
+        $this->colcounter = 1;
+        
+        call_user_func($callback, $this);
+        
+        $this->table = $aux;
+        
+        $this->rowcounter = 0;
+        $this->colcounter = 1;
+    }
+    
+    /**
+     * Set Footer callback
+     */
+    public function setFooterCallback( $callback )
+    {
+        $container = $this->rtf->addFooter();
+        $table = $container->addTable();
+        
+        foreach ($this->widths as $columnwidth)
+        {
+            $table->addColumn($columnwidth);
+        }
+        
+        $aux = $this->table;
+        $this->table = $table;
+        
+        $this->rowcounter = 0;
+        $this->colcounter = 1;
+        
+        call_user_func($callback, $this);
+        
+        $this->table = $aux;
+        
+        $this->rowcounter = 0;
+        $this->colcounter = 1;
+    }
+    
+    /**
      * Add a new style
      * @param @stylename style name
      * @param @fontface  font face
@@ -82,7 +157,7 @@ class TTableWriterRTF implements ITableWriter
      * @param @fontcolor font color
      * @param @fillcolor fill color
      */
-    public function addStyle($stylename, $fontface, $fontsize, $fontstyle, $fontcolor, $fillcolor)
+    public function addStyle($stylename, $fontface, $fontsize, $fontstyle, $fontcolor, $fillcolor, $border = null)
     {
         // instancia um objeto para estilo de fonte (PHPRtfLite_Font)
         $font = new PHPRtfLite_Font($fontsize, $fontface, $fontcolor);
@@ -162,4 +237,3 @@ class TTableWriterRTF implements ITableWriter
         return TRUE;
     }
 }
-?>

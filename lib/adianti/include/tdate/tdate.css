@@ -3,6 +3,7 @@
     display:table;
     border-spacing: 0;
     float:inherit;
+    border-collapse: separate;
 }
 
 .tdate-group .tfield, .tdate-group .tfield_disabled

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Adianti Framework ERP Template III</title>
+    <title>Adianti Template III</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     {LIBRARIES}
@@ -43,7 +43,7 @@
     <link rel="stylesheet" href="app/templates/{template}/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="app/templates/{template}/css/skins/skin-blue.min.css">
+    <link rel="stylesheet" href="app/templates/{template}/css/skins/_all-skins.min.css">
   </head>
   <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -67,6 +67,7 @@
           </a>
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
+              <!--{BUILDER-MENU}-->
             
               <li class="dropdown messages-menu" id="envelope_messages">
                   <!-- /.dropdown-messages -->
@@ -91,17 +92,16 @@
                 <ul class="dropdown-menu">
                   <!-- User image -->
                   <li class="user-header" style="height:initial">
-                    <i class="fa fa-user fa-3x" style="color:white"></i>
+                    <!-- <i class="fa fa-user fa-3x" style="color:white"></i> -->
+                    <img src="app/images/photos/{login}.jpg" onError="this.onerror=null;this.src='app/templates/{template}/img/avatar5.png';" style="border-radius:50%" alt="User" />
                     <p>
-                      {username}
+                      {username}<br>
+                      <a href="index.php?class=SystemProfileView" style="color:white;font-size:12px">[Perfil]</a>
                     </p>
                   </li>
                   <!-- Menu Body -->
                   <!-- Menu Footer-->
                   <li class="user-footer">
-                    <div class="pull-left">
-                      <a generator="adianti" href="index.php?class=SystemProfileView" class="btn btn-default btn-flat">Perfil</a>
-                    </div>
                     <div class="pull-left">
                       <a generator="adianti" href="index.php?class=LoginForm&method=reloadPermissions&static=1" class="btn btn-default btn-flat">Recarregar</a>
                     </div>
@@ -122,9 +122,11 @@
           <!-- Sidebar user panel -->
           <div class="user-panel">
             <div class="pull-left image">
-              <i class="fa fa-user fa-2x" style="color:white"></i>
+              <!-- <i class="fa fa-user fa-2x" style="color:white"></i> -->
+              <img src="app/images/photos/{login}.jpg" onError="this.onerror=null;this.src='app/templates/{template}/img/avatar5.png';" style="border-radius:50%" alt="User" />
             </div>
             <div class="pull-left info" style="position:initial">
+            <br>
               <p>{username}</p>
             </div>
           </div>
@@ -143,7 +145,7 @@
       <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
-            <div id='adianti_div_content'>
+            <div id="adianti_div_content">
             </div>
         </section><!-- /.content -->
         
@@ -166,5 +168,6 @@
 
     <!-- AdminLTE App -->
     <script src="app/templates/{template}/js/app.min.js"></script>
+    <script src="app/templates/{template}/js/custom.js"></script>
   </body>
 </html>

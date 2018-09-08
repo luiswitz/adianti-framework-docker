@@ -17,7 +17,7 @@ use Exception;
 /**
  * Standard List Trait
  *
- * @version    5.0
+ * @version    5.5
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -25,6 +25,18 @@ use Exception;
  */
 trait AdiantiStandardListTrait
 {
+    protected $filterFields;
+    protected $formFilters;
+    protected $filterTransformers;
+    protected $loaded;
+    protected $limit;
+    protected $operators;
+    protected $order;
+    protected $direction;
+    protected $criteria;
+    protected $transformCallback;
+    protected $totalRow;
+    
     use AdiantiStandardControlTrait;
     
     /**

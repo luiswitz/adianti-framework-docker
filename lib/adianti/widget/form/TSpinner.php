@@ -14,7 +14,7 @@ use Exception;
 /**
  * Spinner Widget (also known as spin button)
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -53,6 +53,11 @@ class TSpinner extends TField implements AdiantiWidgetInterface
         $this->min = $min;
         $this->max = $max;
         $this->step = $step;
+        
+        if ($step == 0)
+        {
+            throw new Exception(AdiantiCoreTranslator::translate('Invalid parameter (^1) in ^2', $step, 'setRange'));
+        }
         
         if (is_int($step) AND $this->getValue() % $step !== 0)
         {

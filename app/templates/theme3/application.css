@@ -21,6 +21,12 @@ hr
     border-bottom: 1px solid whitesmoke;
 }
 
+hr.slim
+{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 a
 {
     text-decoration: none;
@@ -45,17 +51,17 @@ a
     padding-bottom: 8px !important;
     padding-left: 15px !important;
     padding-right: 5px !important;
-    border-radius: 4px !important;
+    border-radius: 0px !important;
+    border: 1px solid #ddd !important;
 }
 
 .tframe legend
 {
     background: white;
     color: #fff;
-    border-radius: 2px;
     padding-top: 2px;
     padding-bottom: 2px;
-    box-shadow: 0 0 0 1px #8A8A8A;
+    box-shadow: 0 0 0 1px #C7C7C7;
     margin-left: 3px;
     padding-right: 5px;
     margin-right: 5px;
@@ -64,7 +70,7 @@ a
 
 .tframe legend label
 {
-    padding-left: 5px;
+    padding-left: 3px;
     font-weight: bold;
 }
 
@@ -106,6 +112,12 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 .tseekbutton
 {
     height: 28px !important;
+    border-radius :0 !important;
+}
+
+.tseekbutton i
+{
+    padding-left:2px;
 }
 
 span.tdate-group-addon, span.input-group-addon.tcolor {
@@ -113,11 +125,48 @@ span.tdate-group-addon, span.input-group-addon.tcolor {
   border-radius:0 !important;
 }
 
+.tdate-group .tfield, .tdate-group .tfield_disabled
+{
+    border-radius: 0;
+}
+
+.input-group.color-div input {
+    border-radius: 3px 0 0 3px !important;
+}
+
+span.tdate-group-addon > i.fa-clock-o, span.tdate-group-addon > i.glyphicon-calendar {
+  width:24px !important;
+  padding-top:2px;
+}
+
+.panel form[type="bootstrap"] .ttd
+{
+    display: inline-block;
+    margin-top: 7px;
+}
+
+.login-avatar
+{
+    width: 35px;
+    height: 28px;
+    padding: 6px 12px;
+    color: #555;
+    text-align: center;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-right: 0;
+    
+}
+
 select.tcombo
 {
-    height: 28px;
     border: 1px solid #ccc !important;
     border-radius: 0;
+}
+
+select.tcombo:not([multiple='1'])
+{
+    height: 28px;
 }
 
 .tfield:focus
@@ -132,7 +181,7 @@ select.tcombo
             box-shadow : none !important;
 }
 
-textarea, .select2-choices, .select2-container-multi .select2-choices
+textarea
 {
     border: 1px solid #ccc !important;
     border-radius: 0 !important;
@@ -166,6 +215,42 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 {
     font-size: 12px;
     margin: 0px;
+}
+
+.ui-widget
+{
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.ui-dialog .table>tbody>tr>td
+{
+    padding: 4px;
+    vertical-align: middle;
+}
+
+.ui-dialog .panel .panel-body
+{
+    padding: 8px;
+    padding-bottom: 4px;
+}
+
+.ui-dialog .window_modal
+{
+    padding:0.2px;
+}
+
+.ui-dialog .window_modal .panel
+{
+    margin-bottom:0;
+    border-top:0;
+    border-radius:0;
+    overflow:hidden;
+}
+
+.ui-dialog .ui-dialog-titlebar
+{
+    margin-bottom: 0;
 }
 
 .tformtitle + tr > td
@@ -275,6 +360,26 @@ ul.navbar-top-links .open>a, ul.navbar-top-links .open>a:hover, ul.navbar-top-li
     #search-box {
         display:none !important;
     }
+    
+    ol.tbreadcrumb li 
+    {
+        padding: 0;
+    }
+    
+    .tbreadcrumb li span
+    {
+        font-size: 8pt;
+    }
+    
+    #div_breadcrumbs > ol > li:nth-child(1)
+    {
+        display: none;
+    }
+    
+    ol.tbreadcrumb li a
+    {
+        padding-right: 0.75em;
+    }
 }
 
 @media only screen and (max-width: 550px) {
@@ -292,19 +397,17 @@ ul.navbar-top-links .open>a, ul.navbar-top-links .open>a:hover, ul.navbar-top-li
 {
     background: none;
     overflow: hidden;
+    white-space: normal;
 }
 
-.select2-container {
-    background: white;
-    border-radius: 5px;
+.select2-container--default .select2-selection
+{
+    padding-left: 4px !important;
 }
 
-.select2-container .select2-choice {
-    background-image: none !important;
-}
-
-.select2-dropdown-open .select2-choice {
-    background-color: white;
+input.select2-search__field
+{
+    height: 20px;
 }
 
 .tform
@@ -348,4 +451,257 @@ table.tdatagrid_table
     padding: 0;
     padding: 8px;
     font-size: 17pt;
+}
+
+.panel-default>.panel-heading
+{
+    border-top: 1px solid #797979;
+    background: #f8f8f8;
+    min-height: 52px !important;
+    padding: 7px !important;
+}
+
+.panel-footer
+{
+    background: #f8f8f8;
+}
+
+.btn:not(.btn-link):not(.btn-circle) i
+{
+    font-size: 12px !important;
+    position: initial !important;
+    top: initial !important;
+}
+
+button.btn-default
+{
+    height:30px;
+}
+
+button.btn-primary
+{
+    color: white;
+}
+
+.panel > .panel-footer > .tpagenavigation, .panel > .panel-footer > .tpagenavigation_resume
+{
+    padding-top:0;
+}
+
+.left-mailbox {
+    float: left; 
+    width: 160px;
+    margin-right: 10px;
+}
+
+.right-mailbox { 
+    overflow: hidden;
+}
+
+@media screen and (max-width: 500px) {
+    .left-mailbox { 
+        float: none;
+        width: auto;
+        margin-right:0;
+    }
+}
+
+.ui-dialog .table tbody tr td, .table tbody tr th
+{
+    padding: 8px !important;
+    border-bottom: 0 !important;
+}
+
+.ui-dialog .panel-default>.panel-heading
+{
+    border-top: 0;
+    background: #f8f8f8;
+}
+
+input[type="radio"], input[type="checkbox"]
+{
+    margin-right: 4px !important;
+}
+
+.tcheckgroup_label, .tcheckgroup_label > input
+{
+    cursor:pointer;
+}
+
+
+/* Compatibilidade de cores para o builder */
+.bg-red {
+  background-color: #F44336 !important;
+  color: #fff; }
+.bg-pink {
+  background-color: #E91E63 !important;
+  color: #fff; }
+.bg-purple {
+  background-color: #9C27B0 !important;
+  color: #fff; }
+.bg-deep-purple {
+  background-color: #673AB7 !important;
+  color: #fff; }
+.bg-indigo {
+  background-color: #3F51B5 !important;
+  color: #fff; }
+.bg-blue {
+  background-color: #2196F3 !important;
+  color: #fff; }
+.bg-light-blue {
+  background-color: #03A9F4 !important;
+  color: #fff; }
+.bg-cyan {
+  background-color: #00BCD4 !important;
+  color: #fff; }
+.bg-teal {
+  background-color: #009688 !important;
+  color: #fff; }
+.bg-green {
+  background-color: #4CAF50 !important;
+  color: #fff; }
+.bg-light-green {
+  background-color: #8BC34A !important;
+  color: #fff; }
+.bg-lime {
+  background-color: #CDDC39 !important;
+  color: #fff; }
+.bg-yellow {
+  background-color: #ffe821 !important;
+  color: #fff; }
+.bg-amber {
+  background-color: #FFC107 !important;
+  color: #fff; }
+.bg-orange {
+  background-color: #FF9800 !important;
+  color: #fff; }
+.bg-deep-orange {
+  background-color: #FF5722 !important;
+  color: #fff; }
+.bg-brown {
+  background-color: #795548 !important;
+  color: #fff; }
+.bg-grey {
+  background-color: #9E9E9E !important;
+  color: #fff; }
+.bg-blue-grey {
+  background-color: #607D8B !important;
+  color: #fff; }
+.bg-black {
+  background-color: #000000 !important;
+  color: #fff; }
+.bg-white {
+  background-color: #ffffff !important;
+  color: #fff; }
+
+input[widget="tslider"] {
+    margin: auto;
+}
+
+input[widget="tspinner"] {
+    border:0;
+}
+
+input[widget="tfile"], input[widget="tmultifile"] {
+    padding:2px;
+    height: 28px;
+}
+
+select.tcombo {
+    -webkit-appearance: none;
+    -webkit-border-radius: 0px;
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='17' height='17' viewBox='0 0 24 24'><path fill='%23444' d='M7.406 7.828l4.594 4.594 4.594-4.594 1.406 1.406-6 6-6-6z'></path></svg>") !important;
+    background-position: 100% 50%;
+    background-repeat: no-repeat;
+    padding-left: 5px;
+}
+
+.sourcecodewrapper
+{
+    background: #262722;
+    font-weight:bold;
+    border-radius:3px;
+    padding:8px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px;
+    overflow-x: auto;
+}
+
+.tsourcecode code
+{
+    font-family: Andale mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Lucida Console, Monaco, Consolas, Droid Sans monospace, Monospace;
+    line-height: normal;
+    background: #262722;
+}
+
+.file-response-icon {
+    position: absolute;
+    padding-left: 3px;
+    padding-top: 3px;
+}
+
+.input-data-search
+{
+    box-shadow:none;
+    border-radius: 0;
+    border: 1px solid #afafaf;
+}
+
+.input-data-search:focus
+{
+    border: 1px solid #8C8CF9;
+}
+
+.fc-scroller
+{
+    overflow-x: visible !important;
+}
+
+#envelope_messages li.header
+{
+    font-weight: bold;
+    text-align: center;
+}
+
+#envelope_notifications li.header
+{
+    font-weight: bold;
+    text-align: center;
+}
+
+.little-float-button {
+    position: fixed;
+    width: 30px;
+    height: 30px;
+    bottom: 40px;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    box-shadow: 2px 2px 3px #999;
+    z-index: 20000;
+    font-size: 100%;
+    color: white;
+    right: 10px;
+}
+
+.little-float-button.disabled {
+    background-color: gray;
+}
+
+.little-float-button:hover, .little-float-button:focus {
+    color: white;
+}
+
+.little-float-button .internal-float-button {
+    margin-top: 8px;
+}
+
+div > div.panel > .panel-body {
+    padding: 10px;
+}
+
+.fb-field-container:after {
+    content: '';
+    display: block;
+    clear: both;
 }

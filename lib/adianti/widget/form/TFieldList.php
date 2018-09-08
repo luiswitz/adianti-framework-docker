@@ -15,7 +15,7 @@ use Exception;
 /**
  * Create a field list
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -31,6 +31,7 @@ class TFieldList extends TTable
     private $clone_function;
     private $sort_action;
     private $sorting;
+    private $fields_properties;
     
     /**
      * Class Constructor
@@ -38,10 +39,11 @@ class TFieldList extends TTable
     public function __construct()
     {
         parent::__construct();
-        $this->id     = 'tfieldlist_' . mt_rand(1000000000, 1999999999);
-        $this->class  = 'tfieldlist';
+        $this->{'id'}     = 'tfieldlist_' . mt_rand(1000000000, 1999999999);
+        $this->{'class'}  = 'tfieldlist';
         
         $this->fields = [];
+        $this->fields_properties = [];
         $this->body_created = false;
         $this->detail_row = 0;
         $this->sorting = false;
@@ -95,7 +97,7 @@ class TFieldList extends TTable
      * @param $label  Field Label
      * @param $object Field Object
      */
-    public function addField($label, AdiantiWidgetInterface $field)
+    public function addField($label, AdiantiWidgetInterface $field, $properties = null)
     {
         if ($field instanceof TField)
         {
@@ -109,6 +111,7 @@ class TFieldList extends TTable
             if ($name)
             {
                 $this->fields[$name] = $field;
+                $this->fields_properties[$name] = $properties;
             }
             
             if ($label instanceof TLabel)
@@ -142,15 +145,24 @@ class TFieldList extends TTable
                 $row->addCell( '' );
             }
             
-            foreach ($this->fields as $field)
+            foreach ($this->fields as $name => $field)
             {
                 if ($field instanceof THidden)
                 {
-                    $row->addCell( '' );
+                    $cell = $row->addCell( '' );
+                    $cell->{'style'} = 'display:none';
                 }
                 else
                 {
-                    $row->addCell( new TLabel( $field->getLabel() ) );
+                    $cell = $row->addCell( new TLabel( $field->getLabel() ) );
+                    
+                    if (!empty($this->fields_properties[$name]))
+                    {
+                        foreach ($this->fields_properties[$name] as $property => $value)
+                        {
+                            $cell->setProperty($property, $value);
+                        }
+                    }
                 }
             }
         }
@@ -199,7 +211,12 @@ class TFieldList extends TTable
                 $clone->setId($name.'_'.$uniqid);
                 $clone->{'data-row'} = $this->detail_row;
                 
-                $row->addCell( $clone );
+                $cell = $row->addCell( $clone );
+                
+                if ($clone instanceof THidden)
+                {
+                    $cell->{'style'} = 'display:none';
+                }
                 
                 if (!empty($item->$name) OR (isset($item->$name) AND $item->$name == '0'))
                 {
@@ -242,7 +259,11 @@ class TFieldList extends TTable
         {
             foreach ($this->fields as $field)
             {
-                $row->addCell('');
+                $cell = $row->addCell('');
+                if ($field instanceof THidden)
+                {
+                    $cell->{'style'} = 'display:none';
+                }
             }
         }
         
@@ -256,15 +277,50 @@ class TFieldList extends TTable
         $row->addCell($add);
     }
     
+    /**
+     * Clear field list
+     * @param $name field list name
+     */
+    public static function clear($name)
+    {
+        TScript::create( "tfieldlist_clear('{$name}');" );
+    }
+    
+    /**
+     * Clear some field list rows
+     * @param $name     field list name
+     * @param $index    field list name
+     * @param $quantity field list name
+     */
+    public static function clearRows($name, $start = 0, $length = 0)
+    {
+        TScript::create( "tfieldlist_clear_rows('{$name}', {$start}, {$length});" );
+    }
+    
+    /**
+     * Clear some field list rows
+     * @param $name     field list name
+     * @param $index    field list name
+     * @param $quantity field list name
+     */
+    public static function addRows($name, $rows)
+    {
+        TScript::create( "tfieldlist_add_rows('{$name}', {$rows});" );
+    }
+    
+    /**
+     * Show component
+     */
     public function show()
     {
         parent::show();
+        $id = $this->{'id'};
         
         if ($this->sorting)
         {
             if (empty($this->sort_action))
             {
-                TScript::create("ttable_sortable_rows('{$this->id}', '.handle')");
+                TScript::create("ttable_sortable_rows('{$id}', '.handle')");
             }
             else
             {
@@ -275,7 +331,7 @@ class TFieldList extends TTable
                     $form_name   = $first_field->getFormName();
                     $string_action = $this->sort_action->serialize(FALSE);
                     $sort_action = "function() { __adianti_post_data('{$form_name}', '{$string_action}'); }";
-                    TScript::create("ttable_sortable_rows('{$this->id}', '.handle', $sort_action)");
+                    TScript::create("ttable_sortable_rows('{$id}', '.handle', $sort_action)");
                 }
             }
         }

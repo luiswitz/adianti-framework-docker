@@ -4503,7 +4503,8 @@ section.content {
 .table tbody tr td, .table tbody tr th {
   padding: 10px;
   border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee; }
+  //border-bottom: 1px solid #eee;
+  }
 
 .table tbody tr.primary td, .table tbody tr.primary th {
   background-color: #1f91f3;
@@ -5003,7 +5004,7 @@ section.content {
   margin-bottom: 25px; }
   .form-group .form-control {
     width: 100%;
-    border: none;
+    /*border: none;*/
     box-shadow: none;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
@@ -6218,7 +6219,9 @@ fieldset[disabled] .form-control {
   height: 100%;
   background: #eee;
   overflow: hidden;
-  text-align: center; }
+  text-align: center;
+  opacity: 0.7;
+}
   .page-loader-wrapper p {
     font-size: 13px;
     margin-top: 10px;
@@ -7309,7 +7312,7 @@ fieldset[disabled] .form-control {
   -moz-border-radius: 0;
   -ms-border-radius: 0;
   border-radius: 0;
-  margin-top: -35px !important;
+  /*margin-top: -35px !important;*/
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   border: none; }
   .dropdown-menu .divider {

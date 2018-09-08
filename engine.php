@@ -3,7 +3,7 @@ require_once 'init.php';
 
 class TApplication extends AdiantiCoreApplication
 {
-    static public function run($debug = FALSE)
+    public static function run($debug = FALSE)
     {
         new TSession;
         
@@ -16,20 +16,7 @@ class TApplication extends AdiantiCoreApplication
             if (TSession::getValue('logged')) // logged
             {
                 $programs = (array) TSession::getValue('programs'); // programs with permission
-                $programs = array_merge($programs, array('Adianti\Base\TStandardSeek' => TRUE,
-                                                         'LoginForm' => TRUE,
-                                                         'AdiantiMultiSearchService' => TRUE,
-                                                         'AdiantiUploaderService' => TRUE,
-                                                         'AdiantiAutocompleteService' => TRUE,
-                                                         'EmptyPage' => TRUE,
-                                                         'MessageList' => TRUE,
-                                                         'SystemDocumentUploaderService' => TRUE,
-                                                         'NotificationList' => TRUE,
-                                                         'SearchBox' => TRUE,
-                                                         'SearchInputBox' => TRUE,
-                                                         'SystemPageService' => TRUE,
-                                                         'SystemPageBatchUpdate' => TRUE,
-                                                         'SystemPageUpdate' => TRUE));
+                $programs = array_merge($programs, self::getDefaultPermissions());
                 
                 if( isset($programs[$class]) OR $public )
                 {
@@ -50,6 +37,28 @@ class TApplication extends AdiantiCoreApplication
             }
         }
     }
+    
+    /**
+     * Return default programs for logged users
+     */
+    public static function getDefaultPermissions()
+    {
+        return array('Adianti\Base\TStandardSeek' => TRUE,
+                     'LoginForm' => TRUE,
+                     'AdiantiMultiSearchService' => TRUE,
+                     'AdiantiUploaderService' => TRUE,
+                     'AdiantiAutocompleteService' => TRUE,
+                     'EmptyPage' => TRUE,
+                     'MessageList' => TRUE,
+                     'SystemDocumentUploaderService' => TRUE,
+                     'NotificationList' => TRUE,
+                     'SearchBox' => TRUE,
+                     'SearchInputBox' => TRUE,
+                     'SystemPageService' => TRUE,
+                     'SystemPageBatchUpdate' => TRUE,
+                     'SystemPageUpdate' => TRUE,
+                     'SystemMenuUpdate' => TRUE);
+    } 
 }
 
 TApplication::run(TRUE);

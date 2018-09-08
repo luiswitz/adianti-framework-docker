@@ -9,7 +9,7 @@ use Adianti\Database\TFilter;
 /**
  * Record rest service
  *
- * @version    5.0
+ * @version    5.5
  * @package    service
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -50,7 +50,7 @@ class AdiantiRecordService
         $return = $object->delete($param['id']);
         
         TTransaction::close();
-        return $return;
+        return;
     }
     
     /**
@@ -66,10 +66,10 @@ class AdiantiRecordService
         
         $object = new $activeRecord;
         $object->fromArray($param['data']);
-        $return = $object->store();
+        $object->store();
         
         TTransaction::close();
-        return $return;
+        return $object->toArray();
     }
     
     /**
@@ -149,5 +149,48 @@ class AdiantiRecordService
         $return = $repository->delete($criteria);
         TTransaction::close();
         return $return;
+    }
+    
+    /**
+     * Handle HTTP Request and dispatch
+     * @param $param HTTP POST and php input vars
+     */
+    public function handle($param)
+    {
+        $method = strtoupper($_SERVER['REQUEST_METHOD']);
+        
+        unset($param['class']);
+        unset($param['method']);
+        $param['data'] = $param;
+        
+        switch( $method )
+        {
+            case 'GET':
+                if (!empty($param['id']))
+                {
+                    return self::load($param);
+                }
+                else
+                {
+                    return self::loadAll($param);
+                }
+                break;
+            case 'POST':
+                return self::store($param);
+                break;
+            case 'PUT':
+                return self::store($param);
+                break;        
+            case 'DELETE':
+                if (!empty($param['id']))
+                {
+                    return self::delete($param);
+                }
+                else
+                {
+                    return self::deleteAll($param);
+                }
+                break;
+        }
     }
 }

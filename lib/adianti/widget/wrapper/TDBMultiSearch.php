@@ -15,7 +15,7 @@ use Exception;
 /**
  * Database Multisearch Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -91,7 +91,7 @@ class TDBMultiSearch extends TMultiSearch
         $this->model = $model;
         $this->key = $key;
         $this->column = $value;
-        $this->operator = 'like';
+        $this->operator = null;
         $this->orderColumn = isset($orderColumn) ? $orderColumn : NULL;
         $this->criteria = $criteria;
         $this->mask = '{'.$value.'}';
@@ -163,7 +163,19 @@ class TDBMultiSearch extends TMultiSearch
                     if ($value)
                     {
                         $model = $this->model;
-                        $object = $model::find( $value );
+                        
+                        $pk = constant("{$model}::PRIMARYKEY");
+                        
+                        if ($pk === $this->key) // key is the primary key (default)
+                        {
+                            // use find because it uses cache
+                            $object = $model::find( $value );
+                        }
+                        else // key is an alternative key (uses where->first)
+                        {
+                            $object = $model::where( $this->key, '=', $value )->first();
+                        }
+                        
                         if ($object)
                         {
                             $description = $object->render($this->mask);
@@ -201,7 +213,18 @@ class TDBMultiSearch extends TMultiSearch
                         if ($value)
                         {
                             $model = $this->model;
-                            $object = $model::find( $value );
+                            $pk = constant("{$model}::PRIMARYKEY");
+                            
+                            if ($pk === $this->key) // key is the primary key (default)
+                            {
+                                // use find because it uses cache
+                                $object = $model::find( $value );
+                            }
+                            else // key is an alternative key (uses where->first)
+                            {
+                                $object = $model::where( $this->key, '=', $value )->first();
+                            }
+                            
                             if ($object)
                             {
                                 $description = $object->render($this->mask);
@@ -229,7 +252,13 @@ class TDBMultiSearch extends TMultiSearch
     public function show()
     {
         // define the tag properties
-        $this->tag->{'id'}  = $this->id;    // tag name
+        $this->tag->{'id'}    = $this->id; // tag id
+        
+        if (empty($this->tag->{'name'})) // may be defined by child classes
+        {
+            $this->tag->{'name'}  = $this->name.'[]';  // tag name
+        }
+        
         if (strstr($this->size, '%') !== FALSE)
         {
             $this->setProperty('style', "width:{$this->size};", false); //aggregate style info

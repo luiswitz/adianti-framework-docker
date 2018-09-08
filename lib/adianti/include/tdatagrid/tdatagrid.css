@@ -1,25 +1,13 @@
-table.tdatagrid_table *
-{
-    -webkit-box-sizing: content-box !important;
-    -moz-box-sizing: content-box !important;
-    box-sizing: content-box !important;
-}
-
 table.tdatagrid_table
 {
     border-collapse: separate;
     border-top: 1px solid #C7C7C7;
     border-left: 1px solid #C7C7C7;
-    font-family: arial,verdana;
     font-size: 10pt;
     color: #171717;
     border-spacing: 0px;
     border: #ccc 1px solid;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
     border-radius: 3px;
-    -moz-box-shadow: 3px 3px 3px rgb(236, 236, 236);
-    -webkit-box-shadow: 3px 3px 3px rgb(236, 236, 236);
     box-shadow: 3px 3px 3px rgb(236, 236, 236);
 }
 
@@ -62,10 +50,7 @@ table.tdatagrid_table > thead.tdatagrid_head > tr > th.tdatagrid_action
     padding-left: 1px;
     border-bottom: 1px solid gray;
     background-color: #E8E8E8;
-    -webkit-box-shadow: inset 0 1px 0 #ffffff;
-    -moz-box-shadow: inset 0 1px 0 #ffffff;
     box-shadow: inset 0 1px 0 #ffffff;
-    -moz-user-select: none;
     user-select: none;
     cursor: default;
     font-weight: bold;
@@ -81,7 +66,6 @@ table.tdatagrid_table > thead.tdatagrid_head > tr > th.tdatagrid_col[generator=a
     border-left: 1px solid gray;
     border-right: 1px solid gray;
     padding-right: 0px;
-    -moz-user-select: none;
     user-select: none;
     font-weight: bold;
 }
@@ -92,7 +76,7 @@ table.tdatagrid_table > tbody.tdatagrid_body
 
 table.tdatagrid_table > tbody.tdatagrid_body > tr > td
 {
-    height: 26px;
+    height: 30px;
 }
 
 table.tdatagrid_table > tbody.tdatagrid_body > tr.tdatagrid_group
@@ -111,20 +95,17 @@ table.tdatagrid_table > tbody.tdatagrid_body > tr.tdatagrid_group > td
 table.tdatagrid_table > tbody.tdatagrid_body > tr.tdatagrid_row_even
 {
     background-color: #f6f6f6;
-    height: 19px;
 }
 
 table.tdatagrid_table > tbody.tdatagrid_body > tr.tdatagrid_row_odd
 {
-    background-color: #fafafa;
-    height: 19px;
+    /* background-color: #fafafa; */
 }
 
 table.tdatagrid_table > tbody.tdatagrid_body > tr.tdatagrid_row_even:hover,
 table.tdatagrid_table > tbody.tdatagrid_body > tr.tdatagrid_row_odd:hover
 {
     background-color: #D7D7D7;
-    height: 19px;
     cursor: pointer;
 }
 
@@ -140,6 +121,12 @@ table.tdatagrid_table > tbody.tdatagrid_body > tr > td.tdatagrid_cell
 table.tdatagrid_table > tbody.tdatagrid_body > tr > td.tdatagrid_cell.action
 {
     vertical-align: middle;
+}
+
+table.table>tbody>tr>td.tdatagrid_cell.action
+{
+    padding-left:5px;
+    padding-right:5px;
 }
 
 table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before

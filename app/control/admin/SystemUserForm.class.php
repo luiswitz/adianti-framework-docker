@@ -37,8 +37,7 @@ class SystemUserForm extends TPage
         $program_id          = new TDBSeekButton('program_id', 'permission', 'form_System_user', 'SystemProgram', 'name', 'program_id', 'program_name');
         $program_name        = new TEntry('program_name');
         $groups              = new TDBCheckGroup('groups','permission','SystemGroup','id','name');
-        $frontpage_id        = new TDBSeekButton('frontpage_id', 'permission', 'form_System_user', 'SystemProgram', 'name', 'frontpage_id', 'frontpage_name');
-        $frontpage_name      = new TEntry('frontpage_name');
+        $frontpage_id        = new TDBUniqueSearch('frontpage_id', 'permission', 'SystemProgram', 'id', 'name', 'name');
         $units               = new TDBCheckGroup('units','permission','SystemUnit','id','name');
         
         $units->setLayout('horizontal');
@@ -70,7 +69,7 @@ class SystemUserForm extends TPage
         $this->form->addField($program_name);
         $this->form->addField($add_button);
         
-        $this->program_list = new TQuickGrid;
+        $this->program_list = new BootstrapDatagridWrapper(new TQuickGrid);
         $this->program_list->setHeight(180);
         $this->program_list->makeScrollable();
         $this->program_list->style='width: 100%';
@@ -89,7 +88,7 @@ class SystemUserForm extends TPage
         $vbox = new TVBox;
         $vbox->style='width:100%';
         $vbox->add( $hbox );
-        $vbox->add($this->program_list);
+        $vbox->add(TPanelGroup::pack('', $this->program_list));
 
         // define the sizes
         $id->setSize('50%');
@@ -99,15 +98,14 @@ class SystemUserForm extends TPage
         $repassword->setSize('100%');
         $email->setSize('100%');
         $unit_id->setSize('100%');
-        $frontpage_id->setSize('60');
-        $frontpage_name->setSize('calc(100% - 60px)');
+        $frontpage_id->setSize('100%');
         $program_id->setSize('30');
         $program_name->setSize('calc(100% - 200px)');
+        $frontpage_id->setMinLength(1);
         
         // outros
         $id->setEditable(false);
         $program_name->setEditable(false);
-        $frontpage_name->setEditable(false);
         
         // validations
         $name->addValidation(_t('Name'), new TRequiredValidator);
@@ -116,7 +114,7 @@ class SystemUserForm extends TPage
         
         $this->form->addFields( [new TLabel('ID')], [$id],  [new TLabel(_t('Name'))], [$name] );
         $this->form->addFields( [new TLabel(_t('Login'))], [$login],  [new TLabel(_t('Email'))], [$email] );
-        $this->form->addFields( [new TLabel(_t('Main unit'))], [$unit_id],  [new TLabel(_t('Front page'))], [$frontpage_id, $frontpage_name] );
+        $this->form->addFields( [new TLabel(_t('Main unit'))], [$unit_id],  [new TLabel(_t('Front page'))], [$frontpage_id] );
         $this->form->addFields( [new TLabel(_t('Password'))], [$password],  [new TLabel(_t('Password confirmation'))], [$repassword] );
         $this->form->addFields( [new TFormSeparator(_t('Units'))] );
         $this->form->addFields( [$units] );
@@ -170,6 +168,11 @@ class SystemUserForm extends TPage
                 if (SystemUser::newFromLogin($object->login) instanceof SystemUser)
                 {
                     throw new Exception(_t('An user with this login is already registered'));
+                }
+                
+                if (SystemUser::newFromEmail($object->email) instanceof SystemUser)
+                {
+                    throw new Exception(_t('An user with this e-mail is already registered'));
                 }
                 
                 if ( empty($object->password) )

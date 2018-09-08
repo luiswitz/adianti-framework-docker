@@ -12,7 +12,7 @@ use Exception;
 /**
  * Database Sortlist Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -76,7 +76,19 @@ class TDBSortList extends TSortList
             $items = array();
             foreach ($collection as $object)
             {
-                $items[$object->$key] = $object->$value;
+                if (isset($object->$value))
+                {
+                    $items[$object->$key] = $object->$value;
+                }
+                else
+                {
+                    $items[$object->$key] = $object->render($value);
+                }
+            }
+            
+            if (strpos($value, '{') !== FALSE AND is_null($ordercolumn))
+            {
+                asort($items);
             }
             parent::addItems($items);
         }

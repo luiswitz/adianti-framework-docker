@@ -17,7 +17,7 @@ use ReflectionClass;
 /**
  * Record Lookup Widget: Creates a lookup field used to search values from associated entities
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -27,9 +27,10 @@ use ReflectionClass;
 class TSeekButton extends TEntry implements AdiantiWidgetInterface
 {
     private $action;
-    private $auxiliar;
     private $useOutEvent;
     private $button;
+    private $extra_size;
+    protected $auxiliar;
     protected $id;
     protected $formName;
     protected $name;
@@ -43,7 +44,7 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
         parent::__construct($name);
         $this->useOutEvent = TRUE;
         $this->setProperty('class', 'tfield tseekentry', TRUE);   // classe CSS
-        
+        $this->extra_size = 24;
         $this->button = self::createButton($this->name, $icon);
     }
     
@@ -57,7 +58,8 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
         $button->{'class'} = 'btn btn-default tseekbutton';
         $button->{'type'} = 'button';
         $button->{'onmouseover'} = "style.cursor = 'pointer'";
-        $button->{'name'} = '_' . $name . '_link';
+        $button->{'name'} = '_' . $name . '_seek';
+        $button->{'for'} = $name;
         $button->{'onmouseout'}  = "style.cursor = 'default'";
         $button->add($image);
         
@@ -99,6 +101,14 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
     }
     
     /**
+     * Return the action
+     */
+    public function getAction()
+    {
+        return $this->action;
+    }
+    
+    /**
      * Define an auxiliar field
      * @param $object any TField object
      */
@@ -107,7 +117,37 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
         if (method_exists($object, 'show'))
         {
             $this->auxiliar = $object;
+            $this->extra_size *= 2;
+            
+            if ($object instanceof TField)
+            {
+                $this->action->setParameter('receive_field', $object->getName());
+            }
         }
+    }
+    
+    /**
+     * Returns if has auxiliar field
+     */
+    public function hasAuxiliar()
+    {
+        return !empty($this->auxiliar);
+    }
+    
+    /**
+     * Set extra size
+     */
+    public function setExtraSize($extra_size)
+    {
+        $this->extra_size = $extra_size;
+    }
+    
+    /**
+     * Returns extra size
+     */
+    public function getExtraSize()
+    {
+        return $this->extra_size;
     }
     
     /**
@@ -159,48 +199,49 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
                         $classname  = $callback[0];
                     }
                     
-                    $inst       = new $classname;
-                    $ajaxAction = new TAction(array($inst, 'onSelect'));
-                    
-                    if (in_array($classname, array('TStandardSeek')))
-                    {
-                        $ajaxAction->setParameter('parent',  $this->action->getParameter('parent'));
-                        $ajaxAction->setParameter('database',$this->action->getParameter('database'));
-                        $ajaxAction->setParameter('model',   $this->action->getParameter('model'));
-                        $ajaxAction->setParameter('display_field', $this->action->getParameter('display_field'));
-                        $ajaxAction->setParameter('receive_key',   $this->action->getParameter('receive_key'));
-                        $ajaxAction->setParameter('receive_field', $this->action->getParameter('receive_field'));
-                        $ajaxAction->setParameter('criteria',      $this->action->getParameter('criteria'));
-                        $ajaxAction->setParameter('operator',      $this->action->getParameter('operator') ? $this->action->getParameter('operator') : 'like');
-                    }
-                    else
-                    {
-                    	if($actionParameters = $this->action->getParameters())
-                    	{
-	                    	foreach ($actionParameters as $key => $value) 
-	                    	{
-	                    		$ajaxAction->setParameter($key, $value);
-	                    	}                    		
-                    	}                    	                    
-                    }
-                    $ajaxAction->setParameter('form_name', $this->formName);
-                    $string_action = $ajaxAction->serialize(FALSE);
                     if ($this->useOutEvent)
                     {
+                        $inst       = new $classname;
+                        $ajaxAction = new TAction(array($inst, 'onSelect'));
+                        
+                        if (in_array($classname, array('TStandardSeek')))
+                        {
+                            $ajaxAction->setParameter('parent',  $this->action->getParameter('parent'));
+                            $ajaxAction->setParameter('database',$this->action->getParameter('database'));
+                            $ajaxAction->setParameter('model',   $this->action->getParameter('model'));
+                            $ajaxAction->setParameter('display_field', $this->action->getParameter('display_field'));
+                            $ajaxAction->setParameter('receive_key',   $this->action->getParameter('receive_key'));
+                            $ajaxAction->setParameter('receive_field', $this->action->getParameter('receive_field'));
+                            $ajaxAction->setParameter('criteria',      $this->action->getParameter('criteria'));
+                            $ajaxAction->setParameter('mask',          $this->action->getParameter('mask'));
+                            $ajaxAction->setParameter('operator',      $this->action->getParameter('operator') ? $this->action->getParameter('operator') : 'like');
+                        }
+                        else
+                        {
+                            if ($actionParameters = $this->action->getParameters())
+                            {
+                                foreach ($actionParameters as $key => $value) 
+                                {
+                                    $ajaxAction->setParameter($key, $value);
+                                }                    		
+                            }                    	                    
+                        }
+                        $ajaxAction->setParameter('form_name',  $this->formName);
+                        
+                        $string_action = $ajaxAction->serialize(FALSE);
                         $this->setProperty('seekaction', "__adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback')");
                         $this->setProperty('onBlur', $this->getProperty('seekaction'), FALSE);
                     }
                 }
-                $this->action->setParameter('form_name', $this->formName);
+                $this->action->setParameter('field_name', $this->name);
+                $this->action->setParameter('form_name',  $this->formName);
                 $serialized_action = $this->action->serialize(FALSE);
             }
             
-            $this->button->{'onclick'} = "javascript:serialform=(\$('#{$this->formName}').serialize());
-                  __adianti_append_page('engine.php?{$serialized_action}&'+serialform)";
+            $this->button->{'onclick'} = "javascript:serialform=(\$('#{$this->formName}').serialize());__adianti_append_page('engine.php?{$serialized_action}&'+serialform)";
                   
             $wrapper = new TElement('div');
             $wrapper->{'class'} = 'tseek-group';
-            $wrapper->{'style'} = 'display:inline-table;border-spacing:0';
             $wrapper->open();
             parent::show();
             $this->button->show();

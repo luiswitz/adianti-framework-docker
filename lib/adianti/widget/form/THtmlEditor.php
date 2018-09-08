@@ -10,7 +10,7 @@ use Adianti\Widget\Form\TField;
 /**
  * Html Editor
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio

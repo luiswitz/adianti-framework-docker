@@ -10,7 +10,7 @@ use Exception;
 /**
  * TableRow: Represents a row inside a table
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -19,12 +19,15 @@ use Exception;
  */
 class TTableRow extends TElement
 {
+    private $section;
+    
     /**
      * Class Constructor
      */
-    public function __construct()
+    public function __construct($section = 'tbody')
     {
         parent::__construct('tr');
+        $this->section = $section;
     }
     
     /**
@@ -41,7 +44,8 @@ class TTableRow extends TElement
         else
         {
             // creates a new Table Cell
-            $cell = new TTableCell($value);
+            $cell = new TTableCell($value, $this->section == 'thead' ? 'th' : 'td');
+            
             parent::add($cell);
             // returns the cell object
             return $cell;

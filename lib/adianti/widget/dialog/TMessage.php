@@ -8,7 +8,7 @@ use Adianti\Widget\Base\TScript;
 /**
  * Message Dialog
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage dialog
  * @author     Pablo Dall'Oglio
@@ -27,7 +27,19 @@ class TMessage
      */
     public function __construct($type, $message, TAction $action = NULL, $title_msg = '')
     {
-        $title    = $title_msg ? $title_msg : ( $type == 'info' ? AdiantiCoreTranslator::translate('Information') : AdiantiCoreTranslator::translate('Error'));
+        if (!empty($title_msg))
+        {
+            $title = $title_msg;
+        }
+        else
+        {
+            $titles = [];
+            $titles['info']    = AdiantiCoreTranslator::translate('Information');
+            $titles['error']   = AdiantiCoreTranslator::translate('Error');
+            $titles['warning'] = AdiantiCoreTranslator::translate('Warning');
+            $title = !empty($titles[$type])? $titles[$type] : '';
+        }
+        
         $callback = "function () {}";
         
         if ($action)
@@ -41,6 +53,10 @@ class TMessage
         if ($type == 'info')
         {
             TScript::create("__adianti_message('{$title}', '{$message}', $callback)");
+        }
+        else if ($type == 'warning')
+        {
+            TScript::create("__adianti_warning('{$title}', '{$message}', $callback)");
         }
         else
         {

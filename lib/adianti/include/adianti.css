@@ -149,7 +149,7 @@ table tr td
     z-index: 4000 !important;
 }
 
-.datepicker { /* pq abre dentro de dialogs */
+.datepicker, .datetimepicker { /* pq abre dentro de dialogs */
     z-index: 1000000000000; /* mesmo zindex que tooltip */
 }
 

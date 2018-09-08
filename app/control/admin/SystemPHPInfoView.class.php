@@ -24,6 +24,8 @@ class SystemPHPInfoView extends TPage
         ob_start();
         phpinfo();
         $content = ob_get_contents();
+        $content = str_replace(',', ', ', $content);
+        $content = str_replace(':/', ': /', $content);
         ob_end_clean();
         $content = preg_replace( '%^.*<body>(.*)</body>.*$%ms','$'.'1',$content);
         
