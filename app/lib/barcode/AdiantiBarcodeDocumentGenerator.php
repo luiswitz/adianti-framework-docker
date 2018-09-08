@@ -7,7 +7,7 @@ use BaconQrCode\Writer;
 /**
  * Barcode generator
  *
- * @version    5.0
+ * @version    5.5
  * @package    app
  * @subpackage lib
  * @author     Pablo Dall'Oglio
@@ -95,7 +95,7 @@ class AdiantiBarcodeDocumentGenerator extends AdiantiPDFDesigner
     /**
      * Add Database object to be processed
      */
-    public function addObject($object)
+    public function addObject(TRecord $object)
     {
         $this->objects[] = $object;
     }
@@ -133,22 +133,7 @@ class AdiantiBarcodeDocumentGenerator extends AdiantiPDFDesigner
                 
                 if (!empty($barcode))
                 {
-                    $label = $this->labelTemplate;
-                    preg_match_all('/{(.*?)}/', $label, $matches);
-                    $raw_attributes = $matches[0];
-                    foreach ($raw_attributes as $raw_attribute)
-                    {
-                        $attribute = substr($raw_attribute, 1, -1);
-                        if (substr($attribute, 0, 1) == '$')
-                        {
-                            $attribute = substr($attribute, 1);
-                        }
-                        
-                        if (isset($object->$attribute))
-                        {
-                            $label = str_replace($raw_attribute, $object->$attribute, $label);
-                        }
-                    }
+                    $label = $object->render($this->labelTemplate);
                     
                     parent::SetY($y);
                     

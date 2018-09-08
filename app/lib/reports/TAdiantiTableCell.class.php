@@ -1,9 +1,11 @@
 <?php
 /**
- * TableCell
- * Copyright (c) 2006-2010 Pablo Dall'Oglio
- * @author  Pablo Dall'Oglio <pablo [at] adianti.com.br>
- * @version 2.0, 2007-08-01
+ * Table Cell
+ *
+ * @version    5.5
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class TAdiantiTableCell extends TAdiantiElement
 {

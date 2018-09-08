@@ -5,7 +5,7 @@ use Dompdf\Options;
 /**
  * HTML Document parser
  *
- * @version    5.0
+ * @version    5.5
  * @package    app
  * @subpackage lib
  * @author     Pablo Dall'Oglio
@@ -32,6 +32,11 @@ class AdiantiHTMLDocumentParser
             $this->file     = $file;
             $this->content  = file_get_contents($file);
         }
+        else
+        {
+            $this->content  = '';
+        }
+        
         $this->details  = [];
         $this->replaces = [];
         $this->totals   = [];
@@ -51,7 +56,7 @@ class AdiantiHTMLDocumentParser
      * Define the master object to be replaced
      * @param  $object Object
      */
-    public function setMaster($object)
+    public function setMaster(TRecord $object)
     {
         $this->masterObject = $object;
     }
@@ -222,6 +227,7 @@ class AdiantiHTMLDocumentParser
             $html = str_replace('{$'.$attribute.'}',  $this->masterObject->$attribute, $html);
             $html = str_replace('{{'.$attribute.'}}', $this->masterObject->$attribute, $html);
         }
+        $html = THtmlRenderer::replaceFunctions($html);
         $this->content = $html;
         return $html;
     }
@@ -268,16 +274,15 @@ class AdiantiHTMLDocumentParser
                 }
             }
             
-            preg_match_all('/{(.*?)}/', $content, $matches);
-            $raw_attributes = $matches[0];
-            foreach ($raw_attributes as $raw_attribute)
+            // fix -> object relations preparing for render method
+            if (preg_match_all('/\{(.*?)\}/', $content, $matches) )
             {
-                $attribute = substr($raw_attribute, 2, -1);
-                if (isset($this->masterObject->$attribute))
+                foreach ($matches[0] as $match)
                 {
-                    $content = str_replace($raw_attribute, $this->masterObject->$attribute, $content);
+                    $content = str_replace( $match, str_replace('-&gt;', '->', $match), $content);
                 }
             }
+            $content = $this->masterObject->render($content);
             
             $path = 'tmp/'.mt_rand(1000000000, 1999999999).'.' . $path_info['extension'];
             file_put_contents($path, $content);
@@ -327,6 +332,7 @@ class AdiantiHTMLDocumentParser
         
         $options = new Options();
         $options->set('dpi', '128');
+        $options->setIsRemoteEnabled(true);
 
         // instantiate and use the dompdf class
         $dompdf = new Dompdf($options);
